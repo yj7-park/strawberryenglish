@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/providers/tutor_provider.dart';
 import 'package:strawberryenglish/themes/theme.dart';
+import 'package:strawberryenglish/widgets/my_app_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,9 +38,7 @@ class LoginScreenState extends State<LoginScreen> {
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
-          // appBar: AppBar(
-          //   title: const Text('Login'),
-          // ),
+          appBar: MyMenuAppBar(),
           body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -152,7 +151,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (username.isNotEmpty && password.isNotEmpty) {
       if (username == 'admin@admin.com') {
-        Navigator.pushReplacementNamed(context, '/admin');
+        Navigator.pushNamed(context, '/admin');
         return; // admin 계정으로 로그인 시 바로 종료
       }
 
@@ -161,7 +160,7 @@ class LoginScreenState extends State<LoginScreen> {
 
         if (_errorMessage.isEmpty) {
           if (tutorProvider.tutor != null) {
-            Navigator.pushReplacementNamed(context, '/tutor_calendar');
+            Navigator.pushNamed(context, '/tutor_calendar');
             return; // tutor 로그인 성공 시 바로 종료
           } else {
             _errorMessage = "Login failed. Please check ID / Password.";
@@ -178,7 +177,7 @@ class LoginScreenState extends State<LoginScreen> {
 
         if (_errorMessage.isEmpty) {
           if (studentProvider.student != null) {
-            Navigator.pushReplacementNamed(context, '/student_calendar');
+            Navigator.pushNamed(context, '/student_calendar');
             return; // student 로그인 성공 시 바로 종료
           }
         }

@@ -8,7 +8,7 @@ import 'providers/student_provider.dart';
 // import 'providers/lesson_provider.dart.tmp';
 import 'screens/login_screen.dart';
 import 'screens/student_calendar_screen.dart';
-// import 'screens/main_screen.dart';
+import 'screens/main_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +44,18 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          // '/': (context) => const MainScreen(),
-          '/': (context) => const LoginScreen(),
+          '/': (context) => const MainScreen(),
+          '/introduction': (context) => const MainScreen(),
+          '/announcement': (context) => const MainScreen(),
+          '/lectures': (context) => const MainScreen(),
+          '/topics': (context) => const MainScreen(),
+          '/tutors': (context) => const MainScreen(),
+          '/tuitionfee': (context) => const MainScreen(),
+          '/reviews': (context) => const MainScreen(),
+          '/trial': (context) => const MainScreen(),
+          '/enrollment': (context) => const MainScreen(),
+
+          '/login': (context) => const LoginScreen(),
           '/student_calendar': (context) => const StudentCalendarScreen(),
           '/tutor_calendar': (context) => const TutorCalendarScreen(),
           '/admin': (context) => const AdminScreen(),

@@ -247,7 +247,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       });
 
       // Navigate to calendar screen
-      Navigator.pushReplacementNamed(context, '/student_calendar');
+      Navigator.pushNamed(context, '/student_calendar');
 
       setState(() {
         _statusMessage = 'User registered successfully!';

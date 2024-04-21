@@ -1,4 +1,156 @@
 import 'package:flutter/material.dart';
+import 'package:strawberryenglish/themes/theme.dart';
+
+class MyMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
+  MyMenuAppBar({super.key});
+
+  final MenuController controller1 = MenuController();
+  final MenuController controller2 = MenuController();
+  final FocusNode focusNode1 = FocusNode();
+  final FocusNode focusNode2 = FocusNode();
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+        data: customTheme,
+        child: AppBar(
+          title: myAppBarTitle,
+          // leading: ,
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            SubmenuButton(
+              controller: controller1,
+              focusNode: focusNode1,
+              onClose: () {
+                focusNode1.unfocus();
+              },
+              alignmentOffset: const Offset(0, 7.0),
+              style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all(const Size.fromWidth(100))),
+              menuChildren: <Widget>[
+                MouseRegion(
+                    onExit: (_) {
+                      controller1.close();
+                    },
+                    child: Column(children: [
+                      MenuItemButton(
+                        focusNode: focusNode1,
+                        style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                                const Size.fromWidth(100))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/introduction');
+                        },
+                        child: const MenuAcceleratorLabel('회사소개'),
+                      ),
+                      MenuItemButton(
+                        focusNode: focusNode1,
+                        style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                                const Size.fromWidth(100))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/announcement');
+                        },
+                        child: const MenuAcceleratorLabel('공지사항'),
+                      )
+                    ])),
+              ],
+              child: const MenuAcceleratorLabel('딸기영어'),
+            ),
+            SubmenuButton(
+              focusNode: focusNode2,
+              controller: controller2,
+              onClose: () {
+                focusNode2.unfocus();
+              },
+              alignmentOffset: const Offset(0, 7.0),
+              style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all(const Size.fromWidth(100))),
+              menuChildren: <Widget>[
+                MouseRegion(
+                    onExit: (_) {
+                      controller2.close();
+                    },
+                    child: Column(children: [
+                      MenuItemButton(
+                        focusNode: focusNode2,
+                        style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                                const Size.fromWidth(100))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/lectures');
+                        },
+                        child: const MenuAcceleratorLabel('수강안내'),
+                      ),
+                      MenuItemButton(
+                        focusNode: focusNode2,
+                        style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                                const Size.fromWidth(100))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/topics');
+                        },
+                        child: const MenuAcceleratorLabel('수업토픽'),
+                      ),
+                      MenuItemButton(
+                        focusNode: focusNode2,
+                        style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                                const Size.fromWidth(100))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/tutors');
+                        },
+                        child: const MenuAcceleratorLabel('튜터소개'),
+                      ),
+                      MenuItemButton(
+                        focusNode: focusNode2,
+                        style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all(
+                                const Size.fromWidth(100))),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/tuitionfee');
+                        },
+                        child: const MenuAcceleratorLabel('수강료'),
+                      ),
+                    ]))
+              ],
+              child: const MenuAcceleratorLabel('수업안내'),
+            ),
+            MenuItemButton(
+              style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all(const Size.fromWidth(100))),
+              onPressed: () {
+                Navigator.pushNamed(context, '/reviews');
+              },
+              child: const MenuAcceleratorLabel('딸기후기'),
+            ),
+            MenuItemButton(
+              style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all(const Size.fromWidth(100))),
+              onPressed: () {
+                Navigator.pushNamed(context, '/trial');
+              },
+              child: const MenuAcceleratorLabel('체험하기'),
+            ),
+            MenuItemButton(
+              style: ButtonStyle(
+                  fixedSize:
+                      MaterialStateProperty.all(const Size.fromWidth(100))),
+              onPressed: () {
+                Navigator.pushNamed(context, '/enrollment');
+              },
+              child: const MenuAcceleratorLabel('수강신청'),
+            ),
+          ],
+        ));
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
 
 Row myAppBarTitle = Row(
   children: [
@@ -21,108 +173,3 @@ Row myAppBarTitle = Row(
     ),
   ],
 );
-
-class MyMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyMenuAppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: myAppBarTitle,
-      // leading: ,
-      automaticallyImplyLeading: false,
-      actions: <Widget>[
-        SizedBox(
-          // SizedBox를 사용하여 너비를 100으로 지정
-          width: 100,
-          child: SubmenuButton(
-            alignmentOffset: const Offset(0, 7.0),
-            focusNode: primaryFocus,
-            menuChildren: <Widget>[
-              SizedBox(
-                  // SizedBox를 사용하여 너비를 100으로 지정
-                  width: 100,
-                  child: MenuItemButton(
-                    onPressed: () {
-                      // 딸기 하우스 메뉴의 "회사소개" 아이템이 클릭되었을 때의 동작
-                      // 여기에 클릭 시 수행할 작업을 추가하세요.
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
-                    child: const MenuAcceleratorLabel('회사소개'),
-                  )),
-              MenuItemButton(
-                onPressed: () {
-                  // 딸기 하우스 메뉴의 "공지사항" 아이템이 클릭되었을 때의 동작
-                  // 여기에 클릭 시 수행할 작업을 추가하세요.
-                },
-                child: const MenuAcceleratorLabel('공지사항'),
-              ),
-              MenuItemButton(
-                onPressed: () {
-                  // 딸기 하우스 메뉴의 "후원아이" 아이템이 클릭되었을 때의 동작
-                  // 여기에 클릭 시 수행할 작업을 추가하세요.
-                },
-                child: const MenuAcceleratorLabel('후원아이'),
-              ),
-            ],
-            child: const MenuAcceleratorLabel('딸기 하우스'),
-          ),
-        ),
-        SizedBox(
-          // SizedBox를 사용하여 너비를 100으로 지정
-          width: 100,
-          child: SubmenuButton(
-            alignmentOffset: const Offset(0, 7.0),
-            menuChildren: <Widget>[
-              MenuItemButton(
-                onPressed: () {
-                  // 수업 안내 메뉴의 "신청과정" 아이템이 클릭되었을 때의 동작
-                  // 여기에 클릭 시 수행할 작업을 추가하세요.
-                },
-                child: const MenuAcceleratorLabel('신청과정'),
-              ),
-              // 나머지 수업 안내 메뉴 아이템들도 유사하게 추가
-            ],
-            child: const MenuAcceleratorLabel('수업 안내'),
-          ),
-        ),
-        SizedBox(
-          // SizedBox를 사용하여 너비를 100으로 지정
-          width: 100,
-          child: MenuItemButton(
-            onPressed: () {
-              // 딸기 후기 메뉴의 클릭 동작
-              // 여기에 클릭 시 수행할 작업을 추가하세요.
-            },
-            child: const MenuAcceleratorLabel('딸기 후기'),
-          ),
-        ),
-        SizedBox(
-          // SizedBox를 사용하여 너비를 100으로 지정
-          width: 100,
-          child: MenuItemButton(
-            onPressed: () {
-              // 무료 트라이얼 신청 메뉴의 클릭 동작
-              // 여기에 클릭 시 수행할 작업을 추가하세요.
-            },
-            child: const MenuAcceleratorLabel('무료\n트라이얼 신청'),
-          ),
-        ),
-        SizedBox(
-          // SizedBox를 사용하여 너비를 100으로 지정
-          width: 100,
-          child: MenuItemButton(
-            onPressed: () {
-              // 수강 신청 메뉴의 클릭 동작
-              // 여기에 클릭 시 수행할 작업을 추가하세요.
-            },
-            child: const MenuAcceleratorLabel('수강 신청'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}

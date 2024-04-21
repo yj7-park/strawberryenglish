@@ -20,7 +20,7 @@ class AdminScreen extends StatelessWidget {
         data: customTheme, // customTheme을 적용
         child: Scaffold(
           appBar: AppBar(
-            title: myAppBarTitle,
+            title: MyMenuAppBar(),
             // leading: ,
             automaticallyImplyLeading: false,
             actions: [
@@ -31,7 +31,7 @@ class AdminScreen extends StatelessWidget {
                   if (confirmLogout) {
                     // 사용자가 확인하면 로그아웃 처리
                     await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacementNamed(context, '/');
+                    Navigator.pushNamed(context, '/');
                   }
                 },
                 icon: const Icon(Icons.exit_to_app),
