@@ -488,7 +488,7 @@ class CalendarBodyState extends State<CalendarBody> {
           .toList();
 
       if (selectedAppointments.isNotEmpty) {
-        _bottomSheetController = showBottomSheet<void>(
+        _bottomSheetController = showBottomSheet(
           context: context,
           builder: (BuildContext context) {
             return Column(
