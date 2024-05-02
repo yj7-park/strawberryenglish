@@ -19,7 +19,6 @@ class MyMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Theme(
         data: customTheme,
         child: AppBar(
-          backgroundColor: Colors.white,
           title: myAppBarTitle,
           // leading: ,
           automaticallyImplyLeading: false,

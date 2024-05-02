@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/theme.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class HomeScreen3Tutor extends StatelessWidget {
-  final String videoId = 'gVtH8X8peZk'; // TODO: youtube 영상 ID 추가
-
-  const HomeScreen3Tutor({
+class HomeScreen4Price extends StatelessWidget {
+  const HomeScreen4Price({
     super.key,
   });
 
@@ -25,10 +22,10 @@ class HomeScreen3Tutor extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                       const SizedBox(height: 50),
-                      ...widgets,
+                      ...List.from(widgets.reversed),
                       const SizedBox(height: 50)
                     ]),
-          // TODO: [튜터소개]로 이동 버튼 추가
+          // TODO: [체험하기]로 이동 버튼 추가
         ]));
   }
 
@@ -36,12 +33,20 @@ class HomeScreen3Tutor extends StatelessWidget {
     return [
       Padding(
         padding: const EdgeInsets.all(50),
+        child: Image.asset(
+          'assets/images/price.png',
+          width: screenWidth >= 1600 ? screenWidth / 3 : screenWidth,
+          // height: 30,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '딸기영어가 자신있는 이유',
+              '가격이 비쌀 수 밖에 없었던 이유는\n과도한 고정비와 마케팅비였습니다.',
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
@@ -51,7 +56,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '1. 타사 대비 1.5배 높은 임금과 수업 여건 보장으로 튜터 만족감 업',
+              '1. 100% 재택 근무와 고정비를 최소화',
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -60,7 +65,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "2. 높은 경쟁 속에서 까다로운 3차 면접을 통해 최고의 튜터 채용",
+              "2. 불필요한 마케팅비용을 극단적으로 줄이고 본질에 집중한 바이럴",
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -69,7 +74,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "3. 과도한 페널티를 없애고 튜터들의 자발적인 책임감 요구로 능동적 지도 환경",
+              "3. 박리다매를 지향하는 창업자의 마인드",
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -79,24 +84,6 @@ class HomeScreen3Tutor extends StatelessWidget {
           ],
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.all(50),
-        child: YoutubePlayerBuilder(
-          player: YoutubePlayer(
-            width: screenWidth >= 1600 ? screenWidth / 3 : screenWidth,
-            controller: YoutubePlayerController(
-              initialVideoId: videoId,
-              flags: const YoutubePlayerFlags(
-                autoPlay: true,
-                mute: false,
-              ),
-            ),
-          ),
-          builder: (context, player) => Center(
-            child: player,
-          ),
-        ),
-      )
     ];
   }
 }
