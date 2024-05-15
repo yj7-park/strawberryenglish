@@ -47,7 +47,11 @@ dependencies:
   excel: ^4.0.3
   spreadsheet_decoder: ^2.2.0
   carousel_slider: ^4.2.1
+  youtube_player_iframe: ^5.1.2
+  youtube_player_iframe_web: ^3.0.2
+  webview_flutter_platform_interface: ^2.10.0
   youtube_player_flutter: ^8.1.2
+  multilevel_drawer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

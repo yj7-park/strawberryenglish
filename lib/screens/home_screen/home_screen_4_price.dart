@@ -11,22 +11,28 @@ class HomeScreen4Price extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     dynamic widgets = _buildLayout(screenWidth);
     return Theme(
-        data: customTheme,
-        child: Column(children: [
-          screenWidth >= 1600
-              ? Row(
-                  children: widgets,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                      const SizedBox(height: 50),
-                      ...List.from(widgets.reversed),
-                      const SizedBox(height: 50)
-                    ]),
-          // TODO: [체험하기]로 이동 버튼 추가
-        ]));
+      data: customTheme,
+      child: Container(
+        color: Colors.grey.withOpacity(0.1),
+        child: Column(
+          children: [
+            screenWidth >= 1600
+                ? Row(
+                    children: widgets,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                        const SizedBox(height: 50),
+                        ...List.from(widgets.reversed),
+                        const SizedBox(height: 50)
+                      ]),
+            // TODO: [체험하기]로 이동 버튼 추가
+          ],
+        ),
+      ),
+    );
   }
 
   List<Widget> _buildLayout(double screenWidth) {
@@ -46,7 +52,16 @@ class HomeScreen4Price extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '가격이 비쌀 수 밖에 없었던 이유는\n과도한 고정비와 마케팅비였습니다.',
+              '가격이 비쌀 수 밖에 없었던 이유는',
+              style: TextStyle(
+                // color: Colors.white,
+                fontSize: (screenWidth * 0.04).clamp(14, 32),
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.justify,
+            ),
+            Text(
+              '과도한 고정비와 마케팅비였습니다.',
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.04).clamp(14, 32),

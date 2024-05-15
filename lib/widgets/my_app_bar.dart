@@ -1,232 +1,231 @@
 import 'package:flutter/material.dart';
-import 'package:strawberryenglish/themes/theme.dart';
 
-class MyMenuAppBar extends StatelessWidget implements PreferredSizeWidget {
-  MyMenuAppBar({super.key});
-
-  final MenuController controller1 = MenuController();
-  final MenuController controller2 = MenuController();
-  final MenuController controller3 = MenuController();
-  final MenuController controller4 = MenuController();
-  final MenuController controller5 = MenuController();
-  final FocusNode focusNode1 = FocusNode();
-  final FocusNode focusNode2 = FocusNode();
-  final FocusNode focusNode3 = FocusNode();
-  final FocusNode focusNode4 = FocusNode();
-  final FocusNode focusNode5 = FocusNode();
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-        data: customTheme,
-        child: AppBar(
-          title: myAppBarTitle,
-          // leading: ,
-          automaticallyImplyLeading: false,
-          actions: <Widget>[
-            SubmenuButton(
-              controller: controller1,
-              focusNode: focusNode1,
-              onClose: () {
-                focusNode1.unfocus();
-              },
-              alignmentOffset: const Offset(0, -32.0),
-              menuChildren: <Widget>[
-                MouseRegion(
-                    onExit: (_) {
-                      controller1.close();
-                      focusNode1.unfocus();
-                    },
-                    child: Column(children: [
-                      MenuItemButton(
-                        focusNode: focusNode1,
-                        onPressed: () {
-                          controller1.close();
-                        },
-                        child: const Text('딸기영어'),
-                      ),
-                      MenuItemButton(
-                        focusNode: focusNode1,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/introduction');
-                        },
-                        child: const Text('회사소개'),
-                      ),
-                      MenuItemButton(
-                        focusNode: focusNode1,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/announcement');
-                        },
-                        child: const Text('공지사항'),
-                      )
-                    ])),
-              ],
-              child: const Text('딸기영어'),
-            ),
-            SubmenuButton(
-              focusNode: focusNode2,
-              controller: controller2,
-              onClose: () {
-                focusNode2.unfocus();
-              },
-              alignmentOffset: const Offset(0, -32.0),
-              menuChildren: <Widget>[
-                MouseRegion(
-                    onExit: (_) {
-                      controller2.close();
-                    },
-                    child: Column(children: [
-                      MenuItemButton(
-                        focusNode: focusNode2,
-                        onPressed: () {
-                          controller2.close();
-                        },
-                        child: const Text('수업안내'),
-                      ),
-                      MenuItemButton(
-                        focusNode: focusNode2,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/lectures');
-                        },
-                        child: const Text('수강안내'),
-                      ),
-                      MenuItemButton(
-                        focusNode: focusNode2,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/topics');
-                        },
-                        child: const Text('수업토픽'),
-                      ),
-                      MenuItemButton(
-                        focusNode: focusNode2,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/tutors');
-                        },
-                        child: const Text('튜터소개'),
-                      ),
-                      MenuItemButton(
-                        focusNode: focusNode2,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/tuitionfee');
-                        },
-                        child: const Text('수강료'),
-                      ),
-                    ]))
-              ],
-              child: const Text('수업안내'),
-            ),
-            SubmenuButton(
-              focusNode: focusNode3,
-              controller: controller3,
-              onClose: () {
-                focusNode3.unfocus();
-              },
-              alignmentOffset: const Offset(0, -32.0),
-              menuChildren: <Widget>[
-                MouseRegion(
-                    onExit: (_) {
-                      controller3.close();
-                    },
-                    child: Column(children: [
-                      MenuItemButton(
-                        focusNode: focusNode3,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/reviews');
-                        },
-                        onHover: (onHover) {
-                          if (!onHover) {
-                            focusNode3.unfocus();
-                          }
-                        },
-                        child: const Text('딸기후기'),
-                      ),
-                    ]))
-              ],
-              child: const Text('딸기후기'),
-            ),
-            SubmenuButton(
-              focusNode: focusNode4,
-              controller: controller4,
-              onClose: () {
-                focusNode4.unfocus();
-              },
-              alignmentOffset: const Offset(0, -32.0),
-              menuChildren: <Widget>[
-                MouseRegion(
-                    onExit: (_) {
-                      controller4.close();
-                    },
-                    child: Column(children: [
-                      MenuItemButton(
-                        focusNode: focusNode4,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/trial');
-                        },
-                        onHover: (onHover) {
-                          if (!onHover) {
-                            focusNode4.unfocus();
-                          }
-                        },
-                        child: const Text('체험하기'),
-                      ),
-                    ]))
-              ],
-              child: const Text('체험하기'),
-            ),
-            SubmenuButton(
-              focusNode: focusNode5,
-              controller: controller5,
-              onClose: () {
-                focusNode2.unfocus();
-              },
-              alignmentOffset: const Offset(0, -32.0),
-              menuChildren: <Widget>[
-                MouseRegion(
-                    onExit: (_) {
-                      controller5.close();
-                    },
-                    child: Column(children: [
-                      MenuItemButton(
-                        focusNode: focusNode5,
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/enrollment');
-                        },
-                        onHover: (onHover) {
-                          if (!onHover) {
-                            focusNode5.unfocus();
-                          }
-                        },
-                        child: const Text('수강신청'),
-                      ),
-                    ]))
-              ],
-              child: const Text('수강신청'),
-            )
-          ],
-        ));
-  }
+class MyMenuAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const MyMenuAppBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  _MyMenuAppBarState createState() => _MyMenuAppBarState();
 }
 
-Row myAppBarTitle = Row(
-  children: [
-    Column(
+class _MyMenuAppBarState extends State<MyMenuAppBar>
+    with SingleTickerProviderStateMixin {
+  static const _defaultHeight = 56.0;
+  static const _expendedHeight = 218.0;
+  double _height = _defaultHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
       children: [
-        Image.asset(
-          'assets/images/small_logo.png',
-          width: 30,
-          height: 30,
+        Container(
+            height: _height > _defaultHeight ? double.infinity : 0,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              color:
+                  Colors.black.withOpacity(_height > _defaultHeight ? 0.5 : 0),
+              height: double.infinity,
+            )),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: _height,
+          decoration: const BoxDecoration(color: Colors.white),
+          clipBehavior: Clip.hardEdge,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: OverflowBox(
+              maxHeight: double.infinity,
+              alignment: Alignment.topCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  myAppBarTitle,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MouseRegion(
+                        onEnter: (_) {
+                          setState(() {
+                            _height = _expendedHeight;
+                          });
+                        },
+                        onExit: (_) {
+                          setState(() {
+                            _height = _defaultHeight;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            MenuItemButton(
+                              child: const Text(
+                                '딸기영어',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/introduction');
+                              },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                '회사소개',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/introduction');
+                              },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                '공지사항',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/announcement');
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                      // ),
+                      MouseRegion(
+                        onEnter: (_) {
+                          setState(() {
+                            _height = _expendedHeight;
+                          });
+                        },
+                        onExit: (_) {
+                          setState(() {
+                            _height = _defaultHeight;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            MenuItemButton(
+                              child: const Text(
+                                '수업안내',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/lectures');
+                              },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                '수강안내',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/lectures');
+                              },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                '수업토픽',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/topics');
+                              },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                '튜터소개',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/tutors');
+                              },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                '수강료',
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/tuitionfee');
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      MouseRegion(
+                        onEnter: (_) {
+                          setState(() {
+                            _height = _expendedHeight;
+                          });
+                        },
+                        onExit: (_) {
+                          setState(() {
+                            _height = _defaultHeight;
+                          });
+                        },
+                        child: MenuItemButton(
+                          child: const Text(
+                            '딸기후기',
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/reviews');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      MenuItemButton(
+                        child: const Text(
+                          '체험하기',
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/trial');
+                        },
+                      ),
+                      MenuItemButton(
+                        child: const Text(
+                          '수강신청',
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/enrollment');
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-        const SizedBox(height: 5),
       ],
-    ),
-    const SizedBox(width: 5),
-    const Text(
-      '딸기영어',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
+    );
+  }
+}
+
+final myAppBarTitle = Padding(
+  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+  child: Row(
+    children: [
+      Image.asset(
+        'assets/images/small_logo.png',
+        width: 30,
+        height: 30,
       ),
-    ),
-  ],
+      const SizedBox(width: 5),
+      const Text(
+        '딸기영어',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ],
+  ),
 );

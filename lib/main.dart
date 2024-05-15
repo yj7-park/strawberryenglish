@@ -1,3 +1,5 @@
+// ignore_for_file: implementation_imports
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -9,9 +11,13 @@ import 'providers/student_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/student_calendar_screen.dart';
 import 'screens/home_screen.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:youtube_player_iframe_web/src/web_youtube_player_iframe_platform.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  WebViewPlatform.instance = WebYoutubePlayerIframePlatform();
+
   await Firebase.initializeApp(
     options: const FirebaseOptions(
         apiKey: "AIzaSyCwDuKlVvWKqZ1gQjsMmew31kykpkInKyk",
