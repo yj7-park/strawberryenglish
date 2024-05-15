@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:strawberryenglish/themes/theme.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 
 class ConfirmationDialog {
   static Future<bool> show(BuildContext context) async {

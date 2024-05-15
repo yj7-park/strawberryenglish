@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/calendar_body.dart';
-import 'package:strawberryenglish/themes/theme.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:provider/provider.dart';
 

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
 class MyMenuAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -20,7 +22,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
+        SizedBox(
             height: _height > _defaultHeight ? double.infinity : 0,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
@@ -195,6 +197,15 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, '/enrollment');
+                        },
+                      ),
+                      MenuItemButton(
+                        child: const Text(
+                          '회원가입',
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/signup');
                         },
                       ),
                     ],

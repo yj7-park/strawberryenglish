@@ -3,14 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:strawberryenglish/providers/tutor_provider.dart';
-import 'package:strawberryenglish/screens/admin_screen.dart';
-import 'package:strawberryenglish/screens/tutor_calendar_screen.dart';
+import 'providers/tutor_provider.dart';
 import 'providers/student_provider.dart';
-// import 'providers/lesson_provider.dart.tmp';
+import 'screens/admin_screen.dart';
+import 'screens/signup_screen.dart';
+import 'screens/tutor_calendar_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/student_calendar_screen.dart';
 import 'screens/home_screen.dart';
+// import 'providers/lesson_provider.dart.tmp';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 import 'package:youtube_player_iframe_web/src/web_youtube_player_iframe_platform.dart';
 
@@ -60,6 +61,8 @@ class MyApp extends StatelessWidget {
           '/reviews': (context) => const HomeScreen(),
           '/trial': (context) => const HomeScreen(),
           '/enrollment': (context) => const HomeScreen(),
+
+          '/signup': (context) => const SignUpScreen(),
 
           '/login': (context) => const LoginScreen(),
           '/student_calendar': (context) => const StudentCalendarScreen(),
