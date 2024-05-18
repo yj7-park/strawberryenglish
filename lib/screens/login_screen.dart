@@ -28,116 +28,114 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
     tutorProvider = Provider.of<TutorProvider>(context);
-    // MediaQuery.of(context).size.width를 사용하여 화면의 너비를 가져옵니다.
+
     double screenWidth = MediaQuery.of(context).size.width;
-// 화면 너비의 60%를 계산합니다.
     double imageSize = screenWidth * 0.8;
-// imageSize가 400보다 크면 400으로 제한합니다.
     double constrainedSize = imageSize > 300.0 ? 300.0 : imageSize;
 
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
-          appBar: MyMenuAppBar(),
-          body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // 로고 이미지 추가
-                        Image.asset(
-                          'assets/images/logo.jpg',
-                          width: constrainedSize,
-                          height: constrainedSize,
+        appBar: const MyMenuAppBar(),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // 로고 이미지 추가
+                  Image.asset(
+                    'assets/images/logo.jpg',
+                    width: constrainedSize,
+                    height: constrainedSize,
+                  ),
+                  // 로고와 관련된 텍스트 추가
+                  // Text(
+                  //   'Better life for tutors and students',
+                  //   style: TextStyle(
+                  //     color: customTheme.primaryColor, // 테마의 primaryColor 사용
+                  //     fontSize: 16,
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 24), // 로고와 입력 필드 사이의 여백 추가
+                  SizedBox(
+                      width: constrainedSize,
+                      child: TextField(
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
                         ),
-                        // 로고와 관련된 텍스트 추가
-                        // Text(
-                        //   'Better life for tutors and students',
-                        //   style: TextStyle(
-                        //     color: customTheme.primaryColor, // 테마의 primaryColor 사용
-                        //     fontSize: 16,
-                        //   ),
-                        // ),
-                        // const SizedBox(height: 24), // 로고와 입력 필드 사이의 여백 추가
-                        SizedBox(
-                            width: constrainedSize,
-                            child: TextField(
-                              controller: _usernameController,
-                              decoration: const InputDecoration(
-                                labelText: 'Username',
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                              ),
-                              autofillHints: const ['username'],
-                            )),
-                        const SizedBox(height: 8), // 입력 필드 사이의 간격 조정
-                        SizedBox(
-                            width: constrainedSize,
-                            child: TextField(
-                              controller: _passwordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                labelText: 'Password',
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                              ),
-                              autofillHints: const ['current-password'],
-                              onSubmitted: (String _) async {
-                                await handleLogin();
-                              },
-                            )),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                            width: constrainedSize, // 최대 너비를 300으로 설정
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(
-                                    double.infinity, 50), // 버튼 사이즈 조정
-                              ),
-                              onPressed: () async {
-                                await handleLogin();
-                              },
-                              child: const Text(
-                                'Login',
-                              ),
-                            )),
-                        TextButton(
-                          onPressed: () async {
-                            try {
-                              await FirebaseAuth.instance
-                                  .sendPasswordResetEmail(
-                                email: _usernameController.text,
-                              );
-                              setState(() {
-                                _errorMessage =
-                                    'Password reset email sent. Please check your email.';
-                              });
-                            } catch (e) {
-                              setState(() {
-                                _errorMessage =
-                                    'Error sending password reset email. Please check ID field.';
-                              });
-                            }
-                          },
-                          child: const Text(
-                              'Forgot your password? Reset it here.'),
+                        autofillHints: const ['username'],
+                      )),
+                  const SizedBox(height: 8), // 입력 필드 사이의 간격 조정
+                  SizedBox(
+                      width: constrainedSize,
+                      child: TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
                         ),
-                        const SizedBox(height: 20),
-                        Text(
-                          _errorMessage,
-                          style:
-                              TextStyle(color: customTheme.colorScheme.error),
+                        autofillHints: const ['current-password'],
+                        onSubmitted: (String _) async {
+                          await handleLogin();
+                        },
+                      )),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                      width: constrainedSize, // 최대 너비를 300으로 설정
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize:
+                              const Size(double.infinity, 50), // 버튼 사이즈 조정
                         ),
-                      ],
-                    ),
-                  ]))),
+                        onPressed: () async {
+                          await handleLogin();
+                        },
+                        child: const Text(
+                          'Login',
+                        ),
+                      )),
+                  TextButton(
+                    onPressed: () async {
+                      try {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(
+                          email: _usernameController.text,
+                        );
+                        setState(() {
+                          _errorMessage =
+                              'Password reset email sent. Please check your email.';
+                        });
+                      } catch (e) {
+                        setState(() {
+                          _errorMessage =
+                              'Error sending password reset email. Please check ID field.';
+                        });
+                      }
+                    },
+                    child: const Text('Forgot your password? Reset it here.'),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    _errorMessage,
+                    style: TextStyle(color: customTheme.colorScheme.error),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

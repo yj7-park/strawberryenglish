@@ -7,6 +7,7 @@ import 'providers/tutor_provider.dart';
 import 'providers/student_provider.dart';
 import 'screens/admin_screen.dart';
 import 'screens/signup_screen.dart';
+import 'screens/trial_screen.dart';
 import 'screens/tutor_calendar_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/student_calendar_screen.dart';
@@ -59,9 +60,9 @@ class MyApp extends StatelessWidget {
           '/tutors': (context) => const HomeScreen(),
           '/tuitionfee': (context) => const HomeScreen(),
           '/reviews': (context) => const HomeScreen(),
-          '/trial': (context) => const HomeScreen(),
           '/enrollment': (context) => const HomeScreen(),
 
+          '/trial': (context) => const TrialScreen(),
           '/signup': (context) => const SignUpScreen(),
 
           '/login': (context) => const LoginScreen(),

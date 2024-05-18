@@ -67,27 +67,27 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '딸기영어',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/introduction');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/introduction');
+                              // },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '회사소개',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/introduction');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/introduction');
+                              // },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '공지사항',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/announcement');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/announcement');
+                              // },
                             )
                           ],
                         ),
@@ -111,45 +111,45 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '수업안내',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/lectures');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/lectures');
+                              // },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '수강안내',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/lectures');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/lectures');
+                              // },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '수업토픽',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/topics');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/topics');
+                              // },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '튜터소개',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/tutors');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/tutors');
+                              // },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '수강료',
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/tuitionfee');
-                              },
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/tuitionfee');
+                              // },
                             ),
                           ],
                         ),
@@ -170,9 +170,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                             '딸기후기',
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/reviews');
-                          },
+                          // onPressed: () {
+                          //   Navigator.pushNamed(context, '/reviews');
+                          // },
                         ),
                       ),
                     ],
@@ -195,9 +195,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                           '수강신청',
                           textAlign: TextAlign.center,
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/enrollment');
-                        },
+                        // onPressed: () {
+                        //   Navigator.pushNamed(context, '/enrollment');
+                        // },
                       ),
                       MenuItemButton(
                         child: const Text(

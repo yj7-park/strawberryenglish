@@ -52,6 +52,7 @@ dependencies:
   webview_flutter_platform_interface: ^2.10.0
   youtube_player_flutter: ^8.1.2
   multilevel_drawer: ^2.0.0
+  flutter_multi_formatter: ^2.12.8
 
 dev_dependencies:
   flutter_test:

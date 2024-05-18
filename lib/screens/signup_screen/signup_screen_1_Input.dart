@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class SignUpScreen1Input extends StatefulWidget {
 
 class SignUpScreen1InputState extends State<SignUpScreen1Input> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -83,60 +86,24 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
                 ),
                 const Text('* 실제 수강하는 사람의 이름을 적어주세요.'),
                 const SizedBox(height: 20),
-                // TextFormField(
-                //   controller: _nameController,
-                //   decoration: const InputDecoration(
-                //       labelText: '생년월일', border: OutlineInputBorder()),
-                // ),
-                // // Row(
-                // //   crossAxisAlignment: CrossAxisAlignment.end,
-                // //   children: [
-                // //     Expanded(
-                // //       child: TextFormField(
-                // //         controller: _phoneNumberController,
-                // //         decoration:
-                // //             const InputDecoration(labelText: 'Phone Number'),
-                // //       ),
-                // //     ),
-                // //     ElevatedButton(
-                // //       onPressed: _isVerified ? null : _sendVerificationCode,
-                // //       child: Text(_isVerified ? 'Verified' : 'Verify'),
-                // //     ),
-                // //     // DropdownButton<String>(
-                // //     //   value: _selectedCountryCode,
-                // //     //   onChanged: (String? value) {
-                // //     //     setState(() {
-                // //     //       _selectedCountryCode = value!;
-                // //     //     });
-                // //     //   },
-                // //     //   items: _countryCodes
-                // //     //       .map<DropdownMenuItem<String>>((String value) {
-                // //     //     return DropdownMenuItem<String>(
-                // //     //       value: value,
-                // //     //       child: Text(value),
-                // //     //     );
-                // //     //   }).toList(),
-                // //     // ),
-                // //   ],
-                // // ),
-                // // if (_isSent && !_isVerified)
-                // //   Row(
-                // //     crossAxisAlignment: CrossAxisAlignment.end,
-                // //     children: [
-                // //       Expanded(
-                // //         child: TextFormField(
-                // //           controller: _verificationCodeController,
-                // //           decoration:
-                // //               const InputDecoration(labelText: 'Verification Code'),
-                // //         ),
-                // //       ),
-                // //       ElevatedButton(
-                // //         onPressed: _checkVerificationCode,
-                // //         child: const Text('Check'),
-                // //       ),
-                // //     ],
-                // //   ),
-                // const SizedBox(height: 20),
+                // TODO: 생년월일
+                TextFormField(
+                  controller: _birthdayController,
+                  decoration: const InputDecoration(
+                    labelText: '생년월일',
+                    hintText: 'YYYY-MM-DD',
+                    border: OutlineInputBorder(),
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp("[0-9-]"),
+                    ),
+                    MaskedInputFormatter('####-##-##')
+                  ],
+                  textInputAction: TextInputAction.next,
+                ),
+
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Checkbox(
@@ -612,6 +579,7 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
     );
   }
 
+// TODO: 메일 주소 verification
   // void _sendVerificationCode() async {
   //   final phoneNumber = _phoneNumberController.text.trim();
   //   _errorMessage = '';
@@ -670,6 +638,7 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
   //   }
   // }
 
+// TODO: 회원 가입 처리
   void _registerUser() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
