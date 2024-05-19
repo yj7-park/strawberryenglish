@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:strawberryenglish/screens/lectures_screen.dart';
 import 'providers/tutor_provider.dart';
 import 'providers/student_provider.dart';
 import 'screens/admin_screen.dart';
@@ -53,19 +54,39 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => const HomeScreen(),
+
+          // 딸기영어
+          // 1. 회사소개
           '/introduction': (context) => const HomeScreen(),
+          // 2. 공지사항
           '/announcement': (context) => const HomeScreen(),
-          '/lectures': (context) => const HomeScreen(),
+
+          // 수업안내
+          // 1. 수강안내
+          '/lectures': (context) => const LecturesScreen(),
+          // 2. 수업토픽
           '/topics': (context) => const HomeScreen(),
+          // 3. 튜터소개
           '/tutors': (context) => const HomeScreen(),
+          // 4. 수강료
           '/tuitionfee': (context) => const HomeScreen(),
+          // 5. FAQ
+          '/faq': (context) => const HomeScreen(),
+
+          // 딸기후기
           '/reviews': (context) => const HomeScreen(),
+
+          // 체험하기
+          '/trial': (context) => const TrialScreen(),
+          // 수강신청
           '/enrollment': (context) => const HomeScreen(),
 
-          '/trial': (context) => const TrialScreen(),
+          // 로그인
+          '/login': (context) => const LoginScreen(),
+          // 회원가입
           '/signup': (context) => const SignUpScreen(),
 
-          '/login': (context) => const LoginScreen(),
+          // 마이페이지
           '/student_calendar': (context) => const StudentCalendarScreen(),
           '/tutor_calendar': (context) => const TutorCalendarScreen(),
           '/admin': (context) => const AdminScreen(),

@@ -1,4 +1,4 @@
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+// import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'dart:js' as js;
 // ignore_for_file: use_build_context_synchronously
 
@@ -89,7 +89,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                       FilteringTextInputFormatter.allow(
                         RegExp("[0-9-]"),
                       ),
-                      MaskedInputFormatter('####-##-##')
+                      // MaskedInputFormatter('####-##-##')
                     ],
                     textInputAction: TextInputAction.next,
                   ),
@@ -150,43 +150,27 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                     ),
                     textInputAction: TextInputAction.next,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('* Skype를 이용하여 수업이 진행됩니다.'),
-                        Row(
-                          children: [
-                            TextButton(
-                              child: const Text(
-                                'Skype 다운로드',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ),
-                              onPressed: () {
-                                js.context.callMethod('open', [
-                                  'https://skype.daesung.com/download/downloadMain.asp'
-                                ]);
-                              },
-                            ),
-                            TextButton(
-                              child: const Text(
-                                'Skype 이름 확인',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline),
-                              ),
-                              onPressed: () {
-                                js.context.callMethod('open', [
-                                  'https://www.skybel.co.kr/sub/sugang_skype_id.php'
-                                ]);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                  const Text('* Skype를 이용하여 수업이 진행됩니다.'),
+                  InkWell(
+                    child: const Text(
+                      '▶ Skype 다운로드',
+                      style: TextStyle(decoration: TextDecoration.underline),
                     ),
+                    onTap: () {
+                      js.context.callMethod('open', [
+                        'https://skype.daesung.com/download/downloadMain.asp'
+                      ]);
+                    },
+                  ),
+                  InkWell(
+                    child: const Text(
+                      '▶ Skype 이름 확인',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    onTap: () {
+                      js.context.callMethod('open',
+                          ['https://www.skybel.co.kr/sub/sugang_skype_id.php']);
+                    },
                   ),
                   const SizedBox(height: 20),
                   TextFormField(

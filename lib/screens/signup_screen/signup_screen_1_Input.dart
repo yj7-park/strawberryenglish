@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+// import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -12,6 +12,8 @@ class SignUpScreen1Input extends StatefulWidget {
 }
 
 class SignUpScreen1InputState extends State<SignUpScreen1Input> {
+  final _scrollController = ScrollController();
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -98,7 +100,7 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
                     FilteringTextInputFormatter.allow(
                       RegExp("[0-9-]"),
                     ),
-                    MaskedInputFormatter('####-##-##')
+                    // MaskedInputFormatter('####-##-##')
                   ],
                   textInputAction: TextInputAction.next,
                 ),
@@ -140,20 +142,25 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
                           const Text('[필수] 개인정보 수집이용 동의'),
                         ],
                       ),
-                      TextButton(
-                          onPressed: () {
+                      InkWell(
+                          onTap: () {
                             showModalBottomSheet(
                                 context: context,
                                 builder: (context) {
                                   return Container(
                                     color: Colors.white,
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(50),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: Text("""
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(50),
+                                      child: Scrollbar(
+                                        controller: _scrollController,
+                                        interactive: true,
+                                        thumbVisibility: true,
+                                        child: SingleChildScrollView(
+                                          controller: _scrollController,
+                                          scrollDirection: Axis.vertical,
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Text("""
 [필수] 개인정보 수집이용 동의
 
 딸기아카데미는 고객님의 개인정보 보호를 위해 최소한의 정보만 수집합니다.
@@ -257,6 +264,7 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
 
 개인정보를 처리하는 데이터베이스시스템에 대한 접근권한의 부여,변경,말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며 침입차단시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.
                                   """),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -292,18 +300,23 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
                           const Text('[필수] 딸기영어 이용 약관 동의'),
                         ],
                       ),
-                      TextButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    color: Colors.white,
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(50),
+                      InkWell(
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(50),
+                                    child: Scrollbar(
+                                      controller: _scrollController,
+                                      interactive: true,
+                                      thumbVisibility: true,
                                       child: SingleChildScrollView(
+                                        controller: _scrollController,
                                         scrollDirection: Axis.vertical,
-                                        child: Padding(
+                                        child: const Padding(
                                           padding: EdgeInsets.all(20),
                                           child: Text("""
 [필수] 딸기영어 이용 약관 동의
@@ -485,14 +498,16 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
                                         ),
                                       ),
                                     ),
-                                  );
-                                });
-                          },
-                          child: const Text(
-                            '내용 보기',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
-                          )),
+                                  ),
+                                );
+                              });
+                        },
+                        child: const Text(
+                          '내용 보기',
+                          style:
+                              TextStyle(decoration: TextDecoration.underline),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -517,26 +532,32 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
                           const Text('[선택] 딸기영어 헤택, 이벤트 등 소식 받아보기'),
                         ],
                       ),
-                      TextButton(
-                          onPressed: () {
+                      InkWell(
+                          onTap: () {
                             showModalBottomSheet(
                                 context: context,
                                 builder: (context) {
                                   return Container(
                                     color: Colors.white,
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(50),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: Text("""
+                                    child: Scrollbar(
+                                      controller: _scrollController,
+                                      interactive: true,
+                                      thumbVisibility: true,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(50),
+                                        child: SingleChildScrollView(
+                                          controller: _scrollController,
+                                          scrollDirection: Axis.vertical,
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Text("""
 목적: 딸영어 할인 혜택, 이벤트 정보, 신규 서비스 안내 등 마케팅용 정보 발송
 
 항목: 이메일 주소
 
 보유 및 이용 기간: 이용자의 동의 철회 시까지
                                   """),
+                                          ),
                                         ),
                                       ),
                                     ),

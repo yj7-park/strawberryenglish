@@ -15,7 +15,7 @@ class MyMenuAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _MyMenuAppBarState extends State<MyMenuAppBar>
     with SingleTickerProviderStateMixin {
   static const _defaultHeight = 56.0;
-  static const _expendedHeight = 218.0;
+  static const _expendedHeight = 256.0;
   double _height = _defaultHeight;
 
   @override
@@ -44,7 +44,31 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  myAppBarTitle,
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/small_logo.png',
+                            width: 30,
+                            height: 30,
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            '딸기영어',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,18 +135,18 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '수업안내',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/lectures');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/lectures');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 '수강안내',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/lectures');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/lectures');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
@@ -149,6 +173,15 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                               ),
                               // onPressed: () {
                               //   Navigator.pushNamed(context, '/tuitionfee');
+                              // },
+                            ),
+                            MenuItemButton(
+                              child: const Text(
+                                'FAQ',
+                                textAlign: TextAlign.center,
+                              ),
+                              // onPressed: () {
+                              //   Navigator.pushNamed(context, '/faq');
                               // },
                             ),
                           ],
@@ -220,23 +253,23 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
   }
 }
 
-final myAppBarTitle = Padding(
-  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
-  child: Row(
-    children: [
-      Image.asset(
-        'assets/images/small_logo.png',
-        width: 30,
-        height: 30,
-      ),
-      const SizedBox(width: 5),
-      const Text(
-        '딸기영어',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ],
-  ),
-);
+// final myAppBarTitle = Padding(
+//   padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+//   child: Row(
+//     children: [
+//       Image.asset(
+//         'assets/images/small_logo.png',
+//         width: 30,
+//         height: 30,
+//       ),
+//       const SizedBox(width: 5),
+//       const Text(
+//         '딸기영어',
+//         style: TextStyle(
+//           fontSize: 20,
+//           fontWeight: FontWeight.bold,
+//         ),
+//       ),
+//     ],
+//   ),
+// );
