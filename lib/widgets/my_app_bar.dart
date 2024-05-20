@@ -109,9 +109,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '공지사항',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/announcement');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/announcement');
+                              },
                             )
                           ],
                         ),
@@ -153,9 +153,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '수업토픽',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/topics');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/topics');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
