@@ -3,6 +3,7 @@ import 'package:strawberryenglish/screens/announcement_screen/announcement_scree
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
+import 'package:strawberryenglish/widgets/my_header.dart';
 
 class AnnouncementScreen extends StatelessWidget {
   const AnnouncementScreen({super.key});
@@ -19,6 +20,8 @@ class AnnouncementScreen extends StatelessWidget {
               padding:
                   const EdgeInsets.only(top: 56), // Make space for the AppBar
               children: const [
+                // 제목
+                MyHeader('공지사항'),
                 // 커버 페이지
                 AnnouncementScreen1Listview(),
                 // 회사정보

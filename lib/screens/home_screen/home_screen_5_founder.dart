@@ -4,10 +4,9 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class HomeScreen5Founder extends StatelessWidget {
   final String videoId = 'gVtH8X8peZk'; // TODO: youtube 영상 ID 추가
+  final String title;
 
-  const HomeScreen5Founder({
-    super.key,
-  });
+  const HomeScreen5Founder({super.key, this.title = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class HomeScreen5Founder extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '딸기영어 창업자는 영어공부에 진심이었습니다.',
+              title,
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.04).clamp(14, 32),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:strawberryenglish/screens/topics_screen/topics_screen_1_announcement.dart';
+import 'package:strawberryenglish/screens/tuitionfee_screen/tuitionfee_screen_1_table.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 
-class TopicsScreen extends StatelessWidget {
-  const TopicsScreen({super.key});
+class TuitionfeeScreen extends StatelessWidget {
+  const TuitionfeeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,10 @@ class TopicsScreen extends StatelessWidget {
               padding:
                   const EdgeInsets.only(top: 56), // Make space for the AppBar
               children: const [
-                MyHeader('수업토픽'),
+                // 제목
+                MyHeader('수강료'),
                 // 커버 페이지
-                TopicsScreen1Announcement(),
+                TuitionfeeScreen1Table(),
                 // 회사정보
                 CompanyInfo(),
               ],

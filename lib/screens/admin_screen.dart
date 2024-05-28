@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
-import 'package:strawberryenglish/utils/confirmation_dialog.dart';
+import 'package:strawberryenglish/utils/my_dialogs.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 
 class AdminScreen extends StatelessWidget {

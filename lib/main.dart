@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/screens/announcement_screen.dart';
+import 'package:strawberryenglish/screens/enrollment_screen.dart';
+import 'package:strawberryenglish/screens/faq_screen.dart';
 import 'package:strawberryenglish/screens/lectures_screen.dart';
 import 'package:strawberryenglish/screens/topics_screen.dart';
+import 'package:strawberryenglish/screens/tuitionfee_screen.dart';
+import 'package:strawberryenglish/screens/introduction_screen.dart';
 import 'providers/tutor_provider.dart';
 import 'providers/student_provider.dart';
 import 'screens/admin_screen.dart';
@@ -59,7 +63,7 @@ class MyApp extends StatelessWidget {
 
           // 딸기영어
           // 1. 회사소개
-          '/introduction': (context) => const HomeScreen(),
+          '/introduction': (context) => const IntroductionScreen(),
           // 2. 공지사항
           '/announcement': (context) => const AnnouncementScreen(),
 
@@ -71,22 +75,22 @@ class MyApp extends StatelessWidget {
           // 3. 튜터소개
           // '/tutors': (context) => const TutorsScreen(),
           // 4. 수강료
-          // '/tuitionfee': (context) => const TuitionfeeScreen(),
+          '/tuitionfee': (context) => const TuitionfeeScreen(),
           // 5. FAQ
-          // '/faq': (context) => const FaqScreen(),
+          '/faq': (context) => const FaqScreen(),
 
           // 딸기후기
           // '/reviews': (context) => const ReviewScreen(),
 
           // 체험하기
-          '/trial': (context) => const TrialScreen(),
+          '/trial': (context) => TrialScreen(),
           // 수강신청
-          // '/enrollment': (context) => const EnrollmentScreen(),
+          '/enrollment': (context) => EnrollmentScreen(),
 
           // 로그인
           '/login': (context) => const LoginScreen(),
           // 회원가입
-          '/signup': (context) => const SignUpScreen(),
+          '/signup': (context) => SignupScreen(),
 
           // 마이페이지
           '/student_calendar': (context) => const StudentCalendarScreen(),

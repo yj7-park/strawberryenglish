@@ -11,81 +11,59 @@ class AnnouncementScreen1Listview extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Theme(
       data: customTheme,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const SizedBox(height: 50),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '공지사항',
-                  style: TextStyle(
-                    // color: Colors.white,
-                    fontSize: (screenWidth * 0.04).clamp(14, 32),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.justify,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
+          vertical: 50.0,
+        ),
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          separatorBuilder: (_, __) =>
+              Container(height: 1.5, color: Colors.grey[300]),
+          itemCount: 9,
+          itemBuilder: (context, index) {
+            return Card(
+              elevation: 0.0,
+              child: ExpansionTile(
+                tilePadding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 10,
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ((screenWidth - 1000) / 2).clamp(20, 1000),
-              vertical: 50.0,
-            ),
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              separatorBuilder: (_, __) =>
-                  Container(height: 1.5, color: Colors.grey[300]),
-              itemCount: 9,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 0.0,
-                  child: ExpansionTile(
-                    tilePadding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 10,
+                // tileColor: Colors.white,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "공지",
+                      style: TextStyle(
+                        color: customTheme.colorScheme.secondary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    // tileColor: Colors.white,
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "공지",
-                          style: TextStyle(
-                            color: customTheme.colorScheme.secondary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "제목 ${index + 1}",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "2024.04.0${index + 1}",
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "제목 ${index + 1}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        width: double.infinity,
-                        color: Colors.grey[100],
-                        child: const Text(
-                          """
+                    Text(
+                      "2024.04.0${index + 1}",
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    color: Colors.grey[100],
+                    child: const Text(
+                      """
 안녕하세요 여러분!
 
 한층 업그레이드된 캐스터디에 여러분을 초대합니다 :)
@@ -98,16 +76,14 @@ class AnnouncementScreen1Listview extends StatelessWidget {
 
 이번 스터디는  4/15(월) ~ 4/26(금)까지
 2주간 진행됩니다.""",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

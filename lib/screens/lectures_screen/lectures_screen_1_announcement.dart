@@ -17,28 +17,9 @@ class LecturesScreen1Announcement extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const SizedBox(height: 50),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '등록규정 (공지사항)',
-                  style: TextStyle(
-                    // color: Colors.white,
-                    fontSize: (screenWidth * 0.04).clamp(14, 32),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.justify,
-                ),
-              ],
-            ),
-          ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: ((screenWidth - 1000) / 2).clamp(20, 1000),
+              horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
               vertical: 50.0,
             ),
             child: Container(

@@ -1,6 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class MyMenuAppBar extends StatefulWidget implements PreferredSizeWidget {
   const MyMenuAppBar({super.key});
@@ -91,18 +93,18 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '딸기영어',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/introduction');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/introduction');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
-                                '회사소개',
+                                '뭐가달라?',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/introduction');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/introduction');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
@@ -171,18 +173,18 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '수강료',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/tuitionfee');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/tuitionfee');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
                                 'FAQ',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/faq');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/faq');
+                              },
                             ),
                           ],
                         ),
@@ -221,6 +223,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, '/trial');
+                          if (FirebaseAuth.instance.currentUser == null) {
+                            Navigator.pushNamed(context, '/login');
+                          }
                         },
                       ),
                       MenuItemButton(
@@ -228,19 +233,60 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                           '수강신청',
                           textAlign: TextAlign.center,
                         ),
-                        // onPressed: () {
-                        //   Navigator.pushNamed(context, '/enrollment');
-                        // },
-                      ),
-                      MenuItemButton(
-                        child: const Text(
-                          '회원가입',
-                          textAlign: TextAlign.center,
-                        ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/signup');
+                          Navigator.pushNamed(context, '/enrollment');
+                          if (FirebaseAuth.instance.currentUser == null) {
+                            Navigator.pushNamed(context, '/login');
+                          }
                         },
                       ),
+                      if (FirebaseAuth.instance.currentUser != null) ...[
+                        MenuItemButton(
+                          child: const Text(
+                            '마이페이지',
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/student_calendar');
+                          },
+                        ),
+                        MenuItemButton(
+                          child: Text(
+                            // '${FirebaseAuth.instance.currentUser!.email}\n'
+                            '로그아웃',
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () async {
+                            // 로그아웃 전에 확인 메시지 표시
+                            bool confirmLogout =
+                                await ConfirmationDialog.show(context);
+                            if (confirmLogout) {
+                              // 사용자가 확인하면 로그아웃 처리
+                              await FirebaseAuth.instance.signOut();
+                              Navigator.pushNamed(context, '/');
+                            }
+                          },
+                        ),
+                      ] else ...[
+                        MenuItemButton(
+                          child: const Text(
+                            '회원가입',
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                        ),
+                        MenuItemButton(
+                          child: const Text(
+                            '로그인',
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
+                        ),
+                      ],
                     ],
                   ),
                 ],

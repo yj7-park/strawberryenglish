@@ -16,32 +16,45 @@ class StudentCalendarScreen extends StatelessWidget {
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
-        appBar: const MyMenuAppBar(),
-        body: FutureBuilder<Student?>(
-          future: Provider.of<StudentProvider>(context)
-              .getStudent(), // 새로운 Future 생성
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting ||
-                !snapshot.hasData) {
-              // 로딩중일 때 표시할 화면
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasError) {
-              // 에러가 발생했을 때 표시할 화면
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            } else if (snapshot.hasData) {
-              // 데이터가 로드되었을 때 표시할 화면
-              return CalendarBody(user: snapshot.data!);
-            } else {
-              // 데이터가 없을 때 표시할 화면
-              return const Center(
-                  // child: Text('No data available'),
-                  );
-            }
-          },
+        // appBar: const MyMenuAppBar(),
+        body: Stack(
+          children: [
+            ListView(
+              padding:
+                  const EdgeInsets.only(top: 56), // Make space for the AppBar
+              children: [
+                FutureBuilder<Student?>(
+                  future: Provider.of<StudentProvider>(context)
+                      .getStudent(), // 새로운 Future 생성
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        !snapshot.hasData) {
+                      // 로딩중일 때 표시할 화면
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      // 에러가 발생했을 때 표시할 화면
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (snapshot.hasData) {
+                      // 데이터가 로드되었을 때 표시할 화면
+                      return CalendarBody(user: snapshot.data!);
+                    } else {
+                      // 데이터가 없을 때 표시할 화면
+                      return const Center(
+                          // child: Text('No data available'),
+                          );
+                    }
+                  },
+                ),
+              ],
+            ),
+            const Positioned(
+              child: MyMenuAppBar(),
+            ),
+          ],
         ),
       ),
     );

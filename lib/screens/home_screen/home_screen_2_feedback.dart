@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreen2Feedback extends StatelessWidget {
-  final CarouselController controller = CarouselController();
-
-  HomeScreen2Feedback({super.key});
+  const HomeScreen2Feedback({super.key});
 
   @override
   Widget build(BuildContext context) {
+    CarouselController controller = CarouselController();
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       color: Colors.grey.withOpacity(0.1),

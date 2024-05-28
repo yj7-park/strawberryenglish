@@ -158,7 +158,8 @@ class LoginScreenState extends State<LoginScreen> {
 
         if (_errorMessage.isEmpty) {
           if (tutorProvider.tutor != null) {
-            Navigator.pushNamed(context, '/tutor_calendar');
+            // Navigator.pushNamed(context, '/tutor_calendar');
+            Navigator.of(context).pop();
             return; // tutor 로그인 성공 시 바로 종료
           } else {
             _errorMessage = "Login failed. Please check ID / Password.";
@@ -175,7 +176,8 @@ class LoginScreenState extends State<LoginScreen> {
 
         if (_errorMessage.isEmpty) {
           if (studentProvider.student != null) {
-            Navigator.pushNamed(context, '/student_calendar');
+            // Navigator.pushNamed(context, '/student_calendar');
+            Navigator.of(context).pop(true);
             return; // student 로그인 성공 시 바로 종료
           }
         }

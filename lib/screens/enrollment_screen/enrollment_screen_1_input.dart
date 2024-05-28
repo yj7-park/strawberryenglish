@@ -1,20 +1,54 @@
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-import 'dart:js' as js;
 // ignore_for_file: use_build_context_synchronously
+import 'dart:js' as js;
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 
-class TrialScreen1Input extends StatefulWidget {
-  const TrialScreen1Input({super.key});
+class EnrollmentScreen1Input extends StatefulWidget {
+  const EnrollmentScreen1Input({super.key});
 
   @override
-  TrialScreen1InputState createState() => TrialScreen1InputState();
+  EnrollmentScreen1InputState createState() => EnrollmentScreen1InputState();
 }
 
-class TrialScreen1InputState extends State<TrialScreen1Input> {
+class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
+  static final fee = {
+    1: {
+      2: {
+        30: 83900,
+        55: 149000,
+      },
+      3: {
+        30: 109900,
+        55: 199000,
+      },
+      5: {
+        30: 149900,
+        55: 259000,
+      },
+    },
+    3: {
+      2: {
+        30: 69000,
+        55: 129000,
+      },
+      3: {
+        30: 89000,
+        55: 169000,
+      },
+      5: {
+        30: 119000,
+        55: 209000,
+      },
+    }
+  };
+
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _birthdayController = TextEditingController();
+  final TextEditingController _lessonStartDateController =
+      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dayController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
@@ -26,6 +60,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
   // String _statusMessage = '';
   String _errorMessage = '';
 
+  List<bool> selected = [false, false];
   // final TextEditingController _phoneNumberController =
   //     TextEditingController(text: '+82');
   // final TextEditingController _verificationCodeController =
@@ -36,7 +71,9 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
   // String _selectedCountryCode = '+82'; // 추가된 부분
   // 국가 코드 목록 (필요한 경우 확장 가능)
   // List<String> _countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
-
+  Set<int> selectedMonths = {3};
+  Set<int> selectedDays = {3};
+  Set<int> selectedMins = {55};
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -51,100 +88,118 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // TODO: 생년월일
             TextFormField(
-              controller: _phoneController,
+              controller: _lessonStartDateController,
               decoration: const InputDecoration(
-                labelText: '휴대폰번호',
+                labelText: '수업시작일',
+                hintText: 'YYYY-MM-DD',
                 border: OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.phone,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
-                  RegExp("[0-9]"),
+                  RegExp("[0-9-]"),
                 ),
+                // MaskedInputFormatter('####-##-##')
               ],
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 20),
-            TextFormField(
-              controller: _countryController,
-              decoration: const InputDecoration(
-                labelText: '거주 국가',
-                border: OutlineInputBorder(),
-              ),
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _dayController,
-              decoration: const InputDecoration(
-                labelText: '희망 수업 요일',
-                hintText: 'ex) 월, 수, 금',
-                border: OutlineInputBorder(),
-              ),
-              textInputAction: TextInputAction.next,
-            ),
-            const Text('* 희망 수업 요일을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _timeController,
-              decoration: const InputDecoration(
-                labelText: '희망 수업 시간',
-                hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
-                border: OutlineInputBorder(),
-              ),
-              textInputAction: TextInputAction.next,
-            ),
-            const Text('* 모든 시간은 한국 시간을 기준으로 입력해 주세요.'),
-            const Text('* 희망 수업 시간을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _skypeController,
-              decoration: const InputDecoration(
-                labelText: 'Skype 이름',
-                border: OutlineInputBorder(),
-              ),
-              textInputAction: TextInputAction.next,
-            ),
-            const Text('* Skype를 이용하여 수업이 진행됩니다.'),
-            InkWell(
-              child: const Text(
-                '▶ Skype 다운로드',
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-              onTap: () {
-                js.context.callMethod('open',
-                    ['https://skype.daesung.com/download/downloadMain.asp']);
-              },
-            ),
-            InkWell(
-              child: const Text(
-                '▶ Skype 이름 확인',
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-              onTap: () {
-                js.context.callMethod('open',
-                    ['https://www.skybel.co.kr/sub/sugang_skype_id.php']);
+            Text('수업 기간'),
+            SegmentedButton(
+              segments: [
+                ButtonSegment(
+                  value: 1,
+                  label: SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: Center(
+                      child: Text('1개월'),
+                    ),
+                  ),
+                ),
+                ButtonSegment(
+                  value: 3,
+                  label: Text('3개월'),
+                ),
+              ],
+              showSelectedIcon: false,
+              selected: selectedMonths,
+              onSelectionChanged: (newSelection) {
+                setState(() {
+                  selectedMonths = newSelection;
+                });
               },
             ),
             const SizedBox(height: 20),
-            TextFormField(
-              controller: _studyPurposeController,
-              decoration: const InputDecoration(
-                labelText: '영어 공부 목적',
-                border: OutlineInputBorder(),
-              ),
-              textInputAction: TextInputAction.next,
+            Text(
+              '수업 횟수',
+            ),
+            SegmentedButton(
+              segments: [
+                ButtonSegment(
+                  value: 2,
+                  label: SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: Center(
+                      child: Text('주 2회'),
+                    ),
+                  ),
+                ),
+                ButtonSegment(
+                  value: 3,
+                  label: Text('주 3회'),
+                ),
+                ButtonSegment(
+                  value: 5,
+                  label: Text('주 5회'),
+                ),
+              ],
+              showSelectedIcon: false,
+              selected: selectedDays,
+              onSelectionChanged: (newSelection) {
+                setState(() {
+                  selectedDays = newSelection;
+                });
+              },
             ),
             const SizedBox(height: 20),
-            TextFormField(
-              controller: _referralSourceController,
-              decoration: const InputDecoration(
-                labelText: '딸기영어를 알게된 경로',
-                border: OutlineInputBorder(),
-              ),
-              textInputAction: TextInputAction.next,
+            Text(
+              '수업 길이',
             ),
+            SegmentedButton(
+              segments: [
+                ButtonSegment(
+                  value: 30,
+                  label: SizedBox(
+                    width: 100,
+                    height: 50,
+                    child: Center(
+                      child: Text('30분'),
+                    ),
+                  ),
+                ),
+                ButtonSegment(
+                  value: 55,
+                  label: Text('55분'),
+                ),
+              ],
+              showSelectedIcon: false,
+              selected: selectedMins,
+              onSelectionChanged: (newSelection) {
+                setState(() {
+                  selectedMins = newSelection;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            Text(
+                '${selectedMonths.first}개월 주 ${selectedDays.first}회 ${selectedMins.first}분'),
+            Text(
+                '${NumberFormat("###,###").format(fee[selectedMonths.first]![selectedDays.first]![selectedMins.first]! * selectedMonths.first)}원'),
+            Text(
+                '월(${NumberFormat("###,###").format(fee[selectedMonths.first]![selectedDays.first]![selectedMins.first])}원)'),
           ],
         ),
       ),

@@ -14,56 +14,24 @@ class TopicsScreen1Announcement extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Theme(
       data: customTheme,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            color: Colors.grey.withOpacity(0.1),
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                """
-*딸기영어는 스피킹 능력 향상에 집중하고 있습니다.
-해당 토픽은 레벨에 따라 나눠진 것이 아니라
-학생분들의 공부 목적에 따라 토픽을 선택하시면 레벨에 맞춰 수업이 진행되겠습니다.""",
-                style: TextStyle(
-                  // color: Colors.white,
-                  fontSize: (screenWidth * 0.02).clamp(14, 18),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          const SizedBox(height: 50),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '수업 토픽',
-                  style: TextStyle(
-                    // color: Colors.white,
-                    fontSize: (screenWidth * 0.04).clamp(14, 32),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ((screenWidth - 1000) / 2).clamp(20, 1000),
-              vertical: 50.0,
-            ),
-            child: Container(
-              decoration: BoxDecoration(border: Border.all()),
-              child: const Markdown(
-                shrinkWrap: true,
-                data: """
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
+          vertical: 50.0,
+        ),
+        child: Container(
+          decoration: BoxDecoration(border: Border.all()),
+          child: const Markdown(
+            shrinkWrap: true,
+            data: """
+### * 딸기영어는 스피킹 능력 향상에 집중하고 있습니다.
+해당 토픽은 레벨에 따라 나눠진 것이 아니라  
+학생분들의 공부 목적에 따라 토픽을 선택하시면 레벨에 맞춰 수업이 진행되겠습니다.  
+ 
+#  
+#  
+#  
+#  
 ## 1️⃣ **스피킹 스킬**  
     
    **Structured Speaking**  
@@ -104,10 +72,8 @@ class TopicsScreen1Announcement extends StatelessWidget {
 - TOEIC Speaking  
 - OPIC  
 """,
-              ),
-            ),
           ),
-        ],
+        ),
       ),
     );
   }

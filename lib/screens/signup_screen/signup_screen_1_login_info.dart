@@ -4,14 +4,14 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 
-class SignUpScreen1Input extends StatefulWidget {
-  const SignUpScreen1Input({super.key});
+class SignupScreen1LoginInfo extends StatefulWidget {
+  const SignupScreen1LoginInfo({super.key});
 
   @override
-  SignUpScreen1InputState createState() => SignUpScreen1InputState();
+  SignupScreen1LoginInfoState createState() => SignupScreen1LoginInfoState();
 }
 
-class SignUpScreen1InputState extends State<SignUpScreen1Input> {
+class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
   final _scrollController = ScrollController();
 
   final TextEditingController _nameController = TextEditingController();
@@ -42,125 +42,90 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 20),
-          Text(
-            '회원가입',
-            style: TextStyle(
-              fontSize: (screenWidth * 0.04).clamp(14, 32),
-              fontWeight: FontWeight.bold,
+      padding: EdgeInsets.symmetric(
+        vertical: 30,
+        horizontal: ((screenWidth - 500) / 2).clamp(20, double.nan),
+      ),
+      child: FocusTraversalGroup(
+        policy: OrderedTraversalPolicy(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                  labelText: '아이디(이메일)', border: OutlineInputBorder()),
             ),
-            textAlign: TextAlign.justify,
-          ),
-          const SizedBox(height: 60),
-          SizedBox(
-            width: screenWidth.clamp(500, 500),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                  labelText: '비밀번호', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _confirmPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                  labelText: '비밀번호 확인', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 20),
+            Row(
               children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                      labelText: '아이디(이메일)', border: OutlineInputBorder()),
+                Checkbox(
+                  value: _check1 & _check2 & _check3,
+                  onChanged: ((value) {
+                    setState(
+                      () {
+                        _check1 = _check2 = _check3 = value!;
+                      },
+                    );
+                  }),
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                      labelText: '비밀번호', border: OutlineInputBorder()),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                      labelText: '비밀번호 확인', border: OutlineInputBorder()),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                      labelText: '한글 이름', border: OutlineInputBorder()),
-                ),
-                const Text('* 실제 수강하는 사람의 이름을 적어주세요.'),
-                const SizedBox(height: 20),
-                // TODO: 생년월일
-                TextFormField(
-                  controller: _birthdayController,
-                  decoration: const InputDecoration(
-                    labelText: '생년월일',
-                    hintText: 'YYYY-MM-DD',
-                    border: OutlineInputBorder(),
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                      RegExp("[0-9-]"),
-                    ),
-                    // MaskedInputFormatter('####-##-##')
-                  ],
-                  textInputAction: TextInputAction.next,
-                ),
-
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _check1 & _check2 & _check3,
-                      onChanged: ((value) {
-                        setState(
-                          () {
-                            _check1 = _check2 = _check3 = value!;
-                          },
-                        );
-                      }),
-                    ),
-                    const Text('모두 선택'),
-                  ],
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const Text('모두 선택'),
+              ],
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _check1,
-                            onChanged: ((value) {
-                              setState(
-                                () {
-                                  _check1 = value!;
-                                },
-                              );
-                            }),
-                          ),
-                          const Text('[필수] 개인정보 수집이용 동의'),
-                        ],
+                      Checkbox(
+                        value: _check1,
+                        onChanged: ((value) {
+                          setState(
+                            () {
+                              _check1 = value!;
+                            },
+                          );
+                        }),
                       ),
-                      InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    color: Colors.white,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(50),
-                                      child: Scrollbar(
-                                        controller: _scrollController,
-                                        interactive: true,
-                                        thumbVisibility: true,
-                                        child: SingleChildScrollView(
-                                          controller: _scrollController,
-                                          scrollDirection: Axis.vertical,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(20),
-                                            child: Text("""
+                      const Text('[필수] 개인정보 수집이용 동의'),
+                    ],
+                  ),
+                  InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(50),
+                                  child: Scrollbar(
+                                    controller: _scrollController,
+                                    interactive: true,
+                                    thumbVisibility: true,
+                                    child: SingleChildScrollView(
+                                      controller: _scrollController,
+                                      scrollDirection: Axis.vertical,
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Text("""
 [필수] 개인정보 수집이용 동의
 
 딸기아카데미는 고객님의 개인정보 보호를 위해 최소한의 정보만 수집합니다.
@@ -264,61 +229,60 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
 
 개인정보를 처리하는 데이터베이스시스템에 대한 접근권한의 부여,변경,말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며 침입차단시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.
                                   """),
-                                          ),
-                                        ),
                                       ),
                                     ),
-                                  );
-                                });
-                          },
-                          child: const Text(
-                            '내용 보기',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
-                          )),
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                      child: const Text(
+                        '내용 보기',
+                        style: TextStyle(decoration: TextDecoration.underline),
+                      )),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _check2,
+                        onChanged: ((value) {
+                          setState(
+                            () {
+                              _check2 = value!;
+                            },
+                          );
+                        }),
+                      ),
+                      const Text('[필수] 딸기영어 이용 약관 동의'),
                     ],
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _check2,
-                            onChanged: ((value) {
-                              setState(
-                                () {
-                                  _check2 = value!;
-                                },
-                              );
-                            }),
-                          ),
-                          const Text('[필수] 딸기영어 이용 약관 동의'),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(50),
-                                    child: Scrollbar(
-                                      controller: _scrollController,
-                                      interactive: true,
-                                      thumbVisibility: true,
-                                      child: SingleChildScrollView(
-                                        controller: _scrollController,
-                                        scrollDirection: Axis.vertical,
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: Text("""
+                  InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(50),
+                                child: Scrollbar(
+                                  controller: _scrollController,
+                                  interactive: true,
+                                  thumbVisibility: true,
+                                  child: SingleChildScrollView(
+                                    controller: _scrollController,
+                                    scrollDirection: Axis.vertical,
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Text("""
 [필수] 딸기영어 이용 약관 동의
 
 제 1조 목적
@@ -495,171 +459,91 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
 
 본 이용 약관은 2024년 5월 6일부터 시행됩니다.
                                   """),
-                                        ),
-                                      ),
                                     ),
                                   ),
-                                );
-                              });
-                        },
-                        child: const Text(
-                          '내용 보기',
-                          style:
-                              TextStyle(decoration: TextDecoration.underline),
-                        ),
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: const Text(
+                      '내용 보기',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _check3,
+                        onChanged: ((value) {
+                          setState(
+                            () {
+                              _check3 = value!;
+                            },
+                          );
+                        }),
                       ),
+                      const Text('[선택] 딸기영어 헤택, 이벤트 등 소식 받아보기'),
                     ],
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _check3,
-                            onChanged: ((value) {
-                              setState(
-                                () {
-                                  _check3 = value!;
-                                },
-                              );
-                            }),
-                          ),
-                          const Text('[선택] 딸기영어 헤택, 이벤트 등 소식 받아보기'),
-                        ],
-                      ),
-                      InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    color: Colors.white,
-                                    child: Scrollbar(
-                                      controller: _scrollController,
-                                      interactive: true,
-                                      thumbVisibility: true,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(50),
-                                        child: SingleChildScrollView(
-                                          controller: _scrollController,
-                                          scrollDirection: Axis.vertical,
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(20),
-                                            child: Text("""
+                  InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              color: Colors.white,
+                              child: Scrollbar(
+                                controller: _scrollController,
+                                interactive: true,
+                                thumbVisibility: true,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(50),
+                                  child: SingleChildScrollView(
+                                    controller: _scrollController,
+                                    scrollDirection: Axis.vertical,
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Text("""
 목적: 딸영어 할인 혜택, 이벤트 정보, 신규 서비스 안내 등 마케팅용 정보 발송
 
 항목: 이메일 주소
 
 보유 및 이용 기간: 이용자의 동의 철회 시까지
                                   """),
-                                          ),
-                                        ),
-                                      ),
                                     ),
-                                  );
-                                });
-                          },
-                          child: const Text(
-                            '내용 보기',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
-                          )),
-                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: const Text(
+                      '내용 보기',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            _errorMessage,
-            style: const TextStyle(color: Colors.red),
-          ),
-          SizedBox(
-            width: screenWidth.clamp(500, 500),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
+                ],
               ),
-              onPressed: _registerUser,
-              child: const Text('회원가입',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black38)),
             ),
-          ),
-          const SizedBox(height: 100),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-// TODO: 메일 주소 verification
-  // void _sendVerificationCode() async {
-  //   final phoneNumber = _phoneNumberController.text.trim();
-  //   _errorMessage = '';
+  // TODO: 메일 주소 verification
 
-  //   try {
-  //     await FirebaseAuth.instance.verifyPhoneNumber(
-  //       phoneNumber: phoneNumber,
-  //       verificationCompleted: (PhoneAuthCredential credential) {
-  //         FirebaseAuth.instance.signInWithCredential(credential);
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         setState(() {
-  //           _errorMessage = 'Error: $e';
-  //         });
-  //       },
-  //       codeSent: (String verificationId, int? resendToken) {
-  //         setState(() {
-  //           _verificationId = verificationId;
-  //           _statusMessage = 'Verification code sent!';
-  //           _isSent = true;
-  //         });
-  //       },
-  //       codeAutoRetrievalTimeout: (String verificationId) {
-  //         setState(() {
-  //           _verificationId = verificationId;
-  //         });
-  //       },
-  //     );
-  //   } catch (e) {
-  //     setState(() {
-  //       _errorMessage = 'Error: $e';
-  //     });
-  //   }
-  // }
-
-  // void _checkVerificationCode() async {
-  //   final verificationCode = _verificationCodeController.text.trim();
-  //   _errorMessage = '';
-
-  //   try {
-  //     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //       verificationId: _verificationId,
-  //       smsCode: verificationCode,
-  //     );
-
-  //     await FirebaseAuth.instance.signInWithCredential(credential);
-
-  //     setState(() {
-  //       _statusMessage = 'Phone number verified!';
-  //       _isVerified = true;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       _errorMessage = 'Error: $e';
-  //     });
-  //   }
-  // }
-
-// TODO: 회원 가입 처리
+  // TODO: 회원 가입 처리
   void _registerUser() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
@@ -696,39 +580,8 @@ class SignUpScreen1InputState extends State<SignUpScreen1Input> {
       return;
     }
 
-    // if (!_isVerified) {
-    //   setState(() {
-    //     _errorMessage = 'Phone Number is not verified.';
-    //   });
-    //   return;
-    // }
-
     try {
-      // UserCredential userCredential =
-      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      //   email: email,
-      //   password: password,
-      // );
-
-      // // Add user data to Firestore
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userCredential.user!.uid)
-      //     .set({
-      //   'name': name,
-      //   'email': email,
-      //   // 'phoneNumber': phoneNumber,
-      //   'lessonIDs': <String>[],
-      //   'lessonInfo': <String, dynamic>{},
-      // });
-
-      // Navigate to calendar screen
-      // Navigator.pushNamed(context, '/student_calendar');
       Navigator.pop(context);
-
-      // setState(() {
-      //   _statusMessage = 'User registered successfully!';
-      // });
     } catch (e) {
       setState(() {
         _errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
