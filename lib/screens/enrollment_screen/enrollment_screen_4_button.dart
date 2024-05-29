@@ -3,41 +3,60 @@ import 'package:flutter/services.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:strawberryenglish/screens/enrollment_screen.dart';
+import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class EnrollmentScreen4Button extends StatefulWidget {
-  const EnrollmentScreen4Button({super.key});
+  final TextEditingController nameController;
+  final TextEditingController birthdayController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController dayController;
+  final TextEditingController timeController;
+  final TextEditingController countryController;
+  final TextEditingController skypeIdController;
+  final TextEditingController studyPurposeController;
+  final TextEditingController referralSourceController;
+  final TextEditingController lessonStartDateController;
+
+  const EnrollmentScreen4Button({
+    super.key,
+    required this.nameController,
+    required this.birthdayController,
+    required this.phoneNumberController,
+    required this.dayController,
+    required this.timeController,
+    required this.countryController,
+    required this.skypeIdController,
+    required this.studyPurposeController,
+    required this.referralSourceController,
+    required this.lessonStartDateController,
+  });
 
   @override
   EnrollmentScreen4ButtonState createState() => EnrollmentScreen4ButtonState();
 }
 
 class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
-  final _scrollController = ScrollController();
+  final scrollController = ScrollController();
+  // String statusMessage = '';
+  String errorMessage = '';
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _birthdayController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  // String _statusMessage = '';
-  String _errorMessage = '';
+  bool check1 = false;
+  bool check2 = false;
+  bool check3 = false;
 
-  bool _check1 = false;
-  bool _check2 = false;
-  bool _check3 = false;
-
-  // final TextEditingController _phoneNumberController =
+  // final TextEditingController phoneNumberController =
   //     TextEditingController(text: '+82');
-  // final TextEditingController _verificationCodeController =
+  // final TextEditingController verificationCodeController =
   //     TextEditingController();
-  // String _verificationId = '';
-  // bool _isSent = false;
-  // bool _isVerified = false;
-  // String _selectedCountryCode = '+82'; // 추가된 부분
+  // String verificationId = '';
+  // bool isSent = false;
+  // bool isVerified = false;
+  // String selectedCountryCode = '+82'; // 추가된 부분
   // 국가 코드 목록 (필요한 경우 확장 가능)
-  // List<String> _countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
+  // List<String> countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +68,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         child: Column(
           children: [
             Text(
-              _errorMessage,
+              errorMessage,
               style: const TextStyle(color: Colors.red),
             ),
             SizedBox(
@@ -58,10 +77,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
                 ),
-                onPressed: () async {
-                  // 로그아웃 전에 확인 메시지 표시
-                  bool confirmLogout = await EnrollmentDialog.show(context);
-                },
+                onPressed: submit,
                 child: const Text(
                   '수강신청',
                   style: TextStyle(
@@ -80,48 +96,63 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
   // TODO: 메일 주소 verification
 
-  // TODO: 회원 가입 처리
-  void _registerUser() async {
-    final name = _nameController.text.trim();
-    final email = _emailController.text.trim();
-    // final phoneNumber = _phoneNumberController.text.trim();
-    final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
-    _errorMessage = '';
+  // // TODO: 회원 가입 처리
+  void submit() async {
+    final name = widget.nameController.text.trim();
+    final birthday = widget.birthdayController.text.trim();
+    final phoneNumber = widget.phoneNumberController.text.trim();
+    final day = widget.dayController.text.trim();
+    final time = widget.timeController.text.trim();
+    final country = widget.countryController.text.trim();
+    final skypeId = widget.skypeIdController.text.trim();
+    final studyPurpose = widget.studyPurposeController.text.trim();
+    final referralSource = widget.referralSourceController.text.trim();
+    final lessonStartDate = widget.lessonStartDateController.text.trim();
+    errorMessage = '';
 
     // 필수 필드 값 확인
     if (name.isEmpty ||
-        email.isEmpty ||
-        // phoneNumber.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
+        birthday.isEmpty ||
+        phoneNumber.isEmpty ||
+        day.isEmpty ||
+        time.isEmpty ||
+        country.isEmpty ||
+        skypeId.isEmpty ||
+        studyPurpose.isEmpty ||
+        referralSource.isEmpty ||
+        lessonStartDate.isEmpty) {
       setState(() {
-        // _errorMessage = 'All fields are required.';
-        _errorMessage = '모든 항목이 입력되어야 합니다.';
-      });
-      return;
-    }
-
-    if (password != confirmPassword) {
-      setState(() {
-        // _errorMessage = 'Passwords do not match.';
-        _errorMessage = '비밀번호가 일치하지 않습니다.';
-      });
-      return;
-    }
-
-    if (!_check1 || !_check2) {
-      setState(() {
-        _errorMessage = '필수 항목의 동의가 필요합니다.';
+        // errorMessage = 'All fields are required.';
+        errorMessage = '모든 필수 항목이 입력되어야 합니다.';
       });
       return;
     }
 
     try {
-      Navigator.pop(context);
+      setState(() {});
+      // 결제창 표시
+      bool? confirm = await ConfirmDialog.show(
+          context,
+          "수강료 결제",
+          "" +
+              "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n" +
+              "수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n" +
+              "수업길이 : ${EnrollmentScreen.selectedMins.first}분\n" +
+              "수업토픽 : Power/Fluency\n" +
+              "결제금액 : ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원" +
+              (EnrollmentScreen.selectedMonths.first > 1
+                  ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)"
+                  : ""),
+          "결제하기",
+          "나중에 결제하기");
+
+      if (confirm == true) {
+        // TODO: 성공 시 동작
+        Navigator.pop(context);
+      }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
+        errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
       });
     }
   }

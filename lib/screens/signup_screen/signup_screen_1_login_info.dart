@@ -10,7 +10,7 @@ class SignupScreen1LoginInfo extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
 
-  SignupScreen1LoginInfo({
+  const SignupScreen1LoginInfo({
     super.key,
     required this.emailController,
     required this.passwordController,
@@ -23,19 +23,6 @@ class SignupScreen1LoginInfo extends StatefulWidget {
 
 class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
   final scrollController = ScrollController();
-  // String statusMessage = '';
-  String errorMessage = '';
-
-  // final TextEditingController phoneNumberController =
-  //     TextEditingController(text: '+82');
-  // final TextEditingController verificationCodeController =
-  //     TextEditingController();
-  // String verificationId = '';
-  // bool isSent = false;
-  // bool isVerified = false;
-  // String selectedCountryCode = '+82'; // 추가된 부분
-  // 국가 코드 목록 (필요한 경우 확장 가능)
-  // List<String> countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
 
   @override
   Widget build(BuildContext context) {
@@ -54,21 +41,21 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
             TextFormField(
               controller: widget.emailController,
               decoration: const InputDecoration(
-                  labelText: '아이디(이메일)', border: OutlineInputBorder()),
+                  labelText: '*아이디(이메일)', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 20),
             TextFormField(
               controller: widget.passwordController,
               obscureText: true,
               decoration: const InputDecoration(
-                  labelText: '비밀번호', border: OutlineInputBorder()),
+                  labelText: '*비밀번호', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 20),
             TextFormField(
               controller: widget.confirmPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                  labelText: '비밀번호 확인', border: OutlineInputBorder()),
+                  labelText: '*비밀번호 확인', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 20),
             Row(

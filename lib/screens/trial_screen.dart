@@ -28,6 +28,8 @@ class TrialScreen extends StatefulWidget {
   final TextEditingController referralSourceController =
       TextEditingController();
 
+  static String errorMessage = '';
+
   @override
   State<TrialScreen> createState() => _TrialScreenState();
 }
@@ -71,8 +73,6 @@ class _TrialScreenState extends State<TrialScreen> {
 
                   widget.phoneNumberController.text =
                       snapshot.data!.phoneNumber!;
-// widget.dayController.text = snapshot.data!.day!;
-// widget.timeController.text = snapshot.data!.time!;
                   widget.countryController.text = snapshot.data!.country!;
                   widget.skypeIdController.text = snapshot.data!.skypeId!;
                   widget.studyPurposeController.text =
@@ -89,9 +89,6 @@ class _TrialScreenState extends State<TrialScreen> {
                       SignupScreen2Input(
                         nameController: widget.nameController,
                         birthdayController: widget.birthdayController,
-                        // confirmPasswordController: widget.confirmPasswordController,
-                        // emailController: widget.emailController,
-                        // passwordController: widget.birthdayController,
                       ),
                       TrialScreen1Input(
                         phoneNumberController: widget.phoneNumberController,
@@ -103,7 +100,18 @@ class _TrialScreenState extends State<TrialScreen> {
                         referralSourceController:
                             widget.referralSourceController,
                       ),
-                      TrialScreen3Button(),
+                      TrialScreen3Button(
+                        nameController: widget.nameController,
+                        birthdayController: widget.birthdayController,
+                        phoneNumberController: widget.phoneNumberController,
+                        dayController: widget.dayController,
+                        timeController: widget.timeController,
+                        countryController: widget.countryController,
+                        skypeIdController: widget.skypeIdController,
+                        studyPurposeController: widget.studyPurposeController,
+                        referralSourceController:
+                            widget.referralSourceController,
+                      ),
                       // 회사정보
                       // const CompanyInfo(),
                     ],

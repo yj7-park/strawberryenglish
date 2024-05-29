@@ -15,10 +15,6 @@ class EnrollmentScreen extends StatefulWidget {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController birthdayController = TextEditingController();
-  // final TextEditingController emailController = TextEditingController();
-  // final TextEditingController passwordController = TextEditingController();
-  // final TextEditingController confirmPasswordController =
-  //     TextEditingController();
 
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController dayController = TextEditingController();
@@ -28,6 +24,12 @@ class EnrollmentScreen extends StatefulWidget {
   final TextEditingController studyPurposeController = TextEditingController();
   final TextEditingController referralSourceController =
       TextEditingController();
+
+  final TextEditingController lessonStartDateController =
+      TextEditingController();
+  static Set<int> selectedMonths = {3};
+  static Set<int> selectedDays = {3};
+  static Set<int> selectedMins = {55};
 
   @override
   State<EnrollmentScreen> createState() => _EnrollmentScreenState();
@@ -72,8 +74,6 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
 
                   widget.phoneNumberController.text =
                       snapshot.data!.phoneNumber!;
-// widget.dayController.text = snapshot.data!.day!;
-// widget.timeController.text = snapshot.data!.time!;
                   widget.countryController.text = snapshot.data!.country!;
                   widget.skypeIdController.text = snapshot.data!.skypeId!;
                   widget.studyPurposeController.text =
@@ -90,10 +90,6 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       SignupScreen2Input(
                         nameController: widget.nameController,
                         birthdayController: widget.birthdayController,
-                        // confirmPasswordController:
-                        //     widget.confirmPasswordController,
-                        // emailController: widget.emailController,
-                        // passwordController: widget.birthdayController,
                       ),
                       TrialScreen1Input(
                         phoneNumberController: widget.phoneNumberController,
@@ -105,8 +101,24 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         referralSourceController:
                             widget.referralSourceController,
                       ),
-                      EnrollmentScreen1Input(),
-                      EnrollmentScreen4Button(),
+                      EnrollmentScreen1Input(
+                        lessonStartDateController:
+                            widget.lessonStartDateController,
+                      ),
+                      EnrollmentScreen4Button(
+                        nameController: widget.nameController,
+                        birthdayController: widget.birthdayController,
+                        phoneNumberController: widget.phoneNumberController,
+                        dayController: widget.dayController,
+                        timeController: widget.timeController,
+                        countryController: widget.countryController,
+                        skypeIdController: widget.skypeIdController,
+                        studyPurposeController: widget.studyPurposeController,
+                        referralSourceController:
+                            widget.referralSourceController,
+                        lessonStartDateController:
+                            widget.lessonStartDateController,
+                      ),
                       // 회사정보
                       // const CompanyInfo(),
                     ],

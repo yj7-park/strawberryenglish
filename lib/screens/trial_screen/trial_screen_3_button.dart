@@ -3,40 +3,39 @@ import 'package:flutter/services.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class TrialScreen3Button extends StatefulWidget {
-  const TrialScreen3Button({super.key});
+  final TextEditingController nameController;
+  final TextEditingController birthdayController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController dayController;
+  final TextEditingController timeController;
+  final TextEditingController countryController;
+  final TextEditingController skypeIdController;
+  final TextEditingController studyPurposeController;
+  final TextEditingController referralSourceController;
+
+  const TrialScreen3Button({
+    super.key,
+    required this.nameController,
+    required this.birthdayController,
+    required this.phoneNumberController,
+    required this.dayController,
+    required this.timeController,
+    required this.countryController,
+    required this.skypeIdController,
+    required this.studyPurposeController,
+    required this.referralSourceController,
+  });
 
   @override
   TrialScreen3ButtonState createState() => TrialScreen3ButtonState();
 }
 
 class TrialScreen3ButtonState extends State<TrialScreen3Button> {
-  final _scrollController = ScrollController();
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _birthdayController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  // String _statusMessage = '';
-  String _errorMessage = '';
-
-  bool _check1 = false;
-  bool _check2 = false;
-  bool _check3 = false;
-
-  // final TextEditingController _phoneNumberController =
-  //     TextEditingController(text: '+82');
-  // final TextEditingController _verificationCodeController =
-  //     TextEditingController();
-  // String _verificationId = '';
-  // bool _isSent = false;
-  // bool _isVerified = false;
-  // String _selectedCountryCode = '+82'; // 추가된 부분
-  // 국가 코드 목록 (필요한 경우 확장 가능)
-  // List<String> _countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
         child: Column(
           children: [
             Text(
-              _errorMessage,
+              errorMessage,
               style: const TextStyle(color: Colors.red),
             ),
             SizedBox(
@@ -57,7 +56,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
                 ),
-                onPressed: _registerUser,
+                onPressed: register,
                 child: const Text(
                   '체험하기',
                   style: TextStyle(
@@ -74,50 +73,52 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     );
   }
 
-  // TODO: 메일 주소 verification
-
   // TODO: 회원 가입 처리
-  void _registerUser() async {
-    final name = _nameController.text.trim();
-    final email = _emailController.text.trim();
-    // final phoneNumber = _phoneNumberController.text.trim();
-    final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
-    _errorMessage = '';
+  void register() async {
+    final name = widget.nameController.text.trim();
+    final birthday = widget.birthdayController.text.trim();
+    final phoneNumber = widget.phoneNumberController.text.trim();
+    final day = widget.dayController.text.trim();
+    final time = widget.timeController.text.trim();
+    final country = widget.countryController.text.trim();
+    final skypeId = widget.skypeIdController.text.trim();
+    final studyPurpose = widget.studyPurposeController.text.trim();
+    final referralSource = widget.referralSourceController.text.trim();
+    errorMessage = '';
 
     // 필수 필드 값 확인
     if (name.isEmpty ||
-        email.isEmpty ||
-        // phoneNumber.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
+        birthday.isEmpty ||
+        phoneNumber.isEmpty ||
+        day.isEmpty ||
+        time.isEmpty ||
+        country.isEmpty ||
+        skypeId.isEmpty) {
       setState(() {
-        // _errorMessage = 'All fields are required.';
-        _errorMessage = '모든 항목이 입력되어야 합니다.';
-      });
-      return;
-    }
-
-    if (password != confirmPassword) {
-      setState(() {
-        // _errorMessage = 'Passwords do not match.';
-        _errorMessage = '비밀번호가 일치하지 않습니다.';
-      });
-      return;
-    }
-
-    if (!_check1 || !_check2) {
-      setState(() {
-        _errorMessage = '필수 항목의 동의가 필요합니다.';
+        // errorMessage = 'All fields are required.';
+        errorMessage = '모든 필수 항목이 입력되어야 합니다.';
       });
       return;
     }
 
     try {
-      Navigator.pop(context);
+      setState(() {});
+      // 결제창 표시
+      bool? confirm = await ConfirmDialog.show(
+        context,
+        "수강신청 완료",
+        "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
+        "카카오톡 채널로 문의하기",
+        "마이페이지로 이동",
+      );
+
+      if (confirm == true) {
+        // TODO: 성공 시 동작
+        Navigator.pop(context);
+      }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
+        errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
       });
     }
   }

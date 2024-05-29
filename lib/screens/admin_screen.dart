@@ -27,7 +27,7 @@ class AdminScreen extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   // 로그아웃 전에 확인 메시지 표시
-                  bool confirmLogout = await ConfirmationDialog.show(context);
+                  bool confirmLogout = await LogoutDialog.show(context);
                   if (confirmLogout) {
                     // 사용자가 확인하면 로그아웃 처리
                     await FirebaseAuth.instance.signOut();

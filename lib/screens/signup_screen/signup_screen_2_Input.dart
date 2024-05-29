@@ -19,20 +19,6 @@ class SignupScreen2Input extends StatefulWidget {
 }
 
 class SignupScreen2InputState extends State<SignupScreen2Input> {
-  // String statusMessage = '';
-  String errorMessage = '';
-
-  // final TextEditingController phoneNumberController =
-  //     TextEditingController(text: '+82');
-  // final TextEditingController verificationCodeController =
-  //     TextEditingController();
-  // String verificationId = '';
-  // bool isSent = false;
-  // bool isVerified = false;
-  // String selectedCountryCode = '+82'; // 추가된 부분
-  // 국가 코드 목록 (필요한 경우 확장 가능)
-  // List<String> countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -50,7 +36,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
             TextFormField(
               controller: widget.nameController,
               decoration: const InputDecoration(
-                  labelText: '한글 이름', border: OutlineInputBorder()),
+                  labelText: '*한글 이름', border: OutlineInputBorder()),
             ),
             const Text('* 실제 수강하는 사람의 이름을 적어주세요.'),
             const SizedBox(height: 20),
@@ -58,7 +44,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
             TextFormField(
               controller: widget.birthdayController,
               decoration: const InputDecoration(
-                labelText: '생년월일',
+                labelText: '*생년월일',
                 hintText: 'YYYY-MM-DD',
                 border: OutlineInputBorder(),
               ),

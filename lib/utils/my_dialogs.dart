@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:strawberryenglish/models/payment.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
-class ConfirmationDialog {
+class LogoutDialog {
   static Future<bool> show(BuildContext context) async {
     return await showDialog(
       context: context,
@@ -36,8 +36,14 @@ class ConfirmationDialog {
   }
 }
 
-class EnrollmentDialog {
-  static Future<bool> show(BuildContext context) async {
+class ConfirmDialog {
+  static Future<bool?> show(
+    BuildContext context,
+    String title,
+    String body,
+    String trueButton,
+    String falseButton,
+  ) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -46,8 +52,8 @@ class EnrollmentDialog {
           child: AlertDialog(
             title: Column(
               children: [
-                const Text(
-                  '수강료 결제',
+                Text(
+                  title,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 50),
@@ -64,12 +70,7 @@ class EnrollmentDialog {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          """
-구독기간 : 3개월
-수업횟수 : 주 3회
-수업길이 : 30분
-수업토픽 : Power/Fluency
-결제금액 : 267,000원 (월 89,000원)""",
+                          body,
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -88,13 +89,13 @@ class EnrollmentDialog {
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
-                child: const Text('나중에 결제하기'),
+                child: Text(falseButton),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
-                child: const Text('결제하기'),
+                child: Text(trueButton),
               ),
             ],
           ),

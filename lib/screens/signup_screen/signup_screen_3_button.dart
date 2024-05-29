@@ -98,15 +98,10 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
         confirmPassword.isEmpty) {
       setState(() {
         // errorMessage = 'All fields are required.';
-        errorMessage = '모든 항목이 입력되어야 합니다.';
+        errorMessage = '모든 필수 항목이 입력되어야 합니다.';
       });
       return;
     }
-    print(email);
-    print(password);
-    print(confirmPassword);
-    print(name);
-    print(birthday);
 
     // if (!_isVerified) {
     //   setState(() {

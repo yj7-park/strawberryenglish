@@ -30,20 +30,6 @@ class TrialScreen1Input extends StatefulWidget {
 }
 
 class TrialScreen1InputState extends State<TrialScreen1Input> {
-  // String statusMessage = '';
-  String errorMessage = '';
-
-  // final TextEditingController phoneNumberController =
-  //     TextEditingController(text: '+82');
-  // final TextEditingController verificationCodeController =
-  //     TextEditingController();
-  // String verificationId = '';
-  // bool isSent = false;
-  // bool isVerified = false;
-  // String selectedCountryCode = '+82'; // 추가된 부분
-  // 국가 코드 목록 (필요한 경우 확장 가능)
-  // List<String> countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -61,7 +47,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             TextFormField(
               controller: widget.phoneNumberController,
               decoration: const InputDecoration(
-                labelText: '휴대폰번호',
+                labelText: '*휴대폰번호',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.phone,
@@ -76,7 +62,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             TextFormField(
               controller: widget.countryController,
               decoration: const InputDecoration(
-                labelText: '거주 국가',
+                labelText: '*거주 국가',
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.next,
@@ -85,7 +71,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             TextFormField(
               controller: widget.dayController,
               decoration: const InputDecoration(
-                labelText: '희망 수업 요일',
+                labelText: '*희망 수업 요일',
                 hintText: 'ex) 월, 수, 금',
                 border: OutlineInputBorder(),
               ),
@@ -96,7 +82,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             TextFormField(
               controller: widget.timeController,
               decoration: const InputDecoration(
-                labelText: '희망 수업 시간',
+                labelText: '*희망 수업 시간',
                 hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
                 border: OutlineInputBorder(),
               ),
@@ -108,7 +94,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             TextFormField(
               controller: widget.skypeIdController,
               decoration: const InputDecoration(
-                labelText: 'Skype 이름',
+                labelText: '*Skype 이름',
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.next,
@@ -157,124 +143,4 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
       ),
     );
   }
-
-  // void sendVerificationCode() async {
-  //   final phoneNumber = phoneNumberController.text.trim();
-  //   errorMessage = '';
-
-  //   try {
-  //     await FirebaseAuth.instance.verifyPhoneNumber(
-  //       phoneNumber: phoneNumber,
-  //       verificationCompleted: (PhoneAuthCredential credential) {
-  //         FirebaseAuth.instance.signInWithCredential(credential);
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         setState(() {
-  //           errorMessage = 'Error: $e';
-  //         });
-  //       },
-  //       codeSent: (String verificationId, int? resendToken) {
-  //         setState(() {
-  //           verificationId = verificationId;
-  //           statusMessage = 'Verification code sent!';
-  //           isSent = true;
-  //         });
-  //       },
-  //       codeAutoRetrievalTimeout: (String verificationId) {
-  //         setState(() {
-  //           verificationId = verificationId;
-  //         });
-  //       },
-  //     );
-  //   } catch (e) {
-  //     setState(() {
-  //       errorMessage = 'Error: $e';
-  //     });
-  //   }
-  // }
-
-  // void checkVerificationCode() async {
-  //   final verificationCode = verificationCodeController.text.trim();
-  //   errorMessage = '';
-
-  //   try {
-  //     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //       verificationId: verificationId,
-  //       smsCode: verificationCode,
-  //     );
-
-  //     await FirebaseAuth.instance.signInWithCredential(credential);
-
-  //     setState(() {
-  //       statusMessage = 'Phone number verified!';
-  //       isVerified = true;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       errorMessage = 'Error: $e';
-  //     });
-  //   }
-  // }
-
-// TODO: 정보 등록 처리
-  // void registerUser() async {
-  //   final name = widget.nameController.text.trim();
-  //   final email = widget.phoneNumberController.text.trim();
-  //   // final phoneNumber = phoneNumberController.text.trim();
-  //   final password = widget.dayController.text.trim();
-  //   final confirmPassword = widget.timeController.text.trim();
-  //   errorMessage = '';
-
-  //   // 필수 필드 값 확인
-  //   if (name.isEmpty ||
-  //       email.isEmpty ||
-  //       // phoneNumber.isEmpty ||
-  //       password.isEmpty ||
-  //       confirmPassword.isEmpty) {
-  //     setState(() {
-  //       // errorMessage = 'All fields are required.';
-  //       errorMessage = '모든 항목이 입력되어야 합니다.';
-  //     });
-  //     return;
-  //   }
-
-  //   // if (!_isVerified) {
-  //   //   setState(() {
-  //   //     errorMessage = 'Phone Number is not verified.';
-  //   //   });
-  //   //   return;
-  //   // }
-
-  //   try {
-  //     // UserCredential userCredential =
-  //     //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //     //   email: email,
-  //     //   password: password,
-  //     // );
-
-  //     // // Add user data to Firestore
-  //     // await FirebaseFirestore.instance
-  //     //     .collection('users')
-  //     //     .doc(userCredential.user!.uid)
-  //     //     .set({
-  //     //   'name': name,
-  //     //   'email': email,
-  //     //   // 'phoneNumber': phoneNumber,
-  //     //   'lessonIDs': <String>[],
-  //     //   'lessonInfo': <String, dynamic>{},
-  //     // });
-
-  //     // Navigate to calendar screen
-  //     // Navigator.pushNamed(context, '/student_calendar');
-  //     Navigator.pop(context);
-
-  //     // setState(() {
-  //     //   statusMessage = 'User registered successfully!';
-  //     // });
-  //   } catch (e) {
-  //     setState(() {
-  //       errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
-  //     });
-  //   }
-  // }
 }
