@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
+import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_3_button.dart';
@@ -17,6 +19,15 @@ class TrialScreen extends StatefulWidget {
   // final TextEditingController confirmPasswordController =
   //     TextEditingController();
 
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController dayController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController skypeIdController = TextEditingController();
+  final TextEditingController studyPurposeController = TextEditingController();
+  final TextEditingController referralSourceController =
+      TextEditingController();
+
   @override
   State<TrialScreen> createState() => _TrialScreenState();
 }
@@ -30,25 +41,80 @@ class _TrialScreenState extends State<TrialScreen> {
         // appBar: MyMenuAppBar(),
         body: Stack(
           children: [
-            ListView(
-              padding:
-                  const EdgeInsets.only(top: 56), // Make space for the AppBar
-              children: [
-                // 제목
-                MyHeader('체험하기'),
-                // 커버 페이지
-                SignupScreen2Input(
-                  nameController: widget.nameController,
-                  birthdayController: widget.birthdayController,
-                  // confirmPasswordController: widget.confirmPasswordController,
-                  // emailController: widget.emailController,
-                  // passwordController: widget.birthdayController,
-                ),
-                TrialScreen1Input(),
-                TrialScreen3Button(),
-                // 회사정보
-                // const CompanyInfo(),
-              ],
+            FutureBuilder<Student?>(
+              future: Provider.of<StudentProvider>(context)
+                  .getStudent(), // 새로운 Future 생성
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    !snapshot.hasData) {
+                  // 로딩중일 때 표시할 화면
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  // 에러가 발생했을 때 표시할 화면
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else if (snapshot.hasData) {
+                  // 데이터가 로드되었을 때 표시할 화면
+                  print(snapshot.data!.name);
+                  print(snapshot.data!.birthDate!);
+                  print(snapshot.data!.phoneNumber!);
+                  print(snapshot.data!.country!);
+                  print(snapshot.data!.skypeId!);
+                  print(snapshot.data!.studyPurpose!);
+                  print(snapshot.data!.referralSource!);
+
+                  widget.nameController.text = snapshot.data!.name;
+                  widget.birthdayController.text = snapshot.data!.birthDate!;
+
+                  widget.phoneNumberController.text =
+                      snapshot.data!.phoneNumber!;
+// widget.dayController.text = snapshot.data!.day!;
+// widget.timeController.text = snapshot.data!.time!;
+                  widget.countryController.text = snapshot.data!.country!;
+                  widget.skypeIdController.text = snapshot.data!.skypeId!;
+                  widget.studyPurposeController.text =
+                      snapshot.data!.studyPurpose!;
+                  widget.referralSourceController.text =
+                      snapshot.data!.referralSource!;
+                  return ListView(
+                    padding: const EdgeInsets.only(
+                        top: 56), // Make space for the AppBar
+                    children: [
+                      // 제목
+                      MyHeader('체험하기'),
+                      // 커버 페이지
+                      SignupScreen2Input(
+                        nameController: widget.nameController,
+                        birthdayController: widget.birthdayController,
+                        // confirmPasswordController: widget.confirmPasswordController,
+                        // emailController: widget.emailController,
+                        // passwordController: widget.birthdayController,
+                      ),
+                      TrialScreen1Input(
+                        phoneNumberController: widget.phoneNumberController,
+                        dayController: widget.dayController,
+                        timeController: widget.timeController,
+                        countryController: widget.countryController,
+                        skypeIdController: widget.skypeIdController,
+                        studyPurposeController: widget.studyPurposeController,
+                        referralSourceController:
+                            widget.referralSourceController,
+                      ),
+                      TrialScreen3Button(),
+                      // 회사정보
+                      // const CompanyInfo(),
+                    ],
+                  );
+                } else {
+                  // 데이터가 없을 때 표시할 화면
+                  return const Center(
+                      // child: Text('No data available'),
+                      );
+                }
+              },
             ),
             const Positioned(
               child: MyMenuAppBar(),

@@ -20,6 +20,15 @@ class EnrollmentScreen extends StatefulWidget {
   // final TextEditingController confirmPasswordController =
   //     TextEditingController();
 
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController dayController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController skypeIdController = TextEditingController();
+  final TextEditingController studyPurposeController = TextEditingController();
+  final TextEditingController referralSourceController =
+      TextEditingController();
+
   @override
   State<EnrollmentScreen> createState() => _EnrollmentScreenState();
 }
@@ -52,9 +61,25 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                   // 데이터가 로드되었을 때 표시할 화면
                   print(snapshot.data!.name);
                   print(snapshot.data!.birthDate!);
+                  print(snapshot.data!.phoneNumber!);
+                  print(snapshot.data!.country!);
+                  print(snapshot.data!.skypeId!);
+                  print(snapshot.data!.studyPurpose!);
+                  print(snapshot.data!.referralSource!);
 
                   widget.nameController.text = snapshot.data!.name;
                   widget.birthdayController.text = snapshot.data!.birthDate!;
+
+                  widget.phoneNumberController.text =
+                      snapshot.data!.phoneNumber!;
+// widget.dayController.text = snapshot.data!.day!;
+// widget.timeController.text = snapshot.data!.time!;
+                  widget.countryController.text = snapshot.data!.country!;
+                  widget.skypeIdController.text = snapshot.data!.skypeId!;
+                  widget.studyPurposeController.text =
+                      snapshot.data!.studyPurpose!;
+                  widget.referralSourceController.text =
+                      snapshot.data!.referralSource!;
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 56), // Make space for the AppBar
@@ -70,7 +95,16 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         // emailController: widget.emailController,
                         // passwordController: widget.birthdayController,
                       ),
-                      TrialScreen1Input(),
+                      TrialScreen1Input(
+                        phoneNumberController: widget.phoneNumberController,
+                        dayController: widget.dayController,
+                        timeController: widget.timeController,
+                        countryController: widget.countryController,
+                        skypeIdController: widget.skypeIdController,
+                        studyPurposeController: widget.studyPurposeController,
+                        referralSourceController:
+                            widget.referralSourceController,
+                      ),
                       EnrollmentScreen1Input(),
                       EnrollmentScreen4Button(),
                       // 회사정보

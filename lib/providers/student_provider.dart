@@ -16,10 +16,10 @@ class StudentProvider extends ChangeNotifier {
   }
 
   Future<void> _initStudent() async {
-    await sheetApiProvider.init();
     currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
+      await sheetApiProvider.init();
       if (currentUser!.email != 'admin@admin.com') {
         _student = await getStudent();
       }
@@ -28,6 +28,8 @@ class StudentProvider extends ChangeNotifier {
   }
 
   Future<Student?> getStudent() async {
+    if (_student != null) return _student;
+
     try {
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {

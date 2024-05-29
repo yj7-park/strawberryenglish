@@ -153,23 +153,23 @@ class LoginScreenState extends State<LoginScreen> {
         return; // admin 계정으로 로그인 시 바로 종료
       }
 
-      try {
-        _errorMessage = await tutorProvider.loginTutor(username, password);
+      // try {
+      //   _errorMessage = await tutorProvider.loginTutor(username, password);
 
-        if (_errorMessage.isEmpty) {
-          if (tutorProvider.tutor != null) {
-            // Navigator.pushNamed(context, '/tutor_calendar');
-            Navigator.of(context).pop();
-            return; // tutor 로그인 성공 시 바로 종료
-          } else {
-            _errorMessage = "Login failed. Please check ID / Password.";
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Tutor login 오류 발생: $e');
-        }
-      }
+      //   if (_errorMessage.isEmpty) {
+      //     if (tutorProvider.tutor != null) {
+      //       // Navigator.pushNamed(context, '/tutor_calendar');
+      //       Navigator.of(context).pop();
+      //       return; // tutor 로그인 성공 시 바로 종료
+      //     } else {
+      //       _errorMessage = "Login failed. Please check ID / Password.";
+      //     }
+      //   }
+      // } catch (e) {
+      //   if (kDebugMode) {
+      //     print('Tutor login 오류 발생: $e');
+      //   }
+      // }
 
       try {
         _errorMessage = await studentProvider.loginStudent(username, password);

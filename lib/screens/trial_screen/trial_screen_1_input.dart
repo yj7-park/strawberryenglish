@@ -6,36 +6,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TrialScreen1Input extends StatefulWidget {
-  const TrialScreen1Input({super.key});
+  final TextEditingController phoneNumberController;
+  final TextEditingController dayController;
+  final TextEditingController timeController;
+  final TextEditingController countryController;
+  final TextEditingController skypeIdController;
+  final TextEditingController studyPurposeController;
+  final TextEditingController referralSourceController;
+
+  const TrialScreen1Input({
+    super.key,
+    required this.phoneNumberController,
+    required this.dayController,
+    required this.timeController,
+    required this.countryController,
+    required this.skypeIdController,
+    required this.studyPurposeController,
+    required this.referralSourceController,
+  });
 
   @override
   TrialScreen1InputState createState() => TrialScreen1InputState();
 }
 
 class TrialScreen1InputState extends State<TrialScreen1Input> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _birthdayController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _dayController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
-  final TextEditingController _skypeController = TextEditingController();
-  final TextEditingController _studyPurposeController = TextEditingController();
-  final TextEditingController _referralSourceController =
-      TextEditingController();
-  // String _statusMessage = '';
-  String _errorMessage = '';
+  // String statusMessage = '';
+  String errorMessage = '';
 
-  // final TextEditingController _phoneNumberController =
+  // final TextEditingController phoneNumberController =
   //     TextEditingController(text: '+82');
-  // final TextEditingController _verificationCodeController =
+  // final TextEditingController verificationCodeController =
   //     TextEditingController();
-  // String _verificationId = '';
-  // bool _isSent = false;
-  // bool _isVerified = false;
-  // String _selectedCountryCode = '+82'; // 추가된 부분
+  // String verificationId = '';
+  // bool isSent = false;
+  // bool isVerified = false;
+  // String selectedCountryCode = '+82'; // 추가된 부분
   // 국가 코드 목록 (필요한 경우 확장 가능)
-  // List<String> _countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
+  // List<String> countryCodes = ['+82', '+1', '+44', '+81', '+86', '+33'];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +59,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _phoneController,
+              controller: widget.phoneNumberController,
               decoration: const InputDecoration(
                 labelText: '휴대폰번호',
                 border: OutlineInputBorder(),
@@ -67,7 +74,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _countryController,
+              controller: widget.countryController,
               decoration: const InputDecoration(
                 labelText: '거주 국가',
                 border: OutlineInputBorder(),
@@ -76,7 +83,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _dayController,
+              controller: widget.dayController,
               decoration: const InputDecoration(
                 labelText: '희망 수업 요일',
                 hintText: 'ex) 월, 수, 금',
@@ -87,7 +94,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             const Text('* 희망 수업 요일을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _timeController,
+              controller: widget.timeController,
               decoration: const InputDecoration(
                 labelText: '희망 수업 시간',
                 hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
@@ -99,7 +106,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             const Text('* 희망 수업 시간을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _skypeController,
+              controller: widget.skypeIdController,
               decoration: const InputDecoration(
                 labelText: 'Skype 이름',
                 border: OutlineInputBorder(),
@@ -129,7 +136,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _studyPurposeController,
+              controller: widget.studyPurposeController,
               decoration: const InputDecoration(
                 labelText: '영어 공부 목적',
                 border: OutlineInputBorder(),
@@ -138,7 +145,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _referralSourceController,
+              controller: widget.referralSourceController,
               decoration: const InputDecoration(
                 labelText: '딸기영어를 알게된 경로',
                 border: OutlineInputBorder(),
@@ -151,9 +158,9 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
     );
   }
 
-  // void _sendVerificationCode() async {
-  //   final phoneNumber = _phoneNumberController.text.trim();
-  //   _errorMessage = '';
+  // void sendVerificationCode() async {
+  //   final phoneNumber = phoneNumberController.text.trim();
+  //   errorMessage = '';
 
   //   try {
   //     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -163,111 +170,111 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
   //       },
   //       verificationFailed: (FirebaseAuthException e) {
   //         setState(() {
-  //           _errorMessage = 'Error: $e';
+  //           errorMessage = 'Error: $e';
   //         });
   //       },
   //       codeSent: (String verificationId, int? resendToken) {
   //         setState(() {
-  //           _verificationId = verificationId;
-  //           _statusMessage = 'Verification code sent!';
-  //           _isSent = true;
+  //           verificationId = verificationId;
+  //           statusMessage = 'Verification code sent!';
+  //           isSent = true;
   //         });
   //       },
   //       codeAutoRetrievalTimeout: (String verificationId) {
   //         setState(() {
-  //           _verificationId = verificationId;
+  //           verificationId = verificationId;
   //         });
   //       },
   //     );
   //   } catch (e) {
   //     setState(() {
-  //       _errorMessage = 'Error: $e';
+  //       errorMessage = 'Error: $e';
   //     });
   //   }
   // }
 
-  // void _checkVerificationCode() async {
-  //   final verificationCode = _verificationCodeController.text.trim();
-  //   _errorMessage = '';
+  // void checkVerificationCode() async {
+  //   final verificationCode = verificationCodeController.text.trim();
+  //   errorMessage = '';
 
   //   try {
   //     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //       verificationId: _verificationId,
+  //       verificationId: verificationId,
   //       smsCode: verificationCode,
   //     );
 
   //     await FirebaseAuth.instance.signInWithCredential(credential);
 
   //     setState(() {
-  //       _statusMessage = 'Phone number verified!';
-  //       _isVerified = true;
+  //       statusMessage = 'Phone number verified!';
+  //       isVerified = true;
   //     });
   //   } catch (e) {
   //     setState(() {
-  //       _errorMessage = 'Error: $e';
+  //       errorMessage = 'Error: $e';
   //     });
   //   }
   // }
 
 // TODO: 정보 등록 처리
-  void _registerUser() async {
-    final name = _nameController.text.trim();
-    final email = _phoneController.text.trim();
-    // final phoneNumber = _phoneNumberController.text.trim();
-    final password = _dayController.text.trim();
-    final confirmPassword = _timeController.text.trim();
-    _errorMessage = '';
+  // void registerUser() async {
+  //   final name = widget.nameController.text.trim();
+  //   final email = widget.phoneNumberController.text.trim();
+  //   // final phoneNumber = phoneNumberController.text.trim();
+  //   final password = widget.dayController.text.trim();
+  //   final confirmPassword = widget.timeController.text.trim();
+  //   errorMessage = '';
 
-    // 필수 필드 값 확인
-    if (name.isEmpty ||
-        email.isEmpty ||
-        // phoneNumber.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
-      setState(() {
-        // _errorMessage = 'All fields are required.';
-        _errorMessage = '모든 항목이 입력되어야 합니다.';
-      });
-      return;
-    }
+  //   // 필수 필드 값 확인
+  //   if (name.isEmpty ||
+  //       email.isEmpty ||
+  //       // phoneNumber.isEmpty ||
+  //       password.isEmpty ||
+  //       confirmPassword.isEmpty) {
+  //     setState(() {
+  //       // errorMessage = 'All fields are required.';
+  //       errorMessage = '모든 항목이 입력되어야 합니다.';
+  //     });
+  //     return;
+  //   }
 
-    // if (!_isVerified) {
-    //   setState(() {
-    //     _errorMessage = 'Phone Number is not verified.';
-    //   });
-    //   return;
-    // }
+  //   // if (!_isVerified) {
+  //   //   setState(() {
+  //   //     errorMessage = 'Phone Number is not verified.';
+  //   //   });
+  //   //   return;
+  //   // }
 
-    try {
-      // UserCredential userCredential =
-      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      //   email: email,
-      //   password: password,
-      // );
+  //   try {
+  //     // UserCredential userCredential =
+  //     //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //     //   email: email,
+  //     //   password: password,
+  //     // );
 
-      // // Add user data to Firestore
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userCredential.user!.uid)
-      //     .set({
-      //   'name': name,
-      //   'email': email,
-      //   // 'phoneNumber': phoneNumber,
-      //   'lessonIDs': <String>[],
-      //   'lessonInfo': <String, dynamic>{},
-      // });
+  //     // // Add user data to Firestore
+  //     // await FirebaseFirestore.instance
+  //     //     .collection('users')
+  //     //     .doc(userCredential.user!.uid)
+  //     //     .set({
+  //     //   'name': name,
+  //     //   'email': email,
+  //     //   // 'phoneNumber': phoneNumber,
+  //     //   'lessonIDs': <String>[],
+  //     //   'lessonInfo': <String, dynamic>{},
+  //     // });
 
-      // Navigate to calendar screen
-      // Navigator.pushNamed(context, '/student_calendar');
-      Navigator.pop(context);
+  //     // Navigate to calendar screen
+  //     // Navigator.pushNamed(context, '/student_calendar');
+  //     Navigator.pop(context);
 
-      // setState(() {
-      //   _statusMessage = 'User registered successfully!';
-      // });
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
-      });
-    }
-  }
+  //     // setState(() {
+  //     //   statusMessage = 'User registered successfully!';
+  //     // });
+  //   } catch (e) {
+  //     setState(() {
+  //       errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
+  //     });
+  //   }
+  // }
 }

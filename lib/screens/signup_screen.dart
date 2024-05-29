@@ -17,6 +17,10 @@ class SignupScreen extends StatefulWidget {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  static bool check1 = false;
+  static bool check2 = false;
+  static bool check3 = false;
+
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
@@ -24,6 +28,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
+    SignupScreen.check1 = SignupScreen.check2 = SignupScreen.check3 = false;
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
@@ -37,15 +42,22 @@ class _SignupScreenState extends State<SignupScreen> {
                 // 제목
                 MyHeader('회원가입'),
                 // 커버 페이지
-                SignupScreen1LoginInfo(),
+                SignupScreen1LoginInfo(
+                  emailController: widget.emailController,
+                  confirmPasswordController: widget.confirmPasswordController,
+                  passwordController: widget.passwordController,
+                ),
                 SignupScreen2Input(
                   nameController: widget.nameController,
                   birthdayController: widget.birthdayController,
-                  // confirmPasswordController: widget.confirmPasswordController,
-                  // emailController: widget.emailController,
-                  // passwordController: widget.birthdayController,
                 ),
-                SignupScreen3Button(),
+                SignupScreen3Button(
+                  emailController: widget.emailController,
+                  passwordController: widget.passwordController,
+                  confirmPasswordController: widget.confirmPasswordController,
+                  nameController: widget.nameController,
+                  birthdayController: widget.birthdayController,
+                ),
                 // 회사정보
                 // const CompanyInfo(),
               ],

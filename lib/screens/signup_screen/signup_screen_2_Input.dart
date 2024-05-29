@@ -7,17 +7,11 @@ import 'package:flutter/material.dart';
 class SignupScreen2Input extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController birthdayController;
-  // final TextEditingController emailController;
-  // final TextEditingController passwordController;
-  // final TextEditingController confirmPasswordController;
 
-  SignupScreen2Input({
+  const SignupScreen2Input({
     super.key,
     required this.nameController,
     required this.birthdayController,
-    // required this.emailController,
-    // required this.passwordController,
-    // required this.confirmPasswordController,
   });
 
   @override
@@ -27,10 +21,6 @@ class SignupScreen2Input extends StatefulWidget {
 class SignupScreen2InputState extends State<SignupScreen2Input> {
   // String statusMessage = '';
   String errorMessage = '';
-
-  bool check1 = false;
-  bool check2 = false;
-  bool check3 = false;
 
   // final TextEditingController phoneNumberController =
   //     TextEditingController(text: '+82');
@@ -85,52 +75,4 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
       ),
     );
   }
-
-  // TODO: 메일 주소 verification
-
-  // TODO: 회원 가입 처리
-//   void registerUser() async {
-//     final name = widget.nameController.text.trim();
-//     final email = widget.emailController.text.trim();
-//     // final phoneNumber = phoneNumberController.text.trim();
-//     final password = widget.passwordController.text.trim();
-//     final confirmPassword = widget.confirmPasswordController.text.trim();
-//     errorMessage = '';
-
-//     // 필수 필드 값 확인
-//     if (name.isEmpty ||
-//         email.isEmpty ||
-//         // phoneNumber.isEmpty ||
-//         password.isEmpty ||
-//         confirmPassword.isEmpty) {
-//       setState(() {
-//         // errorMessage = 'All fields are required.';
-//         errorMessage = '모든 항목이 입력되어야 합니다.';
-//       });
-//       return;
-//     }
-
-//     if (password != confirmPassword) {
-//       setState(() {
-//         // errorMessage = 'Passwords do not match.';
-//         errorMessage = '비밀번호가 일치하지 않습니다.';
-//       });
-//       return;
-//     }
-
-//     if (!check1 || !check2) {
-//       setState(() {
-//         errorMessage = '필수 항목의 동의가 필요합니다.';
-//       });
-//       return;
-//     }
-
-//     try {
-//       Navigator.pop(context);
-//     } catch (e) {
-//       setState(() {
-//         errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
-//       });
-//     }
-//   }
 }

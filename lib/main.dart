@@ -7,9 +7,11 @@ import 'package:strawberryenglish/screens/announcement_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
 import 'package:strawberryenglish/screens/faq_screen.dart';
 import 'package:strawberryenglish/screens/lectures_screen.dart';
+import 'package:strawberryenglish/screens/review_screen.dart';
 import 'package:strawberryenglish/screens/topics_screen.dart';
 import 'package:strawberryenglish/screens/tuitionfee_screen.dart';
 import 'package:strawberryenglish/screens/introduction_screen.dart';
+import 'package:strawberryenglish/screens/tutors_screen.dart';
 import 'providers/tutor_provider.dart';
 import 'providers/student_provider.dart';
 import 'screens/admin_screen.dart';
@@ -73,14 +75,14 @@ class MyApp extends StatelessWidget {
           // 2. 수업토픽
           '/topics': (context) => const TopicsScreen(),
           // 3. 튜터소개
-          // '/tutors': (context) => const TutorsScreen(),
+          '/tutors': (context) => const TutorsScreen(),
           // 4. 수강료
           '/tuitionfee': (context) => const TuitionfeeScreen(),
           // 5. FAQ
           '/faq': (context) => const FaqScreen(),
 
           // 딸기후기
-          // '/reviews': (context) => const ReviewScreen(),
+          '/reviews': (context) => const ReviewScreen(),
 
           // 체험하기
           '/trial': (context) => TrialScreen(),

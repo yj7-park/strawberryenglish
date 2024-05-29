@@ -49,11 +49,11 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lessonStartDateController =
       TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _dayController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
-  final TextEditingController _skypeController = TextEditingController();
+  final TextEditingController _skypeIdController = TextEditingController();
   final TextEditingController _studyPurposeController = TextEditingController();
   final TextEditingController _referralSourceController =
       TextEditingController();
@@ -267,7 +267,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
 // TODO: 정보 등록 처리
   void _registerUser() async {
     final name = _nameController.text.trim();
-    final email = _phoneController.text.trim();
+    final email = _phoneNumberController.text.trim();
     // final phoneNumber = _phoneNumberController.text.trim();
     final password = _dayController.text.trim();
     final confirmPassword = _timeController.text.trim();

@@ -28,8 +28,8 @@ class Student {
   String? paymentAmount;
   late String lessonEndDate;
   late String modifiedLessonEndDate;
-  // String? extensionRequestMessage;
-  // String referralSource;
+  String? extensionRequestMessage;
+  String? referralSource;
   // String level;
   // String features;
   // String feedback;
@@ -105,6 +105,11 @@ class Student {
     lessonEndDate = row[index] as String;
     index++;
     modifiedLessonEndDate = row[index] as String;
+    index++;
+    extensionRequestMessage = row[index] as String;
+    index++;
+    referralSource = row[index] as String;
+    index++;
   }
 
   List<Object?> toRow() {
@@ -139,6 +144,8 @@ class Student {
       paymentAmount,
       lessonEndDate,
       modifiedLessonEndDate,
+      extensionRequestMessage,
+      referralSource,
     ];
   }
 }

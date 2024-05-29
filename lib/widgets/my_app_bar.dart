@@ -164,9 +164,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                                 '튜터소개',
                                 textAlign: TextAlign.center,
                               ),
-                              // onPressed: () {
-                              //   Navigator.pushNamed(context, '/tutors');
-                              // },
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/tutors');
+                              },
                             ),
                             MenuItemButton(
                               child: const Text(
@@ -205,9 +205,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar>
                             '딸기후기',
                             textAlign: TextAlign.center,
                           ),
-                          // onPressed: () {
-                          //   Navigator.pushNamed(context, '/reviews');
-                          // },
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/reviews');
+                          },
                         ),
                       ),
                     ],
