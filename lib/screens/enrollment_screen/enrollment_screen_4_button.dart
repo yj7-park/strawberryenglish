@@ -10,10 +10,10 @@ import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class EnrollmentScreen4Button extends StatefulWidget {
   final TextEditingController nameController;
-  final TextEditingController birthdayController;
+  final TextEditingController birthDateController;
   final TextEditingController phoneNumberController;
-  final TextEditingController dayController;
-  final TextEditingController timeController;
+  final TextEditingController lessonDayController;
+  final TextEditingController lessonTimeController;
   final TextEditingController countryController;
   final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
@@ -23,10 +23,10 @@ class EnrollmentScreen4Button extends StatefulWidget {
   const EnrollmentScreen4Button({
     super.key,
     required this.nameController,
-    required this.birthdayController,
+    required this.birthDateController,
     required this.phoneNumberController,
-    required this.dayController,
-    required this.timeController,
+    required this.lessonDayController,
+    required this.lessonTimeController,
     required this.countryController,
     required this.skypeIdController,
     required this.studyPurposeController,
@@ -99,10 +99,10 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
   // // TODO: 회원 가입 처리
   void submit() async {
     final name = widget.nameController.text.trim();
-    final birthday = widget.birthdayController.text.trim();
+    final birthDate = widget.birthDateController.text.trim();
     final phoneNumber = widget.phoneNumberController.text.trim();
-    final day = widget.dayController.text.trim();
-    final time = widget.timeController.text.trim();
+    final lessonDay = widget.lessonDayController.text.trim();
+    final lessonTime = widget.lessonTimeController.text.trim();
     final country = widget.countryController.text.trim();
     final skypeId = widget.skypeIdController.text.trim();
     final studyPurpose = widget.studyPurposeController.text.trim();
@@ -112,10 +112,10 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
     // 필수 필드 값 확인
     if (name.isEmpty ||
-        birthday.isEmpty ||
+        birthDate.isEmpty ||
         phoneNumber.isEmpty ||
-        day.isEmpty ||
-        time.isEmpty ||
+        lessonDay.isEmpty ||
+        lessonTime.isEmpty ||
         country.isEmpty ||
         skypeId.isEmpty ||
         studyPurpose.isEmpty ||
@@ -132,9 +132,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       setState(() {});
       // 결제창 표시
       bool? confirm = await ConfirmDialog.show(
-          context,
-          "수강료 결제",
-          "" +
+          context: context,
+          title: "수강료 결제",
+          body: "" +
               "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n" +
               "수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n" +
               "수업길이 : ${EnrollmentScreen.selectedMins.first}분\n" +
@@ -143,8 +143,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
               (EnrollmentScreen.selectedMonths.first > 1
                   ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)"
                   : ""),
-          "결제하기",
-          "나중에 결제하기");
+          trueButton: "결제하기",
+          falseButton: "나중에 결제하기");
 
       if (confirm == true) {
         // TODO: 성공 시 동작

@@ -11,7 +11,7 @@ class SignupScreen extends StatefulWidget {
   SignupScreen({super.key});
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController birthdayController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -49,14 +49,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SignupScreen2Input(
                   nameController: widget.nameController,
-                  birthdayController: widget.birthdayController,
+                  birthDateController: widget.birthDateController,
                 ),
                 SignupScreen3Button(
                   emailController: widget.emailController,
                   passwordController: widget.passwordController,
                   confirmPasswordController: widget.confirmPasswordController,
                   nameController: widget.nameController,
-                  birthdayController: widget.birthdayController,
+                  birthDateController: widget.birthDateController,
                 ),
                 // 회사정보
                 // const CompanyInfo(),

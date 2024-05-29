@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Student {
-  late String uid;
-  late int id;
-  late String name;
+  String? uid;
+  int? id;
+  String? name;
   String? gender;
   String? birthDate;
   String? phoneNumber;
@@ -15,19 +17,19 @@ class Student {
   List<String>? cancelRequestDates;
   List<String>? cancelDates;
   List<String>? tutorCancelDates;
-  late int cancelCountLeft;
-  late int cancelCountTotal;
+  int? cancelCountLeft;
+  int? cancelCountTotal;
   List<String>? holdRequestDates;
   List<String>? holdDates;
-  late int holdCountLeft;
-  late int holdCountTotal;
-  late String lessonDay;
-  late String lessonTime;
+  int? holdCountLeft;
+  int? holdCountTotal;
+  String? lessonDay;
+  String? lessonTime;
   String? philippinesTime;
-  late String lessonStartDate;
+  String? lessonStartDate;
   String? paymentAmount;
-  late String lessonEndDate;
-  late String modifiedLessonEndDate;
+  String? lessonEndDate;
+  String? modifiedLessonEndDate;
   String? extensionRequestMessage;
   String? referralSource;
   // String level;
@@ -35,6 +37,193 @@ class Student {
   // String feedback;
   // String reenrollment;
   String log = '';
+
+  Student(
+      {this.uid,
+      this.id,
+      this.name,
+      this.gender,
+      this.birthDate,
+      this.phoneNumber,
+      required this.email,
+      this.country,
+      this.program,
+      this.studyPurpose,
+      this.tutor,
+      this.skypeId,
+      this.topic,
+      this.cancelRequestDates,
+      this.cancelDates,
+      this.tutorCancelDates,
+      this.cancelCountLeft,
+      this.cancelCountTotal,
+      this.holdRequestDates,
+      this.holdDates,
+      this.holdCountLeft,
+      this.holdCountTotal,
+      this.lessonDay,
+      this.lessonTime,
+      this.philippinesTime,
+      this.lessonStartDate,
+      this.paymentAmount,
+      this.lessonEndDate,
+      this.modifiedLessonEndDate,
+      this.extensionRequestMessage,
+      this.referralSource});
+
+  Student.fromFirebase(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    try {
+      uid = snapshot['uid'];
+    } catch (e) {
+      uid = null;
+    }
+    try {
+      id = snapshot['id'];
+    } catch (e) {
+      id = null;
+    }
+    try {
+      name = snapshot['name'];
+    } catch (e) {
+      name = null;
+    }
+    try {
+      gender = snapshot['gender'];
+    } catch (e) {
+      gender = null;
+    }
+    try {
+      birthDate = snapshot['birthDate'];
+    } catch (e) {
+      birthDate = null;
+    }
+    try {
+      phoneNumber = snapshot['phoneNumber'];
+    } catch (e) {
+      phoneNumber = null;
+    }
+    email = snapshot['email'];
+    try {
+      country = snapshot['country'];
+    } catch (e) {
+      country = null;
+    }
+    try {
+      program = snapshot['program'];
+    } catch (e) {
+      program = null;
+    }
+    try {
+      studyPurpose = snapshot['studyPurpose'];
+    } catch (e) {
+      studyPurpose = null;
+    }
+    try {
+      tutor = snapshot['tutor'];
+    } catch (e) {
+      tutor = null;
+    }
+    try {
+      skypeId = snapshot['skypeId'];
+    } catch (e) {
+      skypeId = null;
+    }
+    try {
+      topic = snapshot['topic'];
+    } catch (e) {
+      topic = null;
+    }
+    try {
+      cancelRequestDates = snapshot['cancelRequestDates'];
+    } catch (e) {
+      cancelRequestDates = null;
+    }
+    try {
+      cancelDates = snapshot['cancelDates'];
+    } catch (e) {
+      cancelDates = null;
+    }
+    try {
+      tutorCancelDates = snapshot['tutorCancelDates'];
+    } catch (e) {
+      tutorCancelDates = null;
+    }
+    try {
+      cancelCountLeft = snapshot['cancelCountLeft'];
+    } catch (e) {
+      cancelCountLeft = null;
+    }
+    try {
+      cancelCountTotal = snapshot['cancelCountTotal'];
+    } catch (e) {
+      cancelCountTotal = null;
+    }
+    try {
+      holdRequestDates = snapshot['holdRequestDates'];
+    } catch (e) {
+      holdRequestDates = null;
+    }
+    try {
+      holdDates = snapshot['holdDates'];
+    } catch (e) {
+      holdDates = null;
+    }
+    try {
+      holdCountLeft = snapshot['holdCountLeft'];
+    } catch (e) {
+      holdCountLeft = null;
+    }
+    try {
+      holdCountTotal = snapshot['holdCountTotal'];
+    } catch (e) {
+      holdCountTotal = null;
+    }
+    try {
+      lessonDay = snapshot['lessonDay'];
+    } catch (e) {
+      lessonDay = null;
+    }
+    try {
+      lessonTime = snapshot['lessonTime'];
+    } catch (e) {
+      lessonTime = null;
+    }
+    try {
+      philippinesTime = snapshot['philippinesTime'];
+    } catch (e) {
+      philippinesTime = null;
+    }
+    try {
+      lessonStartDate = snapshot['lessonStartDate'];
+    } catch (e) {
+      lessonStartDate = null;
+    }
+    try {
+      paymentAmount = snapshot['paymentAmount'];
+    } catch (e) {
+      paymentAmount = null;
+    }
+    try {
+      lessonEndDate = snapshot['lessonEndDate'];
+    } catch (e) {
+      lessonEndDate = null;
+    }
+    try {
+      modifiedLessonEndDate = snapshot['modifiedLessonEndDate'];
+    } catch (e) {
+      modifiedLessonEndDate = null;
+    }
+    try {
+      extensionRequestMessage = snapshot['extensionRequestMessage'];
+    } catch (e) {
+      extensionRequestMessage = null;
+    }
+    try {
+      referralSource = snapshot['referralSource'];
+    } catch (e) {
+      referralSource = null;
+    }
+  }
 
   Student.fromRow(List<Object?> row) {
     int index = 0;

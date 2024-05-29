@@ -5,14 +5,18 @@ import 'package:flutter/services.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:strawberryenglish/models/student.dart';
+import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/signup_screen.dart';
+import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class SignupScreen3Button extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final TextEditingController nameController;
-  final TextEditingController birthdayController;
+  final TextEditingController birthDateController;
 
   const SignupScreen3Button({
     super.key,
@@ -20,7 +24,7 @@ class SignupScreen3Button extends StatefulWidget {
     required this.passwordController,
     required this.confirmPasswordController,
     required this.nameController,
-    required this.birthdayController,
+    required this.birthDateController,
   });
 
   @override
@@ -29,7 +33,8 @@ class SignupScreen3Button extends StatefulWidget {
 
 class SignupScreen3ButtonState extends State<SignupScreen3Button> {
   final scrollController = ScrollController();
-  // String statusMessage = '';
+  late StudentProvider studentProvider;
+
   String errorMessage = '';
 
   // final TextEditingController phoneNumberController =
@@ -45,6 +50,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
 
   @override
   Widget build(BuildContext context) {
+    studentProvider = Provider.of<StudentProvider>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ((screenWidth - 500) / 2)),
@@ -62,7 +68,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
                 ),
-                onPressed: registerUser,
+                onPressed: submit,
                 child: const Text(
                   '회원가입',
                   style: TextStyle(
@@ -82,18 +88,20 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
   // TODO: 메일 주소 verification
 
   // TODO: 회원 가입 처리
-  void registerUser() async {
+  void submit() async {
     final email = widget.emailController.text.trim();
     final password = widget.passwordController.text.trim();
     final confirmPassword = widget.confirmPasswordController.text.trim();
     final name = widget.nameController.text.trim();
-    final birthday = widget.birthdayController.text.trim();
+    final birthDate = widget.birthDateController.text.trim();
     errorMessage = '';
+
+    bool authCreated = false;
 
     // 필수 필드 값 확인
     if (name.isEmpty ||
         email.isEmpty ||
-        birthday.isEmpty ||
+        birthDate.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty) {
       setState(() {
@@ -132,26 +140,40 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
         password: password,
       );
 
+      authCreated = true;
+
       // Add user data to Firestore
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userCredential.user!.uid)
-      //     .set({
-      //   'name': name,
-      //   'email': email,
-      //   // 'phoneNumber': phoneNumber,
-      //   'lessonIDs': <String>[],
-      //   'lessonInfo': <String, dynamic>{},
-      // });
+      Student newStudent = Student(email: email);
+      await FirebaseFirestore.instance.collection('users').doc(email).set({
+        'name': name,
+        'email': email,
+        'birthDate': birthDate,
+        'adAgreed': SignupScreen.check3,
+      });
 
-      // Navigate to calendar screen
-      // Navigator.pushNamed(context, '/student_calendar');
-      Navigator.pop(context);
+      bool? confirm = await ConfirmDialog.show(
+        context: context,
+        title: "회원가입이 완료되었습니다.",
+        trueButton: "확인",
+      );
 
-      // setState(() {
-      //   statusMessage = 'User registered successfully!';
-      // });
+      studentProvider.loginStudent(email, password);
+
+      if (errorMessage.isEmpty) {
+        if (studentProvider.student != null) {
+          // Navigator.pushNamed(context, '/student_calendar');
+          Navigator.of(context).pop(true);
+          return; // student 로그인 성공 시 바로 종료
+        }
+      }
+
+      if (confirm == true) {
+        Navigator.pop(context);
+      }
     } catch (e) {
+      if (authCreated) {
+        await FirebaseAuth.instance.currentUser!.delete();
+      }
       setState(() {
         errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
       });

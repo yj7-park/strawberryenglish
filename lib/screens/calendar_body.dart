@@ -115,7 +115,7 @@ class CalendarBodyState extends State<CalendarBody> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // _buildInfoRow('수업 요일', widget.user.lessonDay),
-                  _buildInfoRow('수업 시간', widget.user.lessonTime),
+                  _buildInfoRow('수업 시간', widget.user.lessonTime!),
                 ],
               ),
             )
@@ -171,8 +171,8 @@ class CalendarBodyState extends State<CalendarBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoRow('수업 시작일', widget.user.lessonStartDate),
-              _buildInfoRow('수업 종료일', widget.user.modifiedLessonEndDate),
+              _buildInfoRow('수업 시작일', widget.user.lessonStartDate!),
+              _buildInfoRow('수업 종료일', widget.user.modifiedLessonEndDate!),
             ],
           ),
         ),
@@ -215,12 +215,12 @@ class CalendarBodyState extends State<CalendarBody> {
     List<DateTime> holdRequestDates = [];
     try {
       lessonStartDate =
-          DateTime.parse(widget.user.lessonStartDate.replaceAll('. ', '-'));
+          DateTime.parse(widget.user.lessonStartDate!.replaceAll('. ', '-'));
       lastLessonDate = DateTime.parse(
-          widget.user.modifiedLessonEndDate.replaceAll('. ', '-'));
+          widget.user.modifiedLessonEndDate!.replaceAll('. ', '-'));
 
       // lessonTime 파싱
-      lessonDates = _getLessonDatesFromLessonTime(widget.user.lessonTime);
+      lessonDates = _getLessonDatesFromLessonTime(widget.user.lessonTime!);
 
       if (widget.user.cancelDates != null) {
         cancelDates = widget.user.cancelDates!
@@ -530,7 +530,7 @@ class CalendarBodyState extends State<CalendarBody> {
         highlightColor = Colors.indigoAccent[100];
         mainColor = Colors.indigo;
       } else if (appointment.subject.contains('[수업]')) {
-        if (widget.user.cancelCountLeft > 0) {
+        if (widget.user.cancelCountLeft! > 0) {
           DateTime now = DateTime.now();
           // print(appointment.startTime);
           DateTime limitTime =
@@ -573,10 +573,10 @@ class CalendarBodyState extends State<CalendarBody> {
             String formattedDate =
                 DateFormat('yyyy-MM-dd').format(details.date!);
             if (buttonText == '수업 취소 요청') {
-              widget.user.cancelCountLeft = widget.user.cancelCountLeft - 1;
+              widget.user.cancelCountLeft = widget.user.cancelCountLeft! - 1;
               widget.user.cancelRequestDates!.add(formattedDate);
             } else if (buttonText == '수업 재개 요청') {
-              widget.user.cancelCountLeft = widget.user.cancelCountLeft + 1;
+              widget.user.cancelCountLeft = widget.user.cancelCountLeft! + 1;
               widget.user.cancelRequestDates!.remove(formattedDate);
             }
             _updateLastLessonDate();
@@ -595,18 +595,18 @@ class CalendarBodyState extends State<CalendarBody> {
     // Student 취소일
     // int cancelCount = widget.user.cancelDates!.length;
     int cancelCount =
-        widget.user.cancelCountTotal - widget.user.cancelCountLeft;
+        widget.user.cancelCountTotal! - widget.user.cancelCountLeft!;
 
     // Tutor 취소일
     cancelCount += widget.user.tutorCancelDates!.length;
 
     List<int> lessonDays =
-        _getLessonDatesFromLessonTime(widget.user.lessonTime).keys.toList();
+        _getLessonDatesFromLessonTime(widget.user.lessonTime!).keys.toList();
 
     // holdDays 계산
     if (widget.user.holdDates != null) {
       List<int> lessonDays =
-          _getLessonDatesFromLessonTime(widget.user.lessonTime).keys.toList();
+          _getLessonDatesFromLessonTime(widget.user.lessonTime!).keys.toList();
 
       for (String dateRange in widget.user.holdDates!) {
         List<String> dateRangeParts = dateRange.split("~");
@@ -634,7 +634,7 @@ class CalendarBodyState extends State<CalendarBody> {
     }
 
     var lastLessonDate =
-        DateTime.parse(widget.user.lessonEndDate.replaceAll('. ', '-'));
+        DateTime.parse(widget.user.lessonEndDate!.replaceAll('. ', '-'));
     while (!lessonDays.contains(lastLessonDate.weekday)) {
       lastLessonDate = lastLessonDate.subtract(const Duration(days: 1));
     }

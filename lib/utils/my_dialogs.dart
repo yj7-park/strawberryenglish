@@ -37,13 +37,13 @@ class LogoutDialog {
 }
 
 class ConfirmDialog {
-  static Future<bool?> show(
-    BuildContext context,
-    String title,
-    String body,
-    String trueButton,
-    String falseButton,
-  ) async {
+  static Future<bool?> show({
+    required BuildContext context,
+    required String title,
+    String body = "",
+    required String trueButton,
+    String falseButton = "",
+  }) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -57,40 +57,42 @@ class ConfirmDialog {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 50),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(3),
+                if (body != "")
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          body,
-                          style: TextStyle(
-                            fontSize: 16,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            body,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
             backgroundColor: Colors.white,
             titleTextStyle:
                 const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
             actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: Text(falseButton),
-              ),
+              if (falseButton != "")
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(falseButton),
+                ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);

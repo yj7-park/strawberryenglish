@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 
 class TrialScreen1Input extends StatefulWidget {
   final TextEditingController phoneNumberController;
-  final TextEditingController dayController;
-  final TextEditingController timeController;
+  final TextEditingController lessonDayController;
+  final TextEditingController lessonTimeController;
   final TextEditingController countryController;
   final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
@@ -17,8 +17,8 @@ class TrialScreen1Input extends StatefulWidget {
   const TrialScreen1Input({
     super.key,
     required this.phoneNumberController,
-    required this.dayController,
-    required this.timeController,
+    required this.lessonDayController,
+    required this.lessonTimeController,
     required this.countryController,
     required this.skypeIdController,
     required this.studyPurposeController,
@@ -69,7 +69,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: widget.dayController,
+              controller: widget.lessonDayController,
               decoration: const InputDecoration(
                 labelText: '*희망 수업 요일',
                 hintText: 'ex) 월, 수, 금',
@@ -80,7 +80,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
             const Text('* 희망 수업 요일을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
             const SizedBox(height: 20),
             TextFormField(
-              controller: widget.timeController,
+              controller: widget.lessonTimeController,
               decoration: const InputDecoration(
                 labelText: '*희망 수업 시간',
                 hintText: 'ex) 오전 10시~11시, 오후 6시~8시',

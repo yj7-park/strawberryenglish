@@ -14,8 +14,7 @@ class MyMenuAppBar extends StatefulWidget implements PreferredSizeWidget {
   _MyMenuAppBarState createState() => _MyMenuAppBarState();
 }
 
-class _MyMenuAppBarState extends State<MyMenuAppBar>
-    with SingleTickerProviderStateMixin {
+class _MyMenuAppBarState extends State<MyMenuAppBar> {
   static const _defaultHeight = 56.0;
   static const _expendedHeight = 256.0;
   double _height = _defaultHeight;

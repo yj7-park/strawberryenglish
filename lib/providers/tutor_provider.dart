@@ -131,7 +131,7 @@ class TutorProvider extends ChangeNotifier {
       for (var row in values) {
         if (row.length > 22) {
           var student = Student.fromRow(row);
-          if (student.uid.isEmpty) {
+          if (student.uid!.isEmpty) {
             student.log = 'Has no account.';
           }
           if (errorLogs.keys.contains(student.uid)) {
@@ -195,7 +195,7 @@ class TutorProvider extends ChangeNotifier {
     try {
       for (var student in _students!) {
         try {
-          if (student.uid.isNotEmpty) continue;
+          if (student.uid!.isNotEmpty) continue;
           UserCredential userCredential =
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: student.email,
@@ -204,7 +204,7 @@ class TutorProvider extends ChangeNotifier {
           student.uid = userCredential.user!.uid;
           updateStudent(student);
         } catch (e) {
-          errorLogs[student.uid] = e.toString();
+          errorLogs[student.uid!] = e.toString();
           student.log = e.toString();
         }
         if (kDebugMode) {

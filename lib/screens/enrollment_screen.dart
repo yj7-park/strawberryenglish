@@ -14,11 +14,11 @@ class EnrollmentScreen extends StatefulWidget {
   EnrollmentScreen({super.key});
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController birthdayController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
 
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController dayController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
+  final TextEditingController lessonDayController = TextEditingController();
+  final TextEditingController lessonTimeController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
   final TextEditingController skypeIdController = TextEditingController();
   final TextEditingController studyPurposeController = TextEditingController();
@@ -61,25 +61,18 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                   );
                 } else if (snapshot.hasData) {
                   // 데이터가 로드되었을 때 표시할 화면
-                  print(snapshot.data!.name);
-                  print(snapshot.data!.birthDate!);
-                  print(snapshot.data!.phoneNumber!);
-                  print(snapshot.data!.country!);
-                  print(snapshot.data!.skypeId!);
-                  print(snapshot.data!.studyPurpose!);
-                  print(snapshot.data!.referralSource!);
-
-                  widget.nameController.text = snapshot.data!.name;
-                  widget.birthdayController.text = snapshot.data!.birthDate!;
+                  widget.nameController.text = snapshot.data!.name ?? '';
+                  widget.birthDateController.text =
+                      snapshot.data!.birthDate ?? '';
 
                   widget.phoneNumberController.text =
-                      snapshot.data!.phoneNumber!;
-                  widget.countryController.text = snapshot.data!.country!;
-                  widget.skypeIdController.text = snapshot.data!.skypeId!;
+                      snapshot.data!.phoneNumber ?? '';
+                  widget.countryController.text = snapshot.data!.country ?? '';
+                  widget.skypeIdController.text = snapshot.data!.skypeId ?? '';
                   widget.studyPurposeController.text =
-                      snapshot.data!.studyPurpose!;
+                      snapshot.data!.studyPurpose ?? '';
                   widget.referralSourceController.text =
-                      snapshot.data!.referralSource!;
+                      snapshot.data!.referralSource ?? '';
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 56), // Make space for the AppBar
@@ -89,12 +82,12 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       // 커버 페이지
                       SignupScreen2Input(
                         nameController: widget.nameController,
-                        birthdayController: widget.birthdayController,
+                        birthDateController: widget.birthDateController,
                       ),
                       TrialScreen1Input(
                         phoneNumberController: widget.phoneNumberController,
-                        dayController: widget.dayController,
-                        timeController: widget.timeController,
+                        lessonDayController: widget.lessonDayController,
+                        lessonTimeController: widget.lessonTimeController,
                         countryController: widget.countryController,
                         skypeIdController: widget.skypeIdController,
                         studyPurposeController: widget.studyPurposeController,
@@ -107,10 +100,10 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       ),
                       EnrollmentScreen4Button(
                         nameController: widget.nameController,
-                        birthdayController: widget.birthdayController,
+                        birthDateController: widget.birthDateController,
                         phoneNumberController: widget.phoneNumberController,
-                        dayController: widget.dayController,
-                        timeController: widget.timeController,
+                        lessonDayController: widget.lessonDayController,
+                        lessonTimeController: widget.lessonTimeController,
                         countryController: widget.countryController,
                         skypeIdController: widget.skypeIdController,
                         studyPurposeController: widget.studyPurposeController,

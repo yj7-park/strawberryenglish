@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 
 class SignupScreen2Input extends StatefulWidget {
   final TextEditingController nameController;
-  final TextEditingController birthdayController;
+  final TextEditingController birthDateController;
 
   const SignupScreen2Input({
     super.key,
     required this.nameController,
-    required this.birthdayController,
+    required this.birthDateController,
   });
 
   @override
@@ -42,7 +42,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
             const SizedBox(height: 20),
             // TODO: 생년월일
             TextFormField(
-              controller: widget.birthdayController,
+              controller: widget.birthDateController,
               decoration: const InputDecoration(
                 labelText: '*생년월일',
                 hintText: 'YYYY-MM-DD',

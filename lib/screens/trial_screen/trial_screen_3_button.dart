@@ -4,14 +4,17 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:strawberryenglish/models/student.dart';
+import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class TrialScreen3Button extends StatefulWidget {
   final TextEditingController nameController;
-  final TextEditingController birthdayController;
+  final TextEditingController birthDateController;
   final TextEditingController phoneNumberController;
-  final TextEditingController dayController;
-  final TextEditingController timeController;
+  final TextEditingController lessonDayController;
+  final TextEditingController lessonTimeController;
   final TextEditingController countryController;
   final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
@@ -20,10 +23,10 @@ class TrialScreen3Button extends StatefulWidget {
   const TrialScreen3Button({
     super.key,
     required this.nameController,
-    required this.birthdayController,
+    required this.birthDateController,
     required this.phoneNumberController,
-    required this.dayController,
-    required this.timeController,
+    required this.lessonDayController,
+    required this.lessonTimeController,
     required this.countryController,
     required this.skypeIdController,
     required this.studyPurposeController,
@@ -36,9 +39,11 @@ class TrialScreen3Button extends StatefulWidget {
 
 class TrialScreen3ButtonState extends State<TrialScreen3Button> {
   String errorMessage = '';
+  late StudentProvider studentProvider;
 
   @override
   Widget build(BuildContext context) {
+    studentProvider = Provider.of<StudentProvider>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ((screenWidth - 500) / 2)),
@@ -76,10 +81,10 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
   // TODO: 회원 가입 처리
   void register() async {
     final name = widget.nameController.text.trim();
-    final birthday = widget.birthdayController.text.trim();
+    final birthDate = widget.birthDateController.text.trim();
     final phoneNumber = widget.phoneNumberController.text.trim();
-    final day = widget.dayController.text.trim();
-    final time = widget.timeController.text.trim();
+    final lessonDay = widget.lessonDayController.text.trim();
+    final lessonTime = widget.lessonTimeController.text.trim();
     final country = widget.countryController.text.trim();
     final skypeId = widget.skypeIdController.text.trim();
     final studyPurpose = widget.studyPurposeController.text.trim();
@@ -88,10 +93,10 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
 
     // 필수 필드 값 확인
     if (name.isEmpty ||
-        birthday.isEmpty ||
+        birthDate.isEmpty ||
         phoneNumber.isEmpty ||
-        day.isEmpty ||
-        time.isEmpty ||
+        lessonDay.isEmpty ||
+        lessonTime.isEmpty ||
         country.isEmpty ||
         skypeId.isEmpty) {
       setState(() {
@@ -103,19 +108,30 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
 
     try {
       setState(() {});
-      // 결제창 표시
-      bool? confirm = await ConfirmDialog.show(
-        context,
-        "수강신청 완료",
-        "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
-        "카카오톡 채널로 문의하기",
-        "마이페이지로 이동",
+
+      // TODO: 성공 시 동작
+      Student? updatedStudent = await studentProvider.getStudent();
+      updatedStudent!.name = name;
+      updatedStudent.birthDate = birthDate;
+      updatedStudent.phoneNumber = phoneNumber;
+      updatedStudent.lessonDay = lessonDay;
+      updatedStudent.lessonTime = lessonTime;
+      updatedStudent.country = country;
+      updatedStudent.skypeId = skypeId;
+      updatedStudent.studyPurpose = studyPurpose;
+      updatedStudent.referralSource = referralSource;
+      studentProvider.updateStudentToFirestore(updatedStudent);
+
+      // 확인 창
+      await ConfirmDialog.show(
+        context: context,
+        title: "수강신청 완료",
+        body: "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
+        trueButton: "카카오톡 채널로 문의하기",
+        falseButton: "마이페이지로 이동",
       );
 
-      if (confirm == true) {
-        // TODO: 성공 시 동작
-        Navigator.pop(context);
-      }
+      Navigator.pop(context);
     } catch (e) {
       setState(() {
         errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');

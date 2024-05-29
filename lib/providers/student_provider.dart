@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:strawberryenglish/models/student.dart';
@@ -34,7 +35,8 @@ class StudentProvider extends ChangeNotifier {
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
         // Google Sheets에서 사용자 데이터 가져오기
-        return await getStudentFromGoogleSheets(currentUser!.email ?? '');
+        // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
+        return await getStudentFromFirestore(currentUser!.email!);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -46,17 +48,20 @@ class StudentProvider extends ChangeNotifier {
 
   Future<String> loginStudent(String username, String password) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: username,
-        password: password,
-      );
+      if (FirebaseAuth.instance.currentUser == null) {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: username,
+          password: password,
+        );
+      }
       currentUser = FirebaseAuth.instance.currentUser;
-      if (userCredential.user!.email == 'admin@admin.com') {
+      if (currentUser!.email == 'admin@admin.com') {
         _student = null;
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
-        _student = await getStudentFromGoogleSheets(username);
+        // _student = await getStudentFromGoogleSheets(username);
+        _student = await getStudentFromFirestore(username);
         notifyListeners();
       }
       return "";
@@ -80,6 +85,20 @@ class StudentProvider extends ChangeNotifier {
     } catch (e) {
       if (kDebugMode) {
         print('Google Sheets에서 Student 가져오는 중 오류 발생: $e');
+      }
+    }
+    throw Exception('Student를 찾을 수 없습니다.');
+  }
+
+  Future<Student> getStudentFromFirestore(String email) async {
+    try {
+      var values =
+          await FirebaseFirestore.instance.collection('users').doc(email).get();
+      // print(response.values);
+      return Student.fromFirebase(values);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Firestore에서 Student 가져오는 중 오류 발생: $e');
       }
     }
     throw Exception('Student를 찾을 수 없습니다.');
@@ -112,6 +131,56 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateStudentToFirestore(Student updatedStudent) async {
+    try {
+      currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        // Google Sheets에서 기존 사용자 데이터 가져오기
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser!.email)
+            .set({
+          "uid": updatedStudent.uid,
+          "id": updatedStudent.id,
+          "name": updatedStudent.name,
+          "gender": updatedStudent.gender,
+          "birthDate": updatedStudent.birthDate,
+          "phoneNumber": updatedStudent.phoneNumber,
+          "email": updatedStudent.email,
+          "country": updatedStudent.country,
+          "program": updatedStudent.program,
+          "studyPurpose": updatedStudent.studyPurpose,
+          "tutor": updatedStudent.tutor,
+          "skypeId": updatedStudent.skypeId,
+          "topic": updatedStudent.topic,
+          "cancelRequestDates": updatedStudent.cancelRequestDates,
+          "cancelDates": updatedStudent.cancelDates,
+          "tutorCancelDates": updatedStudent.tutorCancelDates,
+          "cancelCountLeft": updatedStudent.cancelCountLeft,
+          "cancelCountTotal": updatedStudent.cancelCountTotal,
+          "holdRequestDates": updatedStudent.holdRequestDates,
+          "holdDates": updatedStudent.holdDates,
+          "holdCountLeft": updatedStudent.holdCountLeft,
+          "holdCountTotal": updatedStudent.holdCountTotal,
+          "lessonDay": updatedStudent.lessonDay,
+          "lessonTime": updatedStudent.lessonTime,
+          "philippinesTime": updatedStudent.philippinesTime,
+          "lessonStartDate": updatedStudent.lessonStartDate,
+          "paymentAmount": updatedStudent.paymentAmount,
+          "lessonEndDate": updatedStudent.lessonEndDate,
+          "modifiedLessonEndDate": updatedStudent.modifiedLessonEndDate,
+          "extensionRequestMessage": updatedStudent.extensionRequestMessage,
+          "referralSource": updatedStudent.referralSource,
+        });
+        notifyListeners();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Student 데이터 업데이트 중 오류 발생: $e');
+      }
+    }
+  }
+
   Future<List<Student>> getAllStudents() async {
     try {
       // Google Sheets에서 전체 사용자 데이터 가져오기
@@ -120,7 +189,7 @@ class StudentProvider extends ChangeNotifier {
       for (var row in values) {
         if (row.length > 22) {
           var student = Student.fromRow(row);
-          if (student.uid.isEmpty) {
+          if (student.uid!.isEmpty) {
             student.log = 'Has no account.';
           }
           if (errorLogs.keys.contains(student.uid)) {
@@ -166,7 +235,7 @@ class StudentProvider extends ChangeNotifier {
         if (row.length > 22) {
           var student = Student.fromRow(row);
           try {
-            if (student.uid.isNotEmpty) continue;
+            if (student.uid!.isNotEmpty) continue;
             UserCredential userCredential =
                 await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: student.email,
@@ -175,7 +244,7 @@ class StudentProvider extends ChangeNotifier {
             student.uid = userCredential.user!.uid;
             updateStudent(student);
           } catch (e) {
-            errorLogs[student.uid] = e.toString();
+            errorLogs[student.uid!] = e.toString();
             student.log = e.toString();
           }
           if (kDebugMode) {
