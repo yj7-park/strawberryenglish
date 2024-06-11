@@ -7,7 +7,7 @@ import 'package:strawberryenglish/screens/announcement_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
 import 'package:strawberryenglish/screens/faq_screen.dart';
 import 'package:strawberryenglish/screens/lectures_screen.dart';
-import 'package:strawberryenglish/screens/review_screen.dart';
+import 'package:strawberryenglish/screens/feedback_screen.dart';
 import 'package:strawberryenglish/screens/topics_screen.dart';
 import 'package:strawberryenglish/screens/tuitionfee_screen.dart';
 import 'package:strawberryenglish/screens/introduction_screen.dart';
@@ -31,13 +31,16 @@ void main() async {
 
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: "AIzaSyCwDuKlVvWKqZ1gQjsMmew31kykpkInKyk",
-        authDomain: "strawberry-english.firebaseapp.com",
-        projectId: "strawberry-english",
-        storageBucket: "strawberry-english.appspot.com",
-        messagingSenderId: "140525000017",
-        appId: "1:140525000017:web:0204c72f13f3463f5b2f70",
-        measurementId: "G-4594T6HVRB"),
+      apiKey: "AIzaSyCwDuKlVvWKqZ1gQjsMmew31kykpkInKyk",
+      authDomain: "strawberry-english.firebaseapp.com",
+      projectId: "strawberry-english",
+      storageBucket: "strawberry-english.appspot.com",
+      messagingSenderId: "140525000017",
+      appId: "1:140525000017:web:0204c72f13f3463f5b2f70",
+      measurementId: "G-4594T6HVRB",
+      databaseURL: 'https://strawberry-english.firebasedatabase.app',
+      // databaseURL: 'https://strawberry-english-default-rtdb.firebaseio.com/',
+    ),
   );
   runApp(const MyApp());
 }
@@ -82,7 +85,7 @@ class MyApp extends StatelessWidget {
           '/faq': (context) => const FaqScreen(),
 
           // 딸기후기
-          '/reviews': (context) => const ReviewScreen(),
+          '/feedbacks': (context) => const FeedbackScreen(),
 
           // 체험하기
           '/trial': (context) => TrialScreen(),

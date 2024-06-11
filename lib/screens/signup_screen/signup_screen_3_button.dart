@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/signup_screen.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
@@ -134,7 +132,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
     }
 
     try {
-      UserCredential userCredential =
+      UserCredential _ =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -143,7 +141,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
       authCreated = true;
 
       // Add user data to Firestore
-      Student newStudent = Student(email: email);
+      // Student newStudent = Student(email: email);
       await FirebaseFirestore.instance.collection('users').doc(email).set({
         'name': name,
         'email': email,

@@ -1,13 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-class TutorsScreen1Listview extends StatelessWidget {
-  final String videoId = 'gVtH8X8peZk'; // TODO: youtube 영상 ID 추가
-  const TutorsScreen1Listview({
+class TutorsScreen1Listview extends StatefulWidget {
+  TutorsScreen1Listview({
     super.key,
   });
+
+  final List<bool> controllers = [];
+
+  @override
+  State<TutorsScreen1Listview> createState() => _TutorsScreen1ListviewState();
+}
+
+class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
+  Map<String, Map<String, dynamic>> data = {};
+
+  Future<dynamic> getData() async {
+    final collection = FirebaseFirestore.instance.collection("tutors");
+
+    await collection
+        .get()
+        .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
+      setState(() {
+        data = {
+          for (var doc in snapshot.docs) doc.id: doc.data(),
+        };
+        for (var _ in data.keys) {
+          widget.controllers.add(false);
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +58,40 @@ class TutorsScreen1Listview extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (_, __) =>
               Container(height: 1.5, color: Colors.grey[300]),
-          itemCount: 9,
+          itemCount: data.length,
           itemBuilder: (context, index) {
+            // name, score, license, body, calendar, youtube
+            var id = data.keys.elementAt(index);
+            var doc = data[id]!;
+
+            var name = doc['name'];
+            var score = doc['score'];
+            var license = doc['license'];
+            var body = doc['body'].join('\n\n');
+            var calendar = doc['calendar'];
+            var youtube = doc['youtube'];
+
             return Card(
               elevation: 0.0,
               child: ExpansionTile(
+                // initiallyExpanded: widget.controllers[index],
+                // controller: widget.controllers[index],
                 tilePadding: const EdgeInsets.symmetric(
                   vertical: 20,
                   horizontal: 10,
                 ),
+                onExpansionChanged: (bool expanded) {
+                  // Add this
+                  setState(() {
+                    widget.controllers[index] = expanded;
+                  });
+                },
                 // tileColor: Colors.white,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'assets/images/logo.jpg',
+                      'assets/images/tutors/$name.png',
                       width: 200,
                     ),
                     const SizedBox(width: 16),
@@ -47,7 +100,7 @@ class TutorsScreen1Listview extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "★ 4.9",
+                            "★ $score",
                             style: TextStyle(
                               color: customTheme.colorScheme.secondary,
                               fontSize: 16,
@@ -55,42 +108,27 @@ class TutorsScreen1Listview extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "Diago D.",
+                            name,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            "English Education Lv2 License",
+                            license,
                             style: const TextStyle(
                               color: Colors.grey,
                             ),
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            """
-Hi, I'm Stephanie! I'm from New Hampshire, United States and I'm a Ph. D. student, English teacher and researcher/instructor of Hispanic Literature. I've been teaching English as a Second Language for 8 years, both in-person and online.
-🌵 I have lived in Argentina for the last 8 years.
-Why choose Stephanie S.
-"Stephanie is an outstanding teacher; I thoroughly enjoy my classes with her. She treats me with utmost respect and friendliness, making each session both comfortable and engaging. Furthermore, her extensive educational background has endowed her with a diverse vocabulary, enriching our discussions. Her prompt corrections help me improve effectively. As each class draws to a close, I eagerly anticipate the next session with her."
-""",
+                            body,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
+                            maxLines: widget.controllers[index] ? 100 : 3,
                           ),
-                          // Align(
-                          //   alignment: Alignment.centerRight,
-                          //   child: TextButton(
-                          //     child: const Text('더보기'),
-                          //     onPressed: () {
-                          //       // TODO : 더보기 클릭 시 동작
-                          //     },
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
-                    // const SizedBox(width: 16),
                   ],
                 ),
                 children: [
@@ -101,41 +139,22 @@ Why choose Stephanie S.
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          // TODO: calendar
                           SizedBox(
                             width: 450,
                             height: 450 / 16 * 9,
                             child: SfCalendar(
-                              view: CalendarView.week,
+                              view: CalendarView.workWeek,
                               showNavigationArrow: true,
-                              // dataSource: _getCalendarDataSource(),
+                              dataSource: _getCalendarDataSource(calendar),
                               // controller: _calendarController,
                               showDatePickerButton: true,
-                              headerDateFormat: 'yyyy년 M월', // 원하는 형식으로 지정
+                              headerDateFormat: 'yyyy년 M월 ', // 원하는 형식으로 지정
                               todayHighlightColor: const Color(0xfffcc021),
-                              monthViewSettings: const MonthViewSettings(
-                                agendaItemHeight: 50,
-                                agendaViewHeight: 60,
-                                appointmentDisplayMode:
-                                    MonthAppointmentDisplayMode.appointment,
-                                appointmentDisplayCount: 1,
-                                showTrailingAndLeadingDates: false,
-                                agendaStyle: AgendaStyle(
-                                  appointmentTextStyle:
-                                      TextStyle(fontSize: 15.0),
-                                  backgroundColor:
-                                      Color.fromARGB(255, 246, 246, 246),
-                                ),
-                                showAgenda: true,
-                                navigationDirection:
-                                    MonthNavigationDirection.horizontal,
-                                monthCellStyle: MonthCellStyle(
-                                  backgroundColor:
-                                      Color.fromARGB(255, 246, 246, 246),
-                                  todayBackgroundColor:
-                                      Color.fromARGB(255, 246, 246, 246),
-                                ),
+                              timeSlotViewSettings: const TimeSlotViewSettings(
+                                startHour: 8,
+                                timeIntervalHeight: 20,
                               ),
-                              // onTap: _buildOnTapWidget,
                             ),
                           ),
                           SizedBox(
@@ -143,7 +162,7 @@ Why choose Stephanie S.
                             child: YoutubePlayer(
                               aspectRatio: 16 / 9,
                               controller: YoutubePlayerController.fromVideoId(
-                                videoId: videoId,
+                                videoId: youtube,
                                 autoPlay: false,
                                 params: const YoutubePlayerParams(
                                     showFullscreenButton: true),
@@ -161,5 +180,27 @@ Why choose Stephanie S.
         ),
       ),
     );
+  }
+
+  CalendarDataSource _getCalendarDataSource(calendar) {
+    List<Appointment> appointments = [];
+
+    for (Timestamp time in calendar) {
+      var date = time.toDate();
+      appointments.add(
+        Appointment(
+          startTime: date,
+          endTime: date.add(const Duration(minutes: 29)),
+          color: Colors.grey,
+        ),
+      );
+    }
+    return MyDataSource(appointments);
+  }
+}
+
+class MyDataSource extends CalendarDataSource {
+  MyDataSource(List<Appointment> source) {
+    appointments = source;
   }
 }

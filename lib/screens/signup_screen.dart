@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_1_login_info.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_Input.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
@@ -40,7 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   const EdgeInsets.only(top: 56), // Make space for the AppBar
               children: [
                 // 제목
-                MyHeader('회원가입'),
+                const MyHeader('회원가입'),
                 // 커버 페이지
                 SignupScreen1LoginInfo(
                   emailController: widget.emailController,

@@ -22,16 +22,16 @@ class HomeScreen extends StatelessWidget {
             ListView(
               padding:
                   const EdgeInsets.only(top: 56), // Make space for the AppBar
-              children: const [
+              children: [
                 // 커버 페이지
-                HomeScreen1Cover(),
+                const HomeScreen1Cover(),
                 HomeScreen2Feedback(),
-                HomeScreen3Tutor(),
-                HomeScreen4Price(),
-                HomeScreen5Founder(title: '딸기영어 창업자는 영어공부에 진심이었습니다.'),
+                const HomeScreen3Tutor(),
+                const HomeScreen4Price(),
+                const HomeScreen5Founder(title: '딸기영어 창업자는 영어공부에 진심이었습니다.'),
 
                 // 회사정보
-                CompanyInfo(),
+                const CompanyInfo(),
               ],
             ),
             const Positioned(

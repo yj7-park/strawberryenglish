@@ -3,22 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
-class AnnouncementScreen1Listview extends StatefulWidget {
-  const AnnouncementScreen1Listview({
-    super.key,
-  });
+class FeedbackScreen1Listview extends StatefulWidget {
+  const FeedbackScreen1Listview({super.key});
 
   @override
-  State<AnnouncementScreen1Listview> createState() =>
-      _AnnouncementScreen1ListviewState();
+  State<FeedbackScreen1Listview> createState() =>
+      _FeedbackScreen1ListviewState();
 }
 
-class _AnnouncementScreen1ListviewState
-    extends State<AnnouncementScreen1Listview> {
+class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
   Map<String, Map<String, dynamic>> data = {};
 
   Future<dynamic> getData() async {
-    final collection = FirebaseFirestore.instance.collection("announcement");
+    final collection = FirebaseFirestore.instance.collection("feedback");
 
     await collection
         .get()
@@ -40,6 +37,7 @@ class _AnnouncementScreen1ListviewState
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    var itemCount = data.length;
     return Theme(
       data: customTheme,
       child: Padding(
@@ -47,66 +45,79 @@ class _AnnouncementScreen1ListviewState
           horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
           vertical: 50.0,
         ),
-        child: SizedBox(
-          height: 500,
-          child: ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              separatorBuilder: (_, __) =>
-                  Container(height: 1.5, color: Colors.grey[300]),
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                var id = data.keys.elementAt(index);
-                var doc = data[id];
-                return Card(
-                  elevation: 0.0,
-                  child: ExpansionTile(
-                    tilePadding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 10,
-                    ),
-                    // tileColor: Colors.white,
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "공지",
-                          style: TextStyle(
-                            color: customTheme.colorScheme.secondary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          id,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          DateFormat('yyyy-MM-dd')
-                              .format(doc!['date'].toDate()),
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        width: double.infinity,
-                        color: Colors.grey[100],
-                        child: Text(
-                          doc['body'].join('\n\n'),
-                          textAlign: TextAlign.left,
-                        ),
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          separatorBuilder: (_, __) =>
+              Container(height: 1.5, color: Colors.grey[300]),
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            var id = data.keys.elementAt(index);
+            var doc = data[id];
+            return Card(
+              elevation: 0.0,
+              child: ExpansionTile(
+                tilePadding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 10,
+                ),
+                // tileColor: Colors.white,
+                leading: Text('${itemCount - index}'),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Diago. D.",
+                      style: TextStyle(
+                        color: customTheme.colorScheme.secondary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
+                    const SizedBox(width: 50),
+                    Text(
+                      "$id 학생 후기",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      id,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(width: 50),
+                    Text(
+                      DateFormat('yyyy-MM-dd').format(doc!['date'].toDate()),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    color: Colors.grey[100],
+                    child: Text(
+                      doc['body'].join('\n\n'),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                );
-              }),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -118,24 +129,24 @@ class _AnnouncementScreen1ListviewState
 // import 'package:flutter/material.dart';
 // import 'package:strawberryenglish/themes/my_theme.dart';
 
-// import '../../models/announcement.dart';
+// import '../../models/feedback.dart';
 
-// class AnnouncementScreen1Listview extends StatefulWidget {
-//   const AnnouncementScreen1Listview({
+// class FeedbackScreen1Listview extends StatefulWidget {
+//   const FeedbackScreen1Listview({
 //     super.key,
 //   });
 
 //   @override
-//   State<AnnouncementScreen1Listview> createState() =>
-//       _AnnouncementScreen1ListviewState();
+//   State<FeedbackScreen1Listview> createState() =>
+//       _FeedbackScreen1ListviewState();
 // }
 
-// class _AnnouncementScreen1ListviewState
-//     extends State<AnnouncementScreen1Listview> {
+// class _FeedbackScreen1ListviewState
+//     extends State<FeedbackScreen1Listview> {
 //   List<dynamic> data = [];
 
 //   Future<dynamic> getData() async {
-//     final document = FirebaseFirestore.instance.collection("announcement");
+//     final document = FirebaseFirestore.instance.collection("feedback");
 
 //     await document.get().then<dynamic>((snapshot) async {
 //       setState(() {
@@ -164,7 +175,7 @@ class _AnnouncementScreen1ListviewState
 //           height: 500,
 //           child: StreamBuilder(
 //             stream: FirebaseFirestore.instance
-//                 .collection('announcement')
+//                 .collection('feedback')
 //                 .snapshots(),
 //             builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) =>
 //                 ListView.builder(

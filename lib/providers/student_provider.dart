@@ -49,7 +49,7 @@ class StudentProvider extends ChangeNotifier {
   Future<String> loginStudent(String username, String password) async {
     try {
       if (FirebaseAuth.instance.currentUser == null) {
-        UserCredential userCredential =
+        UserCredential _ =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: username,
           password: password,

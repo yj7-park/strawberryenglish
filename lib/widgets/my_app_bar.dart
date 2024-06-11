@@ -205,7 +205,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                             textAlign: TextAlign.center,
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/reviews');
+                            Navigator.pushNamed(context, '/feedbacks');
                           },
                         ),
                       ),

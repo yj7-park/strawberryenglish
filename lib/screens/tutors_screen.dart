@@ -19,13 +19,13 @@ class TutorsScreen extends StatelessWidget {
             ListView(
               padding:
                   const EdgeInsets.only(top: 56), // Make space for the AppBar
-              children: const [
+              children: [
                 // 제목
-                MyHeader('튜터소개'),
+                const MyHeader('튜터소개'),
                 // 커버 페이지
                 TutorsScreen1Listview(),
                 // 회사정보
-                CompanyInfo(),
+                const CompanyInfo(),
               ],
             ),
             const Positioned(

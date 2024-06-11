@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class IntroductionScreen1Text extends StatelessWidget {
   final String videoId = 'gVtH8X8peZk'; // TODO: youtube 영상 ID 추가
@@ -42,7 +41,7 @@ class IntroductionScreen1Text extends StatelessWidget {
               textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               """
 영어 공부에 진심이었던 시골 축구선수 출신으로 화상영어 사업을 시작한 이유는 단순했습니다.
 기존 필리핀 전화 영어 서비스를 이용하며 만족스럽지 않았습니다.

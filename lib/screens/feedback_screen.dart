@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:strawberryenglish/screens/review_screen/review_screen_1_listview.dart';
+import 'package:strawberryenglish/screens/feedback_screen/feedback_screen_1_listview.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 
-class ReviewScreen extends StatelessWidget {
-  const ReviewScreen({super.key});
+class FeedbackScreen extends StatelessWidget {
+  const FeedbackScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ReviewScreen extends StatelessWidget {
                 // 제목
                 MyHeader('딸기후기'),
                 // 커버 페이지
-                ReviewScreen1Listview(),
+                FeedbackScreen1Listview(),
                 // 회사정보
                 CompanyInfo(),
               ],

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:strawberryenglish/models/payment.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class LogoutDialog {
@@ -56,23 +54,23 @@ class ConfirmDialog {
                   title,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 if (body != "")
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(),
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(3),
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             body,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                             ),
                           ),
