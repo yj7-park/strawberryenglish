@@ -35,7 +35,7 @@ final ThemeData customTheme = ThemeData(
       shadowColor: WidgetStateProperty.all(Colors.white),
       overlayColor: WidgetStateProperty.all(Colors.white),
       surfaceTintColor: WidgetStateProperty.all(Colors.white),
-      fixedSize: WidgetStateProperty.all(const Size.fromWidth(90)),
+      fixedSize: WidgetStateProperty.all(const Size.fromWidth(120)),
     ),
   ),
 );
@@ -43,7 +43,7 @@ final ThemeData customTheme = ThemeData(
 OutlineInputBorder myOutlineInputBorder(controller) {
   return OutlineInputBorder(
     borderSide: BorderSide(
-        color: controller.text.isEmpty ? Colors.redAccent : Colors.black38),
+        color: controller.text.isEmpty ? Colors.redAccent : Colors.black),
   );
 }
 

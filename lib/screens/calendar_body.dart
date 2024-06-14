@@ -99,14 +99,15 @@ class CalendarBodyState extends State<CalendarBody> {
             left: 16.0, right: 16.0), // ListTile의 contentPadding 조절
         initiallyExpanded: isExpanded,
         title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Information',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-              ),
-              SizedBox(height: 10),
-            ]),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Information',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
         subtitle: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -383,7 +384,7 @@ class CalendarBodyState extends State<CalendarBody> {
   //           child: Center(
   //             child: Icon(
   //               Icons.group,
-  //               color: Colors.black38,
+  //               color: Colors.black,
   //             ),
   //           )),
   //       Container(

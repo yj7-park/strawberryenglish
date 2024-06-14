@@ -92,7 +92,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                 labelStyle: TextStyle(
                   color: widget.lessonStartDateController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {

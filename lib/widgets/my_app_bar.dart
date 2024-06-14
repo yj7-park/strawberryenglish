@@ -59,9 +59,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                       shape: const StadiumBorder(),
                       minimumSize: const Size(80, 30),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      backgroundColor: Colors.white70,
+                      backgroundColor: Colors.white,
                       foregroundColor: customTheme.colorScheme.secondary,
-                      shadowColor: Colors.white70,
+                      shadowColor: Colors.white,
                     ),
                     onPressed: () {
                       isLoggedIn
@@ -155,7 +155,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                               const Text(
                                 '딸기영어',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -163,7 +163,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 50),
+                      const SizedBox(width: 180),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,39 +182,12 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                             },
                             child: Column(
                               children: [
-                                MenuItemButton(
-                                  child: const Text(
-                                    '딸기영어',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                            context, '/introduction')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    '뭐가달라?',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                            context, '/introduction')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    '공지사항',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                            context, '/announcement')
-                                        .then((_) => setState(() {}));
-                                  },
-                                )
+                                myMenuItemButton(
+                                    context, '딸기영어', '/introduction'),
+                                myMenuItemButton(
+                                    context, '뭐가달라?', '/introduction'),
+                                myMenuItemButton(
+                                    context, '공지사항', '/announcement'),
                               ],
                             ),
                           ),
@@ -232,66 +205,12 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                             },
                             child: Column(
                               children: [
-                                MenuItemButton(
-                                  child: const Text(
-                                    '수업안내',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/lectures')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    '수강안내',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/lectures')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    '수업토픽',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/topics')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    '튜터소개',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/tutors')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    '수강료',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/tuitionfee')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
-                                MenuItemButton(
-                                  child: const Text(
-                                    'FAQ',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/faq')
-                                        .then((_) => setState(() {}));
-                                  },
-                                ),
+                                myMenuItemButton(context, '수업안내', '/lectures'),
+                                myMenuItemButton(context, '수강안내', '/lectures'),
+                                myMenuItemButton(context, '수업토픽', '/topics'),
+                                myMenuItemButton(context, '튜터소개', '/tutors'),
+                                myMenuItemButton(context, '수강료', '/tuitionfee'),
+                                myMenuItemButton(context, 'FAQ', '/faq'),
                               ],
                             ),
                           ),
@@ -306,16 +225,8 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                 _height = _defaultHeight;
                               });
                             },
-                            child: MenuItemButton(
-                              child: const Text(
-                                '딸기후기',
-                                textAlign: TextAlign.center,
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/feedbacks')
-                                    .then((_) => setState(() {}));
-                              },
-                            ),
+                            child:
+                                myMenuItemButton(context, '딸기후기', '/feedbacks'),
                           ),
                         ],
                       ),
@@ -395,6 +306,19 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
       ],
     );
   }
+}
+
+Widget myMenuItemButton(context, text, url) {
+  return MenuItemButton(
+    child: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 17),
+    ),
+    onPressed: () {
+      Navigator.pushNamed(context, url).then((_) => context.setState(() {}));
+    },
+  );
 }
 
 // final myAppBarTitle = Padding(

@@ -87,7 +87,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black38),
+                      color: Colors.black),
                 ),
               ),
             ),

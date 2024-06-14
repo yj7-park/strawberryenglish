@@ -9,7 +9,7 @@ class HomeScreen4Price extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    dynamic widgets = _buildLayout(screenWidth);
+    dynamic widgets = _buildLayout(context, screenWidth);
     return Theme(
       data: customTheme,
       child: Container(
@@ -24,23 +24,23 @@ class HomeScreen4Price extends StatelessWidget {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                        const SizedBox(height: 50),
-                        ...List.from(widgets.reversed),
-                        const SizedBox(height: 50)
-                      ]),
-            // TODO: [체험하기]로 이동 버튼 추가
+                      const SizedBox(height: 50),
+                      ...List.from(widgets.reversed),
+                      const SizedBox(height: 50),
+                    ],
+                  ),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _buildLayout(double screenWidth) {
+  List<Widget> _buildLayout(context, double screenWidth) {
     return [
       Padding(
         padding: const EdgeInsets.all(50),
         child: Image.asset(
-          'assets/images/price.png',
+          'assets/images/price2.png',
           width: screenWidth >= 1600 ? screenWidth / 3 : screenWidth,
           // height: 30,
         ),
@@ -95,6 +95,39 @@ class HomeScreen4Price extends StatelessWidget {
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
               textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 40),
+            // [체험하기]로 이동 버튼
+            Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/feedbacks');
+                },
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: 18),
+                        Container(
+                          height: 7,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: customTheme.colorScheme.secondary
+                                .withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Text(
+                      ' ✔ 체험하기 바로가기',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

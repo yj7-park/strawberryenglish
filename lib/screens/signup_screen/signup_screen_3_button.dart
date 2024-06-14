@@ -72,7 +72,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black38),
+                      color: Colors.black),
                 ),
               ),
             ),

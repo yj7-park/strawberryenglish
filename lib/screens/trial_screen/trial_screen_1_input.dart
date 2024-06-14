@@ -65,7 +65,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                 labelStyle: TextStyle(
                   color: widget.phoneNumberController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -90,7 +90,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                 labelStyle: TextStyle(
                   color: widget.countryController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -110,7 +110,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                 labelStyle: TextStyle(
                   color: widget.lessonDayController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -133,7 +133,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                 labelStyle: TextStyle(
                   color: widget.lessonTimeController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -154,7 +154,7 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                 labelStyle: TextStyle(
                   color: widget.skypeIdController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {

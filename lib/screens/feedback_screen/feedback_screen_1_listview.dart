@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +28,14 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
         };
       });
     });
+
+    var sortedEntries = data.entries.toList()
+      ..sort((e1, e2) {
+        var diff = e2.value['date'].compareTo(e1.value['date']);
+        return diff;
+      });
+
+    data = Map<String, Map<String, dynamic>>.fromEntries(sortedEntries);
   }
 
   @override

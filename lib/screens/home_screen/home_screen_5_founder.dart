@@ -19,7 +19,7 @@ class HomeScreen5Founder extends StatelessWidget {
         children: [
           const SizedBox(height: 50),
           ...widgets,
-          const SizedBox(height: 50)
+          const SizedBox(height: 50),
         ],
       ),
     );

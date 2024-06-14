@@ -65,7 +65,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black38),
+                      color: Colors.black),
                 ),
               ),
             ),

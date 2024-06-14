@@ -56,7 +56,7 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                 labelStyle: TextStyle(
                   color: widget.emailController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -75,7 +75,7 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                 labelStyle: TextStyle(
                   color: widget.passwordController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -96,7 +96,7 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                 labelStyle: TextStyle(
                   color: widget.confirmPasswordController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {

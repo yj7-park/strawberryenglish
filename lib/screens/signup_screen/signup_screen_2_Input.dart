@@ -52,7 +52,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
                 labelStyle: TextStyle(
                   color: widget.nameController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               onChanged: (_) {
@@ -73,7 +73,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
                 labelStyle: TextStyle(
                   color: widget.birthDateController.text.isEmpty
                       ? Colors.redAccent
-                      : Colors.black38,
+                      : Colors.black,
                 ),
               ),
               inputFormatters: [

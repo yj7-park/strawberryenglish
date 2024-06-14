@@ -12,7 +12,7 @@ class HomeScreen3Tutor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    dynamic widgets = _buildLayout(screenWidth);
+    dynamic widgets = _buildLayout(context, screenWidth);
     return Theme(
       data: customTheme,
       child: Column(
@@ -25,11 +25,11 @@ class HomeScreen3Tutor extends StatelessWidget {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                      const SizedBox(height: 50),
-                      ...widgets,
-                      const SizedBox(height: 50)
-                    ]),
-          // TODO: [튜터소개]로 이동 버튼 추가
+                    const SizedBox(height: 50),
+                    ...widgets,
+                    const SizedBox(height: 50)
+                  ],
+                ),
         ],
       ),
     );
@@ -52,7 +52,7 @@ class HomeScreen3Tutor extends StatelessWidget {
   //   );
   // }
 
-  List<Widget> _buildLayout(double screenWidth) {
+  List<Widget> _buildLayout(context, double screenWidth) {
     return [
       Padding(
         padding: const EdgeInsets.all(50),
@@ -95,6 +95,39 @@ class HomeScreen3Tutor extends StatelessWidget {
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
               textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 40),
+            // [튜터소개]로 이동 버튼
+            Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/feedbacks');
+                },
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: 18),
+                        Container(
+                          height: 7,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: customTheme.colorScheme.secondary
+                                .withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Text(
+                      ' ✔ 튜터소개 바로가기',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
