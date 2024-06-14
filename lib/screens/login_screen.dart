@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/providers/tutor_provider.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
-import 'package:strawberryenglish/widgets/my_app_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,7 +35,7 @@ class LoginScreenState extends State<LoginScreen> {
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
-        appBar: const MyMenuAppBar(),
+        // appBar: const MyMenuAppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -63,34 +62,34 @@ class LoginScreenState extends State<LoginScreen> {
                   // ),
                   // const SizedBox(height: 24), // 로고와 입력 필드 사이의 여백 추가
                   SizedBox(
-                      width: constrainedSize,
-                      child: TextField(
-                        controller: _usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                        ),
-                        autofillHints: const ['username'],
-                      )),
+                    width: constrainedSize,
+                    child: TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                        border: OutlineInputBorder(),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 8), // 입력 필드 사이의 간격 조정
                   SizedBox(
-                      width: constrainedSize,
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                        ),
-                        autofillHints: const ['current-password'],
-                        onSubmitted: (String _) async {
-                          await handleLogin();
-                        },
-                      )),
+                    width: constrainedSize,
+                    child: TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      ),
+                      onSubmitted: (String _) async {
+                        await handleLogin();
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   SizedBox(
                       width: constrainedSize, // 최대 너비를 300으로 설정
@@ -149,34 +148,34 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (username.isNotEmpty && password.isNotEmpty) {
       if (username == 'admin@admin.com') {
-        Navigator.pushNamed(context, '/admin');
+        Navigator.pushNamed(context, '/admin').then((_) => setState(() {}));
         return; // admin 계정으로 로그인 시 바로 종료
       }
 
-      // try {
-      //   _errorMessage = await tutorProvider.loginTutor(username, password);
+      try {
+        _errorMessage = await tutorProvider.loginTutor(username, password);
 
-      //   if (_errorMessage.isEmpty) {
-      //     if (tutorProvider.tutor != null) {
-      //       // Navigator.pushNamed(context, '/tutor_calendar');
-      //       Navigator.of(context).pop();
-      //       return; // tutor 로그인 성공 시 바로 종료
-      //     } else {
-      //       _errorMessage = "Login failed. Please check ID / Password.";
-      //     }
-      //   }
-      // } catch (e) {
-      //   if (kDebugMode) {
-      //     print('Tutor login 오류 발생: $e');
-      //   }
-      // }
+        if (_errorMessage.isEmpty) {
+          if (tutorProvider.tutor != null) {
+            // Navigator.pushNamed(context, '/tutor_calendar').then((_) => setState(() {}));
+            Navigator.of(context).pop();
+            return; // tutor 로그인 성공 시 바로 종료
+          } else {
+            _errorMessage = "Login failed. Please check ID / Password.";
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Tutor login 오류 발생: $e');
+        }
+      }
 
       try {
         _errorMessage = await studentProvider.loginStudent(username, password);
 
         if (_errorMessage.isEmpty) {
           if (studentProvider.student != null) {
-            // Navigator.pushNamed(context, '/student_calendar');
+            // Navigator.pushNamed(context, '/student_calendar').then((_) => setState(() {}));
             Navigator.of(context).pop(true);
             return; // student 로그인 성공 시 바로 종료
           }
@@ -188,7 +187,9 @@ class LoginScreenState extends State<LoginScreen> {
       }
 
       if (_errorMessage.isNotEmpty) {
-        setState(() {});
+        setState(() {
+          _errorMessage = _errorMessage.replaceFirst(RegExp(r'\[.*\] '), '');
+        });
       }
     }
   }

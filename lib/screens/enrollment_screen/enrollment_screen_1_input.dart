@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 
 class EnrollmentScreen1Input extends StatefulWidget {
   static final fee = {
@@ -38,6 +39,11 @@ class EnrollmentScreen1Input extends StatefulWidget {
     }
   };
 
+  static const _textStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+
   final TextEditingController lessonStartDateController;
 
   const EnrollmentScreen1Input({
@@ -64,14 +70,34 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              '수강 정보',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
             // TODO: 날짜
             TextFormField(
               controller: widget.lessonStartDateController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: '*수업시작일',
                 hintText: 'YYYY-MM-DD',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                enabledBorder:
+                    myOutlineInputBorder(widget.lessonStartDateController),
+                focusedBorder:
+                    myOutlineInputBorder(widget.lessonStartDateController),
+                labelStyle: TextStyle(
+                  color: widget.lessonStartDateController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black38,
+                ),
               ),
+              onChanged: (_) {
+                setState(() {});
+              },
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
                   RegExp("[0-9-]"),
@@ -80,8 +106,9 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
               ],
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 20),
-            const Text('*구독기간'),
+            const SizedBox(height: 30),
+            const Text('*구독기간', style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 10),
             SegmentedButton(
               segments: const [
                 ButtonSegment(
@@ -90,13 +117,19 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('1개월'),
+                      child: Text(
+                        '1개월',
+                        style: EnrollmentScreen1Input._textStyle,
+                      ),
                     ),
                   ),
                 ),
                 ButtonSegment(
                   value: 3,
-                  label: Text('3개월'),
+                  label: Text(
+                    '3개월',
+                    style: EnrollmentScreen1Input._textStyle,
+                  ),
                 ),
               ],
               showSelectedIcon: false,
@@ -107,10 +140,9 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                 });
               },
             ),
-            const SizedBox(height: 20),
-            const Text(
-              '*수업횟수',
-            ),
+            const SizedBox(height: 30),
+            const Text('*수업횟수', style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 10),
             SegmentedButton(
               segments: const [
                 ButtonSegment(
@@ -119,17 +151,26 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('주 2회'),
+                      child: Text(
+                        '주2회',
+                        style: EnrollmentScreen1Input._textStyle,
+                      ),
                     ),
                   ),
                 ),
                 ButtonSegment(
                   value: 3,
-                  label: Text('주 3회'),
+                  label: Text(
+                    '주3회',
+                    style: EnrollmentScreen1Input._textStyle,
+                  ),
                 ),
                 ButtonSegment(
                   value: 5,
-                  label: Text('주 5회'),
+                  label: Text(
+                    '주5회',
+                    style: EnrollmentScreen1Input._textStyle,
+                  ),
                 ),
               ],
               showSelectedIcon: false,
@@ -140,10 +181,9 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                 });
               },
             ),
-            const SizedBox(height: 20),
-            const Text(
-              '*수업길이',
-            ),
+            const SizedBox(height: 30),
+            const Text('*수업길이', style: TextStyle(fontSize: 16)),
+            const SizedBox(height: 10),
             SegmentedButton(
               segments: const [
                 ButtonSegment(
@@ -152,13 +192,19 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                     width: 100,
                     height: 50,
                     child: Center(
-                      child: Text('30분'),
+                      child: Text(
+                        '30분',
+                        style: EnrollmentScreen1Input._textStyle,
+                      ),
                     ),
                   ),
                 ),
                 ButtonSegment(
                   value: 55,
-                  label: Text('55분'),
+                  label: Text(
+                    '55분',
+                    style: EnrollmentScreen1Input._textStyle,
+                  ),
                 ),
               ],
               showSelectedIcon: false,
@@ -169,13 +215,51 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                 });
               },
             ),
-            const SizedBox(height: 20),
-            Text(
-                '${EnrollmentScreen.selectedMonths.first}개월 주 ${EnrollmentScreen.selectedDays.first}회 ${EnrollmentScreen.selectedMins.first}분'),
-            Text(
-                '${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원'),
-            Text(
-                '월(${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)'),
+            const SizedBox(height: 60),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: customTheme.colorScheme.secondary),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      '${EnrollmentScreen.selectedMonths.first}개월 수강권',
+                    ),
+                    const SizedBox(width: 30),
+                    Text(
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      '( 주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분 )',
+                    ),
+                    const Spacer(),
+                    Column(
+                      children: [
+                        Text(
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: customTheme.colorScheme.secondary,
+                            ),
+                            '${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원'),
+                        Text(
+                            '(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

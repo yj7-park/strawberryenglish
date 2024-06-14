@@ -17,7 +17,6 @@ class CalendarBody extends StatefulWidget {
 
 class CalendarBodyState extends State<CalendarBody> {
   late CalendarController _calendarController;
-  bool _isStudentInfoExpanded = false; // 학생 정보 확장 여부 상태 변수
 
   @override
   void initState() {
@@ -28,33 +27,40 @@ class CalendarBodyState extends State<CalendarBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const Divider(),
-          // 여기에 사용자 정보를 보여주는 위젯 추가
-          _buildStudentDetails(),
-          const Divider(),
-          SizedBox(
-            height: 430,
-            child: Localizations.override(
-              context: context,
-              locale: const Locale('ko'),
-              child: SfCalendar(
-                view: CalendarView.month,
-                // selectionDecoration: BoxDecoration(
-                //   color: const Color(0xfffcc021), // 선택된 셀의 배경색
-                //   borderRadius: BorderRadius.circular(10), // 모서리 반경
-                // ),
-                showNavigationArrow: true,
-                dataSource: _getCalendarDataSource(),
-                controller: _calendarController,
-                showDatePickerButton: true,
-                headerDateFormat: 'yyyy년 M월', // 원하는 형식으로 지정
-                todayHighlightColor: const Color(0xfffcc021),
-                // allowAppointmentResize: true,
-                // allowDragAndDrop: true,,
-                monthViewSettings: const MonthViewSettings(
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
+        vertical: 50.0,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Divider(),
+            // 여기에 사용자 정보를 보여주는 위젯 추가
+            _buildStudentDetails(screenHeight > 1000),
+            const Divider(),
+            SizedBox(
+              height: 430,
+              child: Localizations.override(
+                context: context,
+                locale: const Locale('ko'),
+                child: SfCalendar(
+                  view: CalendarView.month,
+                  // selectionDecoration: BoxDecoration(
+                  //   color: const Color(0xfffcc021), // 선택된 셀의 배경색
+                  //   borderRadius: BorderRadius.circular(10), // 모서리 반경
+                  // ),
+                  showNavigationArrow: true,
+                  dataSource: _getCalendarDataSource(),
+                  controller: _calendarController,
+                  showDatePickerButton: true,
+                  headerDateFormat: 'yyyy년 M월', // 원하는 형식으로 지정
+                  todayHighlightColor: const Color(0xfffcc021),
+                  // allowAppointmentResize: true,
+                  // allowDragAndDrop: true,
+                  monthViewSettings: const MonthViewSettings(
                     agendaItemHeight: 50,
                     agendaViewHeight: 60,
                     appointmentDisplayMode:
@@ -69,26 +75,29 @@ class CalendarBodyState extends State<CalendarBody> {
                     monthCellStyle: MonthCellStyle(
                       backgroundColor: Color.fromARGB(255, 246, 246, 246),
                       todayBackgroundColor: Color.fromARGB(255, 246, 246, 246),
-                    )),
-                // monthCellBuilder: _buildMonthCell,
-                onTap: _buildOnTapWidget,
+                    ),
+                  ),
+                  // monthCellBuilder: _buildMonthCell,
+                  onTap: _buildOnTapWidget,
+                ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 100,
-          )
-        ],
+            const SizedBox(
+              height: 100,
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildStudentDetails() {
+  Widget _buildStudentDetails(bool isExpanded) {
     return ExpansionTile(
         // backgroundColor: Color.fromARGB(255, 246, 246, 246),
         // collapsedBackgroundColor: Color.fromARGB(255, 246, 246, 246),
         tilePadding: const EdgeInsets.only(
             left: 16.0, right: 16.0), // ListTile의 contentPadding 조절
+        initiallyExpanded: isExpanded,
         title: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -121,12 +130,6 @@ class CalendarBodyState extends State<CalendarBody> {
             )
           ],
         ),
-        initiallyExpanded: _isStudentInfoExpanded,
-        onExpansionChanged: (isExpanded) {
-          setState(() {
-            _isStudentInfoExpanded = isExpanded;
-          });
-        },
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -323,12 +326,15 @@ class CalendarBodyState extends State<CalendarBody> {
           }
         }
 
-        appointments.add(Appointment(
+        appointments.add(
+          Appointment(
             startTime: currentLessonTime,
             endTime: currentLessonTime.add(const Duration(minutes: 29)),
             color: appointmentColor,
             subject: subject,
-            isAllDay: true));
+            isAllDay: true,
+          ),
+        );
       }
 
       currentLessonDate = currentLessonDate.add(const Duration(days: 1));
@@ -377,7 +383,7 @@ class CalendarBodyState extends State<CalendarBody> {
   //           child: Center(
   //             child: Icon(
   //               Icons.group,
-  //               color: Colors.black,
+  //               color: Colors.black38,
   //             ),
   //           )),
   //       Container(
@@ -490,6 +496,7 @@ class CalendarBodyState extends State<CalendarBody> {
       if (selectedAppointments.isNotEmpty) {
         _bottomSheetController = showBottomSheet(
           context: context,
+          backgroundColor: Colors.grey.withOpacity(0.1),
           builder: (BuildContext context) {
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -581,7 +588,7 @@ class CalendarBodyState extends State<CalendarBody> {
             }
             _updateLastLessonDate();
             Provider.of<StudentProvider>(context, listen: false)
-                .updateStudent(widget.user);
+                .updateStudentToFirestore(widget.user);
             _bottomSheetController?.close(); // Close the bottom sheet
           },
         )

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_1_login_info.dart';
-import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_Input.dart';
+import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
@@ -36,7 +36,7 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             ListView(
               padding:
-                  const EdgeInsets.only(top: 56), // Make space for the AppBar
+                  const EdgeInsets.only(top: 93), // Make space for the AppBar
               children: [
                 // 제목
                 const MyHeader('회원가입'),
@@ -61,6 +61,19 @@ class _SignupScreenState extends State<SignupScreen> {
                 // const CompanyInfo(),
               ],
             ),
+            // Positioned(
+            //   bottom: 30,
+            //   right: 30,
+            //   child: InkWell(
+            //     onTap: () {
+            //       js.context
+            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/kakao_talk.png',
+            //     ),
+            //   ),
+            // ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

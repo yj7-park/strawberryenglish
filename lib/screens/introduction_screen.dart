@@ -1,3 +1,4 @@
+import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/introduction_screen/introduction_screen_1_text.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
@@ -19,16 +20,33 @@ class IntroductionScreen extends StatelessWidget {
           children: [
             ListView(
               padding:
-                  const EdgeInsets.only(top: 56), // Make space for the AppBar
-              children: const [
+                  const EdgeInsets.only(top: 93), // Make space for the AppBar
+              children: [
                 // 커버 페이지
-                MyHeader('뭐가 달라?'),
-                HomeScreen5Founder(title: ''),
-                IntroductionScreen1Text(),
+                const MyHeader('뭐가 달라?'),
+                const HomeScreen5Founder(title: ''),
+                Container(
+                  color: customTheme.colorScheme.secondary.withOpacity(0.1),
+                  child: const IntroductionScreen1Text(),
+                ),
 
                 // 회사정보
-                CompanyInfo(),
+                const CompanyInfo(),
               ],
+            ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                  width: 70,
+                ),
+              ),
             ),
             const Positioned(
               child: MyMenuAppBar(),

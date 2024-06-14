@@ -85,7 +85,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
 
   // TODO: 메일 주소 verification
 
-  // TODO: 회원 가입 처리
+  // submit 처리
   void submit() async {
     final email = widget.emailController.text.trim();
     final password = widget.passwordController.text.trim();
@@ -159,14 +159,14 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
 
       if (errorMessage.isEmpty) {
         if (studentProvider.student != null) {
-          // Navigator.pushNamed(context, '/student_calendar');
+          // Navigator.pushNamed(context, '/student_calendar').then((_) => setState(() {})).then((_) => setState(() {}));
           Navigator.of(context).pop(true);
           return; // student 로그인 성공 시 바로 종료
         }
       }
 
       if (confirm == true) {
-        Navigator.pop(context);
+        Navigator.of(context).pop(true);
       }
     } catch (e) {
       if (authCreated) {

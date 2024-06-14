@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
         // Add more providers if needed
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Strawberry English',
         theme: ThemeData(
           primarySwatch: Colors.blue,

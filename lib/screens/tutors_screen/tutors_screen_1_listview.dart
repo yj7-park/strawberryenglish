@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -139,7 +137,7 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          // TODO: calendar
+                          // calendar
                           SizedBox(
                             width: 450,
                             height: 450 / 16 * 9,

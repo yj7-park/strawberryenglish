@@ -18,7 +18,7 @@ class TuitionfeeScreen extends StatelessWidget {
           children: [
             ListView(
               padding:
-                  const EdgeInsets.only(top: 56), // Make space for the AppBar
+                  const EdgeInsets.only(top: 93), // Make space for the AppBar
               children: const [
                 // 제목
                 MyHeader('수강료'),
@@ -28,6 +28,19 @@ class TuitionfeeScreen extends StatelessWidget {
                 CompanyInfo(),
               ],
             ),
+            // Positioned(
+            //   bottom: 30,
+            //   right: 30,
+            //   child: InkWell(
+            //     onTap: () {
+            //       js.context
+            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/kakao_talk.png',
+            //     ),
+            //   ),
+            // ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

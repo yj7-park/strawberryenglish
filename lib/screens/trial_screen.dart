@@ -52,6 +52,7 @@ class _TrialScreenState extends State<TrialScreen> {
                   // 로딩중일 때 표시할 화면
                   return const Center(
                     child: CircularProgressIndicator(),
+                    // child: Text('로그인이 필요한 서비스입니다.'),
                   );
                 } else if (snapshot.hasError) {
                   // 에러가 발생했을 때 표시할 화면
@@ -77,7 +78,7 @@ class _TrialScreenState extends State<TrialScreen> {
                         top: 56), // Make space for the AppBar
                     children: [
                       // 제목
-                      MyHeader('체험하기'),
+                      const MyHeader('체험하기'),
                       // 커버 페이지
                       SignupScreen2Input(
                         nameController: widget.nameController,
@@ -117,6 +118,19 @@ class _TrialScreenState extends State<TrialScreen> {
                 }
               },
             ),
+            // Positioned(
+            //   bottom: 30,
+            //   right: 30,
+            //   child: InkWell(
+            //     onTap: () {
+            //       js.context
+            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/kakao_talk.png',
+            //     ),
+            //   ),
+            // ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

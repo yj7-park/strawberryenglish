@@ -1,9 +1,7 @@
-import 'package:flutter/services.dart';
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
@@ -78,7 +76,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     );
   }
 
-  // TODO: 회원 가입 처리
+  // submit 처리
   void register() async {
     final name = widget.nameController.text.trim();
     final birthDate = widget.birthDateController.text.trim();
@@ -109,7 +107,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     try {
       setState(() {});
 
-      // TODO: 성공 시 동작
+      // 성공 시 동작
       Student? updatedStudent = await studentProvider.getStudent();
       updatedStudent!.name = name;
       updatedStudent.birthDate = birthDate;
@@ -131,7 +129,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
         falseButton: "마이페이지로 이동",
       );
 
-      Navigator.pop(context);
+      Navigator.of(context).pop(true);
     } catch (e) {
       setState(() {
         errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');

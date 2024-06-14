@@ -1,3 +1,4 @@
+import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
 import 'package:strawberryenglish/screens/home_screen/home_screen_1_cover.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             ListView(
               padding:
-                  const EdgeInsets.only(top: 56), // Make space for the AppBar
+                  const EdgeInsets.only(top: 93), // Make space for the AppBar
               children: [
                 // 커버 페이지
                 const HomeScreen1Cover(),
@@ -33,6 +34,20 @@ class HomeScreen extends StatelessWidget {
                 // 회사정보
                 const CompanyInfo(),
               ],
+            ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                  width: 70,
+                ),
+              ),
             ),
             const Positioned(
               child: MyMenuAppBar(),

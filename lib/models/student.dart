@@ -134,17 +134,18 @@ class Student {
       topic = null;
     }
     try {
-      cancelRequestDates = snapshot['cancelRequestDates'];
+      cancelRequestDates =
+          (snapshot['cancelRequestDates'] as List).cast<String>();
     } catch (e) {
       cancelRequestDates = null;
     }
     try {
-      cancelDates = snapshot['cancelDates'];
+      cancelDates = (snapshot['cancelDates'] as List).cast<String>();
     } catch (e) {
       cancelDates = null;
     }
     try {
-      tutorCancelDates = snapshot['tutorCancelDates'];
+      tutorCancelDates = (snapshot['tutorCancelDates'] as List).cast<String>();
     } catch (e) {
       tutorCancelDates = null;
     }
@@ -159,12 +160,12 @@ class Student {
       cancelCountTotal = null;
     }
     try {
-      holdRequestDates = snapshot['holdRequestDates'];
+      holdRequestDates = (snapshot['holdRequestDates'] as List).cast<String>();
     } catch (e) {
       holdRequestDates = null;
     }
     try {
-      holdDates = snapshot['holdDates'];
+      holdDates = (snapshot['holdDates'] as List).cast<String>();
     } catch (e) {
       holdDates = null;
     }

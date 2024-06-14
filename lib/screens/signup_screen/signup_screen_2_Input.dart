@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 
 class SignupScreen2Input extends StatefulWidget {
   final TextEditingController nameController;
@@ -33,20 +34,47 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              '필수 정보',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
             TextFormField(
               controller: widget.nameController,
-              decoration: const InputDecoration(
-                  labelText: '*한글 이름', border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: '*한글 이름',
+                border: const OutlineInputBorder(),
+                enabledBorder: myOutlineInputBorder(widget.nameController),
+                focusedBorder: myOutlineInputBorder(widget.nameController),
+                labelStyle: TextStyle(
+                  color: widget.nameController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black38,
+                ),
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
             ),
             const Text('* 실제 수강하는 사람의 이름을 적어주세요.'),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             // TODO: 생년월일
             TextFormField(
               controller: widget.birthDateController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: '*생년월일',
                 hintText: 'YYYY-MM-DD',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                enabledBorder: myOutlineInputBorder(widget.birthDateController),
+                focusedBorder: myOutlineInputBorder(widget.birthDateController),
+                labelStyle: TextStyle(
+                  color: widget.birthDateController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black38,
+                ),
               ),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
@@ -54,6 +82,9 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
                 ),
                 // MaskedInputFormatter('####-##-##')
               ],
+              onChanged: (_) {
+                setState(() {});
+              },
               textInputAction: TextInputAction.next,
             ),
           ],

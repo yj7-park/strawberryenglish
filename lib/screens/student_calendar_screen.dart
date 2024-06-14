@@ -1,3 +1,5 @@
+import 'package:strawberryenglish/widgets/my_header.dart';
+import 'package:universal_html/js.dart' as js;
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -21,8 +23,10 @@ class StudentCalendarScreen extends StatelessWidget {
           children: [
             ListView(
               padding:
-                  const EdgeInsets.only(top: 56), // Make space for the AppBar
+                  const EdgeInsets.only(top: 93), // Make space for the AppBar
               children: [
+                // 제목
+                const MyHeader('마이페이지'),
                 FutureBuilder<Student?>(
                   future: Provider.of<StudentProvider>(context)
                       .getStudent(), // 새로운 Future 생성
@@ -50,6 +54,20 @@ class StudentCalendarScreen extends StatelessWidget {
                   },
                 ),
               ],
+            ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                  width: 70,
+                ),
+              ),
             ),
             const Positioned(
               child: MyMenuAppBar(),

@@ -17,7 +17,7 @@ class HomeScreen1Cover extends StatelessWidget {
           width: double.infinity,
           height: 700, // 적당한 높이 조절
           colorBlendMode: BlendMode.darken,
-          color: Colors.black45,
+          color: Colors.black38,
         ),
         // 텍스트
         Positioned.fill(

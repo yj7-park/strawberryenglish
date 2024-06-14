@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/signup_screen.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 
 class SignupScreen1LoginInfo extends StatefulWidget {
   final TextEditingController emailController;
@@ -37,24 +38,70 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              '계정 정보',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
             TextFormField(
               controller: widget.emailController,
-              decoration: const InputDecoration(
-                  labelText: '*아이디(이메일)', border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: '*아이디(이메일)',
+                border: const OutlineInputBorder(),
+                enabledBorder: myOutlineInputBorder(widget.emailController),
+                focusedBorder: myOutlineInputBorder(widget.emailController),
+                labelStyle: TextStyle(
+                  color: widget.emailController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black38,
+                ),
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             TextFormField(
               controller: widget.passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: '*비밀번호', border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: '*비밀번호',
+                border: const OutlineInputBorder(),
+                enabledBorder: myOutlineInputBorder(widget.passwordController),
+                focusedBorder: myOutlineInputBorder(widget.passwordController),
+                labelStyle: TextStyle(
+                  color: widget.passwordController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black38,
+                ),
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             TextFormField(
               controller: widget.confirmPasswordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                  labelText: '*비밀번호 확인', border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: '*비밀번호 확인',
+                border: const OutlineInputBorder(),
+                enabledBorder:
+                    myOutlineInputBorder(widget.confirmPasswordController),
+                focusedBorder:
+                    myOutlineInputBorder(widget.confirmPasswordController),
+                labelStyle: TextStyle(
+                  color: widget.confirmPasswordController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black38,
+                ),
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             Row(

@@ -13,12 +13,10 @@ final ThemeData customTheme = ThemeData(
     secondary: Color(0xfffcc021), // 직접 지정한 보조 색상
     // secondaryVariant: Color(0xFFfbd85a), // secondaryColor의 변형 색상
     surface: Colors.white70,
-    background: Colors.white70,
     error: Colors.red,
     onPrimary: Colors.white70,
     onSecondary: Color(0xFF424242),
     onSurface: Color(0xFF424242),
-    onBackground: Color(0xFF424242),
     onError: Colors.white70,
     brightness: Brightness.light,
   ),
@@ -34,13 +32,20 @@ final ThemeData customTheme = ThemeData(
   menuButtonTheme: MenuButtonThemeData(
     style: ButtonStyle(
       // backgroundColor: MaterialStateProperty.all(Colors.white),
-      shadowColor: MaterialStateProperty.all(Colors.white),
-      overlayColor: MaterialStateProperty.all(Colors.white),
-      surfaceTintColor: MaterialStateProperty.all(Colors.white),
-      fixedSize: MaterialStateProperty.all(const Size.fromWidth(90)),
+      shadowColor: WidgetStateProperty.all(Colors.white),
+      overlayColor: WidgetStateProperty.all(Colors.white),
+      surfaceTintColor: WidgetStateProperty.all(Colors.white),
+      fixedSize: WidgetStateProperty.all(const Size.fromWidth(90)),
     ),
   ),
 );
+
+OutlineInputBorder myOutlineInputBorder(controller) {
+  return OutlineInputBorder(
+    borderSide: BorderSide(
+        color: controller.text.isEmpty ? Colors.redAccent : Colors.black38),
+  );
+}
 
 // const Color primaryColor = Color(0xFFF5F5F5);
 

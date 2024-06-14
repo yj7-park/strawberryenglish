@@ -16,7 +16,7 @@ class TutorCalendarScreen extends StatelessWidget {
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
-        appBar: MyMenuAppBar(),
+        appBar: const MyMenuAppBar(),
         body: FutureBuilder<List<Student>>(
           future: Provider.of<TutorProvider>(context)
               .getAllStudents(), // Assuming getStudents is a method that fetches student data.

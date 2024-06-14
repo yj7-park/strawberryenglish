@@ -21,7 +21,7 @@ class CompanyInfo extends StatelessWidget {
             children: [
               Text(
                 """
-딸기아카데미 | 519-55-00921 | 대표자 윤소명 | 이메일
+딸기아카데미 | 519-55-00921 | 대표자 윤소명 | 이메일 hgu0485@naver.com
 통신판매업 신고번호
 경북 구미시 고아읍 송평구길 62 나동 1402호
 

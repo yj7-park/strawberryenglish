@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
+import 'package:strawberryenglish/providers/tutor_provider.dart';
+import 'package:strawberryenglish/screens/calendar_body.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
@@ -20,7 +22,7 @@ class AdminScreen extends StatelessWidget {
         data: customTheme, // customTheme을 적용
         child: Scaffold(
           appBar: AppBar(
-            title: MyMenuAppBar(),
+            title: const MyMenuAppBar(),
             // leading: ,
             automaticallyImplyLeading: false,
             actions: [
@@ -125,118 +127,164 @@ class AddLessonScreenState extends State<AddLessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Lesson'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-            TextField(
-              controller: programNameController,
-              decoration: const InputDecoration(labelText: 'Program Name'),
-            ),
-            TextField(
-              controller: topicController,
-              decoration: const InputDecoration(labelText: 'Topic'),
-            ),
-            TextField(
-              controller: tutorController,
-              decoration: const InputDecoration(labelText: 'Tutor'),
-            ),
-            // Day of Week 선택
-            const Padding(
-              padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: Text(
-                'Day(s) of Week',
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            Wrap(
-              children: <Widget>[
-                for (String day in [
-                  'Monday',
-                  'Tuesday',
-                  'Wednesday',
-                  'Thursday',
-                  'Friday',
-                  'Saturday',
-                  'Sunday',
-                ])
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _selectedDaysOfWeek.contains(day),
-                        onChanged: (bool? value) {
-                          setState(() {
-                            if (value != null) {
-                              if (value) {
-                                _selectedDaysOfWeek.add(day);
-                              } else {
-                                _selectedDaysOfWeek.remove(day);
-                              }
-                            }
-                          });
-                        },
-                      ),
-                      Text(day),
-                    ],
+    return Theme(
+      data: customTheme, // customTheme을 적용
+      child: Scaffold(
+        appBar: const MyMenuAppBar(),
+        body: FutureBuilder<List<Student>>(
+          future: Provider.of<TutorProvider>(context)
+              .getAllStudents(), // Assuming getStudents is a method that fetches student data.
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                !snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('학생이 없습니다.'));
+            }
+
+            final students = snapshot.data!;
+
+            return DefaultTabController(
+              length: students.length,
+              child: Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: TabBar(
+                    isScrollable: true,
+                    tabs: students
+                        .map((student) => Tab(text: student.name))
+                        .toList(),
                   ),
-              ],
-            ),
-            TextField(
-              controller: lessonTypeController,
-              decoration: const InputDecoration(labelText: 'Lesson Type'),
-            ),
-            TextField(
-              controller: lessonTimeController,
-              decoration: const InputDecoration(labelText: 'Lesson Time'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  // Lesson 추가
-                  await _firestore.collection('lessons').add({
-                    'title': titleController.text,
-                    'description': descriptionController.text,
-                    'programName': programNameController.text,
-                    'topic': topicController.text,
-                    'tutor': tutorController.text,
-                    'dayOfWeek': _selectedDaysOfWeek,
-                    'lessonType': lessonTypeController.text,
-                    'lessonTime': lessonTimeController.text,
-                  });
-
-                  if (kDebugMode) {
-                    print('Lesson added successfully!');
-                  } // 추가된 메시지를 확인하기 위한 로그
-
-                  // 앞 화면으로 돌아가기
-                  Navigator.pop(context);
-                } catch (e) {
-                  if (kDebugMode) {
-                    print('Error adding lesson: $e');
-                  } // 오류 메시지를 확인하기 위한 로그
-                }
-              },
-              child: const Text('Add Lesson'),
-            ),
-          ],
+                ),
+                body: TabBarView(
+                  children: students
+                      .map((student) => CalendarBody(user: student))
+                      .toList(),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Add Lesson'),
+  //     ),
+  //     body: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           TextField(
+  //             controller: titleController,
+  //             decoration: const InputDecoration(labelText: 'Title'),
+  //           ),
+  //           TextField(
+  //             controller: descriptionController,
+  //             decoration: const InputDecoration(labelText: 'Description'),
+  //           ),
+  //           TextField(
+  //             controller: programNameController,
+  //             decoration: const InputDecoration(labelText: 'Program Name'),
+  //           ),
+  //           TextField(
+  //             controller: topicController,
+  //             decoration: const InputDecoration(labelText: 'Topic'),
+  //           ),
+  //           TextField(
+  //             controller: tutorController,
+  //             decoration: const InputDecoration(labelText: 'Tutor'),
+  //           ),
+  //           // Day of Week 선택
+  //           const Padding(
+  //             padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+  //             child: Text(
+  //               'Day(s) of Week',
+  //               style: TextStyle(fontSize: 16),
+  //             ),
+  //           ),
+  //           Wrap(
+  //             children: <Widget>[
+  //               for (String day in [
+  //                 'Monday',
+  //                 'Tuesday',
+  //                 'Wednesday',
+  //                 'Thursday',
+  //                 'Friday',
+  //                 'Saturday',
+  //                 'Sunday',
+  //               ])
+  //                 Row(
+  //                   children: [
+  //                     Checkbox(
+  //                       value: _selectedDaysOfWeek.contains(day),
+  //                       onChanged: (bool? value) {
+  //                         setState(() {
+  //                           if (value != null) {
+  //                             if (value) {
+  //                               _selectedDaysOfWeek.add(day);
+  //                             } else {
+  //                               _selectedDaysOfWeek.remove(day);
+  //                             }
+  //                           }
+  //                         });
+  //                       },
+  //                     ),
+  //                     Text(day),
+  //                   ],
+  //                 ),
+  //             ],
+  //           ),
+  //           TextField(
+  //             controller: lessonTypeController,
+  //             decoration: const InputDecoration(labelText: 'Lesson Type'),
+  //           ),
+  //           TextField(
+  //             controller: lessonTimeController,
+  //             decoration: const InputDecoration(labelText: 'Lesson Time'),
+  //           ),
+  //           const SizedBox(height: 16),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               try {
+  //                 // Lesson 추가
+  //                 await _firestore.collection('lessons').add({
+  //                   'title': titleController.text,
+  //                   'description': descriptionController.text,
+  //                   'programName': programNameController.text,
+  //                   'topic': topicController.text,
+  //                   'tutor': tutorController.text,
+  //                   'dayOfWeek': _selectedDaysOfWeek,
+  //                   'lessonType': lessonTypeController.text,
+  //                   'lessonTime': lessonTimeController.text,
+  //                 });
+
+  //                 if (kDebugMode) {
+  //                   print('Lesson added successfully!');
+  //                 } // 추가된 메시지를 확인하기 위한 로그
+
+  //                 // 앞 화면으로 돌아가기
+  //                 Navigator.pop(context);
+  //               } catch (e) {
+  //                 if (kDebugMode) {
+  //                   print('Error adding lesson: $e');
+  //                 } // 오류 메시지를 확인하기 위한 로그
+  //               }
+  //             },
+  //             child: const Text('Add Lesson'),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 class EditLessonScreen extends StatefulWidget {

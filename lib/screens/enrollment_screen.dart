@@ -1,10 +1,11 @@
+import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_4_button.dart';
-import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_Input.dart';
+import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
@@ -53,6 +54,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                   // 로딩중일 때 표시할 화면
                   return const Center(
                     child: CircularProgressIndicator(),
+                    // child: Text('로그인이 필요한 서비스입니다.'),
                   );
                 } else if (snapshot.hasError) {
                   // 에러가 발생했을 때 표시할 화면
@@ -78,7 +80,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         top: 56), // Make space for the AppBar
                     children: [
                       // 제목
-                      MyHeader('수강신청'),
+                      const MyHeader('수강신청'),
                       // 커버 페이지
                       SignupScreen2Input(
                         nameController: widget.nameController,
@@ -123,6 +125,20 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       );
                 }
               },
+            ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                  width: 70,
+                ),
+              ),
             ),
             const Positioned(
               child: MyMenuAppBar(),

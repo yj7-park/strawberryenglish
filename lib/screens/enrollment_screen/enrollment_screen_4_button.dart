@@ -1,9 +1,11 @@
-import 'package:flutter/services.dart';
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:strawberryenglish/models/student.dart';
+import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
@@ -42,6 +44,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
   final scrollController = ScrollController();
   // String statusMessage = '';
   String errorMessage = '';
+  late StudentProvider studentProvider;
 
   bool check1 = false;
   bool check2 = false;
@@ -60,6 +63,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
   @override
   Widget build(BuildContext context) {
+    studentProvider = Provider.of<StudentProvider>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ((screenWidth - 500) / 2)),
@@ -96,7 +100,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
   // TODO: 메일 주소 verification
 
-  // // TODO: 회원 가입 처리
+  // submit 처리
   void submit() async {
     final name = widget.nameController.text.trim();
     final birthDate = widget.birthDateController.text.trim();
@@ -134,21 +138,27 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       bool? confirm = await ConfirmDialog.show(
           context: context,
           title: "수강료 결제",
-          body: "" +
-              "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n" +
-              "수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n" +
-              "수업길이 : ${EnrollmentScreen.selectedMins.first}분\n" +
-              "수업토픽 : Power/Fluency\n" +
-              "결제금액 : ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원" +
-              (EnrollmentScreen.selectedMonths.first > 1
-                  ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)"
-                  : ""),
+          body:
+              "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n수업길이 : ${EnrollmentScreen.selectedMins.first}분\n수업토픽 : Power/Fluency\n결제금액 : ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원${EnrollmentScreen.selectedMonths.first > 1 ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)" : ""}",
           trueButton: "결제하기",
           falseButton: "나중에 결제하기");
 
       if (confirm == true) {
-        // TODO: 성공 시 동작
-        Navigator.pop(context);
+        // 성공 시 동작
+        Student? updatedStudent = await studentProvider.getStudent();
+        updatedStudent!.name = name;
+        updatedStudent.birthDate = birthDate;
+        updatedStudent.phoneNumber = phoneNumber;
+        updatedStudent.lessonDay = lessonDay;
+        updatedStudent.lessonTime = lessonTime;
+        updatedStudent.country = country;
+        updatedStudent.skypeId = skypeId;
+        updatedStudent.studyPurpose = studyPurpose;
+        updatedStudent.referralSource = referralSource;
+        updatedStudent.lessonStartDate = lessonStartDate;
+        studentProvider.updateStudentToFirestore(updatedStudent);
+
+        Navigator.of(context).pop(true);
       }
     } catch (e) {
       setState(() {
