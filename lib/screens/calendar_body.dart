@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarBody extends StatefulWidget {
   final Student user;
+  static String selectedHoldStartDate = '';
 
   const CalendarBody({super.key, required this.user});
 
@@ -78,7 +79,28 @@ class CalendarBodyState extends State<CalendarBody> {
                     ),
                   ),
                   // monthCellBuilder: _buildMonthCell,
-                  onTap: _buildOnTapWidget,
+                  onTap: CalendarBody.selectedHoldStartDate.isEmpty
+                      ? _buildOnTapWidget
+                      : // 장기 홀드 끝날짜 선택
+                      (details) {
+                          DateTime startDate = DateTime.parse(CalendarBody
+                              .selectedHoldStartDate
+                              .replaceAll('. ', '-'));
+                          if (details.date!.isAfter(startDate) ||
+                              details.date!.isAtSameMomentAs(startDate)) {
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(details.date!);
+                            widget.user.holdRequestDates!.add(
+                                '${CalendarBody.selectedHoldStartDate}~$formattedDate');
+                            widget.user.holdCountLeft =
+                                widget.user.holdCountLeft! - 1;
+                            CalendarBody.selectedHoldStartDate = '';
+                            _bottomSheetController?.close();
+                            _updateLastLessonDate();
+                            Provider.of<StudentProvider>(context, listen: false)
+                                .updateStudentToFirestore(widget.user);
+                          }
+                        },
                 ),
               ),
             ),
@@ -264,14 +286,30 @@ class CalendarBodyState extends State<CalendarBody> {
             }
           }
         }
-
         holdDates = parsedHoldDates;
       }
 
       if (widget.user.holdRequestDates != null) {
-        holdRequestDates = widget.user.holdRequestDates!
-            .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
-            .toList();
+        for (String range in widget.user.holdRequestDates!) {
+          List<String> dateParts =
+              range.split('~').map((e) => e.trim()).toList();
+          if (dateParts.length == 2) {
+            DateTime startDate = DateTime.parse(dateParts[0]);
+            DateTime endDate = DateTime.parse(dateParts[1]);
+
+            if (startDate.isBefore(endDate) ||
+                startDate.isAtSameMomentAs(endDate)) {
+              for (int i = 0;
+                  startDate.add(Duration(days: i)).isBefore(endDate) ||
+                      startDate
+                          .add(Duration(days: i))
+                          .isAtSameMomentAs(endDate);
+                  i++) {
+                holdRequestDates.add(startDate.add(Duration(days: i)));
+              }
+            }
+          }
+        }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -506,14 +544,14 @@ class CalendarBodyState extends State<CalendarBody> {
           },
         );
       } else {
-        _bottomSheetController?.close(); // Close the bottom sheet if it's open
+        _bottomSheetController?.close();
       }
     }
   }
 
   dynamic _buildLessonCancelMenu(CalendarTapDetails details) {
     String message = '';
-    String buttonText = '';
+    List<(String, String)> buttonText = [];
     dynamic highlightColor;
     dynamic mainColor;
 
@@ -522,77 +560,158 @@ class CalendarBodyState extends State<CalendarBody> {
             appointment.startTime.year == details.date!.year &&
             appointment.startTime.month == details.date!.month &&
             appointment.startTime.day == details.date!.day)
-        .forEach((appointment) {
-      if ((appointment as Appointment).subject.contains('[수업 취소]')) {
-        message = '해당 일자의 수업은 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
-      } else if (appointment.subject.contains('[수업 취소중]')) {
-        message = '해당 일자의 수업은 취소 요청중입니다.';
-        buttonText = '수업 재개 요청';
-        highlightColor = Colors.indigoAccent[100];
-        mainColor = Colors.indigo;
-      } else if (appointment.subject.contains('[장기 홀드]')) {
-        message = '해당 일자는 장기 홀드 처리되었습니다.\n해제를 원하시면 관리자에게 문의하세요.';
-      } else if (appointment.subject.contains('[장기 홀드중]')) {
-        message = '해당 일자는 장기 홀드 요청중입니다.';
-        buttonText = '장기 홀드 해제';
-        highlightColor = Colors.indigoAccent[100];
-        mainColor = Colors.indigo;
-      } else if (appointment.subject.contains('[수업]')) {
-        if (widget.user.cancelCountLeft! > 0) {
+        .forEach(
+      (appointment) {
+        if ((appointment as Appointment).subject.contains('[수업 취소]')) {
+          message = '해당 일자의 수업은 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
+        } else if (appointment.subject.contains('[수업 취소중]')) {
+          message = '해당 일자의 수업은 취소 요청중입니다.';
+          buttonText.add(('수업 재개 요청', ''));
+          highlightColor = Colors.indigoAccent[100];
+          mainColor = Colors.indigo;
+        } else if (appointment.subject.contains('[장기 홀드]')) {
+          message = '해당 일자는 장기 홀드 처리되었습니다.\n해제를 원하시면 관리자에게 문의하세요.';
+        } else if (appointment.subject.contains('[장기 홀드중]')) {
+          message = '해당 일자는 장기 홀드 요청중입니다.';
+          buttonText.add(('홀드 해제 요청', ''));
+          highlightColor = Colors.indigoAccent[100];
+          mainColor = Colors.indigo;
+        } else if (appointment.subject.contains('[수업 종료]')) {
+          message = '종료된 수업입니다.';
+        } else if (appointment.subject.contains('[수업]')) {
           DateTime now = DateTime.now();
-          // print(appointment.startTime);
           DateTime limitTime =
               appointment.startTime.subtract(const Duration(hours: 12));
-          // print(limitTime);
-
-          if (now.isBefore(limitTime)) {
-            message = '수업 취소를 요청하시겠습니까?';
-            buttonText = '수업 취소 요청';
-            highlightColor = Colors.redAccent[100];
-            mainColor = Colors.red;
+          if (!now.isBefore(limitTime)) {
+            message = '정상 수업 예정입니다.\n(수업 취소 / 장기 홀드는 수업 시작 12시간 전까지만 가능합니다.)';
           } else {
-            message = '수업 취소는 수업 시작 12시간 이전까지만 가능합니다.';
+            message = '정상 수업 예정입니다.\n(잔여 수업 취소 / 장기 홀드가 없습니다.)';
+            if (widget.user.cancelCountLeft! > 0) {
+              message = '정상 수업 예정입니다.\n수업 취소를 요청하시겠습니까?';
+              buttonText.add((
+                '수업 취소 요청',
+                '잔여 횟수 : ${widget.user.cancelCountLeft}/${widget.user.cancelCountTotal}'
+              ));
+              highlightColor = Colors.redAccent[100];
+              mainColor = Colors.red;
+            }
+            if (widget.user.holdCountLeft! > 0) {
+              if (message.isEmpty) {
+                message = '정상 수업 예정입니다.\n장기 홀드를 요청하시겠습니까?';
+              } else {
+                message = '정상 수업 예정입니다.\n수업 취소 / 장기 홀드를 요청하시겠습니까?';
+              }
+              buttonText.add((
+                '장기 홀드 요청',
+                '잔여 횟수 : ${widget.user.holdCountLeft}/${widget.user.holdCountTotal}'
+              ));
+              highlightColor = Colors.redAccent[100];
+              mainColor = Colors.red;
+            }
           }
-        } else {
-          message = '수업 취소 잔여 횟수가 부족합니다.';
         }
-      } else if (appointment.subject.contains('[수업 종료]')) {
-        message = '종료된 수업입니다.';
-      }
-    });
+      },
+    );
     return [
       ListTile(title: Text(message)),
-      if (buttonText.isNotEmpty)
-        ListTile(
+      ...buttonText.map(
+        (items) => ListTile(
           leading: Icon(Icons.cancel, color: mainColor),
-          title:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(buttonText,
-                style:
-                    TextStyle(color: mainColor, fontWeight: FontWeight.w600)),
-            Text(
-              '잔여 횟수 : ${widget.user.cancelCountLeft}/${widget.user.cancelCountTotal}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ]),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(items.$1,
+                  style:
+                      TextStyle(color: mainColor, fontWeight: FontWeight.w600)),
+              Text(
+                items.$2,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
           hoverColor: highlightColor,
           onTap: () {
             // 요청 처리 로직 추가
             String formattedDate =
                 DateFormat('yyyy-MM-dd').format(details.date!);
-            if (buttonText == '수업 취소 요청') {
-              widget.user.cancelCountLeft = widget.user.cancelCountLeft! - 1;
-              widget.user.cancelRequestDates!.add(formattedDate);
-            } else if (buttonText == '수업 재개 요청') {
-              widget.user.cancelCountLeft = widget.user.cancelCountLeft! + 1;
-              widget.user.cancelRequestDates!.remove(formattedDate);
+            if (items.$1 == '수업 취소 요청') {
+              if (!widget.user.cancelRequestDates!.contains(formattedDate)) {
+                widget.user.cancelRequestDates!.add(formattedDate);
+                widget.user.cancelCountLeft = widget.user.cancelCountLeft! - 1;
+              }
+            } else if (items.$1 == '수업 재개 요청') {
+              if (widget.user.cancelRequestDates!.remove(formattedDate)) {
+                widget.user.cancelCountLeft = widget.user.cancelCountLeft! + 1;
+              }
+            } else if (items.$1 == '장기 홀드 요청') {
+              // widget.user.holdCountLeft = widget.user.holdCountLeft! - 1;
+              CalendarBody.selectedHoldStartDate = formattedDate;
+              // widget.user.holdRequestDates!.add(formattedDate);
+              _bottomSheetController?.close(); // Close the bottom sheet
+              _bottomSheetController = showBottomSheet(
+                context: context,
+                backgroundColor: Colors.grey.withOpacity(0.1),
+                builder: (BuildContext context) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                          title: Text(
+                              '장기 홀드 끝 날짜를 선택해주세요. (시작일: ${CalendarBody.selectedHoldStartDate})')),
+                      ListTile(
+                        leading: Icon(Icons.cancel, color: mainColor),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '취소',
+                              style: TextStyle(
+                                color: mainColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        hoverColor: highlightColor,
+                        onTap: () {
+                          CalendarBody.selectedHoldStartDate = '';
+                          _bottomSheetController?.close();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+              setState(() {
+                CalendarBody.selectedHoldStartDate = formattedDate;
+              });
+              return;
+            } else if (items.$1 == '홀드 해제 요청') {
+              for (String range in widget.user.holdRequestDates!) {
+                List<String> dateParts =
+                    range.split('~').map((e) => e.trim()).toList();
+                if (dateParts.length == 2) {
+                  DateTime startDate = DateTime.parse(dateParts[0]);
+                  DateTime endDate = DateTime.parse(dateParts[1]);
+
+                  if (details.date!.isAtSameMomentAs(startDate) |
+                      details.date!.isAtSameMomentAs(endDate) |
+                      (details.date!.isBefore(endDate) &&
+                          details.date!.isAfter(startDate))) {
+                    widget.user.holdRequestDates!.remove(range);
+                    widget.user.holdCountLeft = widget.user.holdCountLeft! + 1;
+                    break;
+                  }
+                }
+              }
             }
+            _bottomSheetController?.close();
             _updateLastLessonDate();
             Provider.of<StudentProvider>(context, listen: false)
                 .updateStudentToFirestore(widget.user);
-            _bottomSheetController?.close(); // Close the bottom sheet
           },
-        )
+        ),
+      ),
     ];
   }
 
@@ -617,6 +736,35 @@ class CalendarBodyState extends State<CalendarBody> {
           _getLessonDatesFromLessonTime(widget.user.lessonTime!).keys.toList();
 
       for (String dateRange in widget.user.holdDates!) {
+        List<String> dateRangeParts = dateRange.split("~");
+        if (dateRangeParts.length == 2) {
+          DateTime startDate =
+              DateTime.parse(dateRangeParts[0].replaceAll('. ', '-'));
+          DateTime endDate =
+              DateTime.parse(dateRangeParts[1].replaceAll('. ', '-'));
+
+          int lessonDaysInRange = 0;
+
+          // startDate와 endDate 사이에 있는 날짜를 확인하면서 lessonDays에 포함된 weekDay를 count
+          for (DateTime date = startDate;
+              date.isBefore(endDate) || date.isAtSameMomentAs(endDate);
+              date = date.add(const Duration(days: 1))) {
+            int weekDay = date.weekday;
+            if (lessonDays.contains(weekDay)) {
+              lessonDaysInRange++;
+            }
+          }
+
+          cancelCount += lessonDaysInRange;
+        }
+      }
+    }
+    // holdRequestDays 계산
+    if (widget.user.holdRequestDates != null) {
+      List<int> lessonDays =
+          _getLessonDatesFromLessonTime(widget.user.lessonTime!).keys.toList();
+
+      for (String dateRange in widget.user.holdRequestDates!) {
         List<String> dateRangeParts = dateRange.split("~");
         if (dateRangeParts.length == 2) {
           DateTime startDate =

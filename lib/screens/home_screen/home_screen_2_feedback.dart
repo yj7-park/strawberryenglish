@@ -148,26 +148,6 @@ class _HomeScreen2FeedbackState extends State<HomeScreen2Feedback> {
                 ],
               ),
             ),
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     padding: const EdgeInsets.symmetric(
-            //       horizontal: 50,
-            //       vertical: 20,
-            //     ),
-            //     foregroundColor: Colors.white,
-            //   ),
-            //   onPressed: () {
-            //     // 더보기 클릭 시 동작
-            //     Navigator.pushNamed(context, '/feedbacks');
-            //   },
-            //   child: const Text(
-            //     '✔ 딸기후기 바로가기',
-            //     style: TextStyle(
-            //       fontSize: 20,
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
