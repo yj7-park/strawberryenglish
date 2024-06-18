@@ -32,44 +32,47 @@ class Student {
   String? modifiedLessonEndDate;
   String? extensionRequestMessage;
   String? referralSource;
+  int? points;
   // String level;
   // String features;
   // String feedback;
   // String reenrollment;
   String log = '';
 
-  Student(
-      {this.uid,
-      this.id,
-      this.name,
-      this.gender,
-      this.birthDate,
-      this.phoneNumber,
-      required this.email,
-      this.country,
-      this.program,
-      this.studyPurpose,
-      this.tutor,
-      this.skypeId,
-      this.topic,
-      this.cancelRequestDates,
-      this.cancelDates,
-      this.tutorCancelDates,
-      this.cancelCountLeft,
-      this.cancelCountTotal,
-      this.holdRequestDates,
-      this.holdDates,
-      this.holdCountLeft,
-      this.holdCountTotal,
-      this.lessonDay,
-      this.lessonTime,
-      this.philippinesTime,
-      this.lessonStartDate,
-      this.paymentAmount,
-      this.lessonEndDate,
-      this.modifiedLessonEndDate,
-      this.extensionRequestMessage,
-      this.referralSource});
+  Student({
+    this.uid,
+    this.id,
+    this.name,
+    this.gender,
+    this.birthDate,
+    this.phoneNumber,
+    required this.email,
+    this.country,
+    this.program,
+    this.studyPurpose,
+    this.tutor,
+    this.skypeId,
+    this.topic,
+    this.cancelRequestDates,
+    this.cancelDates,
+    this.tutorCancelDates,
+    this.cancelCountLeft,
+    this.cancelCountTotal,
+    this.holdRequestDates,
+    this.holdDates,
+    this.holdCountLeft,
+    this.holdCountTotal,
+    this.lessonDay,
+    this.lessonTime,
+    this.philippinesTime,
+    this.lessonStartDate,
+    this.paymentAmount,
+    this.lessonEndDate,
+    this.modifiedLessonEndDate,
+    this.extensionRequestMessage,
+    this.referralSource,
+    this.points,
+  });
 
   Student.fromFirebase(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     try {
@@ -223,6 +226,11 @@ class Student {
       referralSource = snapshot['referralSource'];
     } catch (e) {
       referralSource = null;
+    }
+    try {
+      points = snapshot['points'];
+    } catch (e) {
+      points = null;
     }
   }
 

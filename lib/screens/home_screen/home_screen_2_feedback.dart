@@ -103,8 +103,7 @@ class _HomeScreen2FeedbackState extends State<HomeScreen2Feedback> {
                                 child: const Text('더보기'),
                                 onPressed: () {
                                   // 더보기 클릭 시 동작
-                                  Navigator.pushNamed(context, '/feedbacks')
-                                      .then((_) => setState(() {}));
+                                  Navigator.pushNamed(context, '/feedbacks');
                                   // TODO: 해당 리뷰 위치로 이동 및 펼치기
                                 },
                               ),

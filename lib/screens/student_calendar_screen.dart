@@ -55,20 +55,20 @@ class StudentCalendarScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              bottom: 30,
-              right: 30,
-              child: InkWell(
-                onTap: () {
-                  js.context
-                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-                },
-                child: Image.asset(
-                  'assets/images/kakao_talk.png',
-                  width: 70,
-                ),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 30,
+            //   right: 30,
+            //   child: InkWell(
+            //     onTap: () {
+            //       js.context
+            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/kakao_talk.png',
+            //       width: 70,
+            //     ),
+            //   ),
+            // ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

@@ -123,11 +123,11 @@ class CalendarBodyState extends State<CalendarBody> {
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Information',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            ),
-            SizedBox(height: 10),
+            // Text(
+            //   'Information',
+            //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            // ),
+            // SizedBox(height: 10),
           ],
         ),
         subtitle: Row(
@@ -137,8 +137,17 @@ class CalendarBodyState extends State<CalendarBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInfoRow(
-                      '이름', '${widget.user.name}\n${widget.user.email}'),
+                  _buildInfoRow('이름', '${widget.user.name}'
+                      // '\n${widget.user.email}'
+                      ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildInfoRow('수업 시간', widget.user.lessonTime!),
                 ],
               ),
             ),
@@ -147,10 +156,11 @@ class CalendarBodyState extends State<CalendarBody> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // _buildInfoRow('수업 요일', widget.user.lessonDay),
-                  _buildInfoRow('수업 시간', widget.user.lessonTime!),
+                  _buildInfoRow('적립금',
+                      '${NumberFormat("###,###").format(widget.user.points!)} 원'),
                 ],
               ),
-            )
+            ),
           ],
         ),
         children: [
@@ -202,6 +212,21 @@ class CalendarBodyState extends State<CalendarBody> {
             ],
           ),
         ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildInfoRow(
+                '수업 취소 (잔여/전체)',
+                '${widget.user.cancelCountLeft}회 / ${widget.user.cancelCountTotal}회',
+              ),
+              _buildInfoRow(
+                '장기 홀드 (잔여/전체)',
+                '${widget.user.holdCountLeft}회 / ${widget.user.holdCountTotal}회',
+              ),
+            ],
+          ),
+        ),
         const SizedBox(
           width: 32.0,
         )
@@ -217,9 +242,15 @@ class CalendarBodyState extends State<CalendarBody> {
           label,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        Text(content),
+        Text(
+          content,
+          style: const TextStyle(
+            fontSize: 18,
+          ),
+        ),
         const SizedBox(height: 10),
       ],
     );
@@ -475,7 +506,7 @@ class CalendarBodyState extends State<CalendarBody> {
   //     borderColor = Colors.red;
   //   } else if (appointments.any(
   //       (appointment) => (appointment as Appointment).subject == '수업 취소 요청중')) {
-  //     borderColor = Colors.yellow;
+  //     borderColor = Colors.orange;
   //   } else if (appointments
   //       .any((appointment) => (appointment as Appointment).subject == '장기홀드')) {
   //     borderColor = Colors.grey;
@@ -535,7 +566,7 @@ class CalendarBodyState extends State<CalendarBody> {
       if (selectedAppointments.isNotEmpty) {
         _bottomSheetController = showBottomSheet(
           context: context,
-          backgroundColor: Colors.grey.withOpacity(0.1),
+          backgroundColor: Colors.grey[200],
           builder: (BuildContext context) {
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -551,9 +582,7 @@ class CalendarBodyState extends State<CalendarBody> {
 
   dynamic _buildLessonCancelMenu(CalendarTapDetails details) {
     String message = '';
-    List<(String, String)> buttonText = [];
-    dynamic highlightColor;
-    dynamic mainColor;
+    List<(String, String, IconData, MaterialAccentColor, bool)> buttonText = [];
 
     details.appointments!
         .where((appointment) =>
@@ -565,17 +594,25 @@ class CalendarBodyState extends State<CalendarBody> {
         if ((appointment as Appointment).subject.contains('[수업 취소]')) {
           message = '해당 일자의 수업은 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
         } else if (appointment.subject.contains('[수업 취소중]')) {
-          message = '해당 일자의 수업은 취소 요청중입니다.';
-          buttonText.add(('수업 재개 요청', ''));
-          highlightColor = Colors.indigoAccent[100];
-          mainColor = Colors.indigo;
+          message = '해당 일자의 수업은 취소 상태입니다.';
+          buttonText.add((
+            '수업 재개',
+            '',
+            Icons.play_circle_outlined,
+            Colors.indigoAccent,
+            true,
+          ));
         } else if (appointment.subject.contains('[장기 홀드]')) {
-          message = '해당 일자는 장기 홀드 처리되었습니다.\n해제를 원하시면 관리자에게 문의하세요.';
+          message = '해당 일자의 수업은 장기 홀드 처리되었습니다.\n해제를 원하시면 관리자에게 문의하세요.';
         } else if (appointment.subject.contains('[장기 홀드중]')) {
-          message = '해당 일자는 장기 홀드 요청중입니다.';
-          buttonText.add(('홀드 해제 요청', ''));
-          highlightColor = Colors.indigoAccent[100];
-          mainColor = Colors.indigo;
+          message = '해당 일자의 수업은 장기 홀드 상태입니다.';
+          buttonText.add((
+            '홀드 해제',
+            '',
+            Icons.sync_outlined,
+            Colors.lightBlueAccent,
+            true,
+          ));
         } else if (appointment.subject.contains('[수업 종료]')) {
           message = '종료된 수업입니다.';
         } else if (appointment.subject.contains('[수업]')) {
@@ -585,29 +622,21 @@ class CalendarBodyState extends State<CalendarBody> {
           if (!now.isBefore(limitTime)) {
             message = '정상 수업 예정입니다.\n(수업 취소 / 장기 홀드는 수업 시작 12시간 전까지만 가능합니다.)';
           } else {
-            message = '정상 수업 예정입니다.\n(잔여 수업 취소 / 장기 홀드가 없습니다.)';
-            if (widget.user.cancelCountLeft! > 0) {
-              message = '정상 수업 예정입니다.\n수업 취소를 요청하시겠습니까?';
-              buttonText.add((
-                '수업 취소 요청',
-                '잔여 횟수 : ${widget.user.cancelCountLeft}/${widget.user.cancelCountTotal}'
-              ));
-              highlightColor = Colors.redAccent[100];
-              mainColor = Colors.red;
-            }
-            if (widget.user.holdCountLeft! > 0) {
-              if (message.isEmpty) {
-                message = '정상 수업 예정입니다.\n장기 홀드를 요청하시겠습니까?';
-              } else {
-                message = '정상 수업 예정입니다.\n수업 취소 / 장기 홀드를 요청하시겠습니까?';
-              }
-              buttonText.add((
-                '장기 홀드 요청',
-                '잔여 횟수 : ${widget.user.holdCountLeft}/${widget.user.holdCountTotal}'
-              ));
-              highlightColor = Colors.redAccent[100];
-              mainColor = Colors.red;
-            }
+            message = '정상 수업 예정입니다.';
+            buttonText.add((
+              '수업 취소',
+              '잔여 횟수 : ${widget.user.cancelCountLeft}/${widget.user.cancelCountTotal}',
+              Icons.play_disabled_outlined,
+              Colors.redAccent,
+              widget.user.cancelCountLeft! > 0
+            ));
+            buttonText.add((
+              '장기 홀드',
+              '잔여 횟수 : ${widget.user.holdCountLeft}/${widget.user.holdCountTotal}',
+              Icons.sync_disabled_outlined,
+              Colors.orangeAccent,
+              widget.user.holdCountLeft! > 0
+            ));
           }
         }
       },
@@ -615,102 +644,116 @@ class CalendarBodyState extends State<CalendarBody> {
     return [
       ListTile(title: Text(message)),
       ...buttonText.map(
-        (items) => ListTile(
-          leading: Icon(Icons.cancel, color: mainColor),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(items.$1,
-                  style:
-                      TextStyle(color: mainColor, fontWeight: FontWeight.w600)),
-              Text(
-                items.$2,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          hoverColor: highlightColor,
-          onTap: () {
-            // 요청 처리 로직 추가
-            String formattedDate =
-                DateFormat('yyyy-MM-dd').format(details.date!);
-            if (items.$1 == '수업 취소 요청') {
-              if (!widget.user.cancelRequestDates!.contains(formattedDate)) {
-                widget.user.cancelRequestDates!.add(formattedDate);
-                widget.user.cancelCountLeft = widget.user.cancelCountLeft! - 1;
-              }
-            } else if (items.$1 == '수업 재개 요청') {
-              if (widget.user.cancelRequestDates!.remove(formattedDate)) {
-                widget.user.cancelCountLeft = widget.user.cancelCountLeft! + 1;
-              }
-            } else if (items.$1 == '장기 홀드 요청') {
-              // widget.user.holdCountLeft = widget.user.holdCountLeft! - 1;
-              CalendarBody.selectedHoldStartDate = formattedDate;
-              // widget.user.holdRequestDates!.add(formattedDate);
-              _bottomSheetController?.close(); // Close the bottom sheet
-              _bottomSheetController = showBottomSheet(
-                context: context,
-                backgroundColor: Colors.grey.withOpacity(0.1),
-                builder: (BuildContext context) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                          title: Text(
-                              '장기 홀드 끝 날짜를 선택해주세요. (시작일: ${CalendarBody.selectedHoldStartDate})')),
-                      ListTile(
-                        leading: Icon(Icons.cancel, color: mainColor),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '취소',
-                              style: TextStyle(
-                                color: mainColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        hoverColor: highlightColor,
-                        onTap: () {
-                          CalendarBody.selectedHoldStartDate = '';
-                          _bottomSheetController?.close();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-              setState(() {
+        (items) {
+          var text1 = items.$1;
+          var text2 = items.$2;
+          var icon = items.$3;
+          var mainColor = items.$5 ? items.$4[700] : Colors.grey[700];
+          var highlightColor = items.$4[200];
+          var tileColor = items.$5 ? items.$4[100] : Colors.grey[400];
+          return ListTile(
+            leading: Icon(icon, color: mainColor),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(text1,
+                    style: TextStyle(
+                        color: mainColor, fontWeight: FontWeight.w600)),
+                Text(
+                  text2,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            tileColor: tileColor,
+            enabled: items.$5,
+            hoverColor: highlightColor,
+            onTap: () {
+              // 요청 처리 로직 추가
+              String formattedDate =
+                  DateFormat('yyyy-MM-dd').format(details.date!);
+              if (items.$1 == '수업 취소') {
+                if (!widget.user.cancelRequestDates!.contains(formattedDate)) {
+                  widget.user.cancelRequestDates!.add(formattedDate);
+                  widget.user.cancelCountLeft =
+                      widget.user.cancelCountLeft! - 1;
+                }
+              } else if (items.$1 == '수업 재개') {
+                if (widget.user.cancelRequestDates!.remove(formattedDate)) {
+                  widget.user.cancelCountLeft =
+                      widget.user.cancelCountLeft! + 1;
+                }
+              } else if (items.$1 == '장기 홀드') {
+                // widget.user.holdCountLeft = widget.user.holdCountLeft! - 1;
                 CalendarBody.selectedHoldStartDate = formattedDate;
-              });
-              return;
-            } else if (items.$1 == '홀드 해제 요청') {
-              for (String range in widget.user.holdRequestDates!) {
-                List<String> dateParts =
-                    range.split('~').map((e) => e.trim()).toList();
-                if (dateParts.length == 2) {
-                  DateTime startDate = DateTime.parse(dateParts[0]);
-                  DateTime endDate = DateTime.parse(dateParts[1]);
+                // widget.user.holdRequestDates!.add(formattedDate);
+                _bottomSheetController?.close(); // Close the bottom sheet
+                _bottomSheetController = showBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.grey[200],
+                  builder: (BuildContext context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                            title: Text(
+                                '장기 홀드 끝 날짜를 선택해주세요. (시작일: ${CalendarBody.selectedHoldStartDate})')),
+                        ListTile(
+                          leading: Icon(Icons.cancel, color: mainColor),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '취소',
+                                style: TextStyle(
+                                  color: mainColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          tileColor: tileColor,
+                          hoverColor: highlightColor,
+                          onTap: () {
+                            CalendarBody.selectedHoldStartDate = '';
+                            _bottomSheetController?.close();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+                setState(() {
+                  CalendarBody.selectedHoldStartDate = formattedDate;
+                });
+                return;
+              } else if (items.$1 == '홀드 해제') {
+                for (String range in widget.user.holdRequestDates!) {
+                  List<String> dateParts =
+                      range.split('~').map((e) => e.trim()).toList();
+                  if (dateParts.length == 2) {
+                    DateTime startDate = DateTime.parse(dateParts[0]);
+                    DateTime endDate = DateTime.parse(dateParts[1]);
 
-                  if (details.date!.isAtSameMomentAs(startDate) |
-                      details.date!.isAtSameMomentAs(endDate) |
-                      (details.date!.isBefore(endDate) &&
-                          details.date!.isAfter(startDate))) {
-                    widget.user.holdRequestDates!.remove(range);
-                    widget.user.holdCountLeft = widget.user.holdCountLeft! + 1;
-                    break;
+                    if (details.date!.isAtSameMomentAs(startDate) |
+                        details.date!.isAtSameMomentAs(endDate) |
+                        (details.date!.isBefore(endDate) &&
+                            details.date!.isAfter(startDate))) {
+                      widget.user.holdRequestDates!.remove(range);
+                      widget.user.holdCountLeft =
+                          widget.user.holdCountLeft! + 1;
+                      break;
+                    }
                   }
                 }
               }
-            }
-            _bottomSheetController?.close();
-            _updateLastLessonDate();
-            Provider.of<StudentProvider>(context, listen: false)
-                .updateStudentToFirestore(widget.user);
-          },
-        ),
+              _bottomSheetController?.close();
+              _updateLastLessonDate();
+              Provider.of<StudentProvider>(context, listen: false)
+                  .updateStudentToFirestore(widget.user);
+            },
+          );
+        },
       ),
     ];
   }

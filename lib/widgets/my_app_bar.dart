@@ -66,9 +66,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                     onPressed: () {
                       isLoggedIn
                           ? Navigator.pushNamed(context, '/student_calendar')
-                              .then((_) => setState(() {}))
-                          : Navigator.pushNamed(context, '/signup')
-                              .then((_) => setState(() {}));
+                          : Navigator.pushNamed(context, '/signup');
                     },
                     child: Text(
                       isLoggedIn ? '마이페이지' : '회원가입',
@@ -101,8 +99,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                               // 사용자가 확인하면 로그아웃 처리
                               await FirebaseAuth.instance.signOut();
                               if (!context.mounted) return;
-                              Navigator.pushNamed(context, '/')
-                                  .then((_) => setState(() {}));
+                              Navigator.pushNamed(context, '/');
                             }
                           }
                         : () {
@@ -139,8 +136,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                       SizedBox(width: widgetPadding),
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, '/')
-                              .then((_) => setState(() {}));
+                          Navigator.pushNamed(context, '/');
                         },
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
@@ -250,11 +246,10 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/trial')
-                                      .then((_) => setState(() {}));
+                                  Navigator.pushNamed(context, '/trial');
                                   if (FirebaseAuth.instance.currentUser ==
                                       null) {
-                                    Navigator.pushNamed(context, '/login')
+                                    Navigator.popAndPushNamed(context, '/login')
                                         .then((_) => setState(() {}));
                                   }
                                 },
@@ -273,11 +268,10 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                   shadowColor: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/enrollment')
-                                      .then((_) => setState(() {}));
+                                  Navigator.pushNamed(context, '/enrollment');
                                   if (FirebaseAuth.instance.currentUser ==
                                       null) {
-                                    Navigator.pushNamed(context, '/login')
+                                    Navigator.popAndPushNamed(context, '/login')
                                         .then((_) => setState(() {}));
                                   }
                                 },

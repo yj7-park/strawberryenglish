@@ -148,7 +148,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (username.isNotEmpty && password.isNotEmpty) {
       if (username == 'admin@admin.com') {
-        Navigator.pushNamed(context, '/admin').then((_) => setState(() {}));
+        Navigator.pushNamed(context, '/admin');
         return; // admin 계정으로 로그인 시 바로 종료
       }
 
@@ -157,7 +157,7 @@ class LoginScreenState extends State<LoginScreen> {
 
         if (_errorMessage.isEmpty) {
           if (tutorProvider.tutor != null) {
-            // Navigator.pushNamed(context, '/tutor_calendar').then((_) => setState(() {}));
+            // Navigator.pushNamed(context, '/tutor_calendar');
             Navigator.of(context).pop();
             return; // tutor 로그인 성공 시 바로 종료
           } else {
@@ -175,7 +175,7 @@ class LoginScreenState extends State<LoginScreen> {
 
         if (_errorMessage.isEmpty) {
           if (studentProvider.student != null) {
-            // Navigator.pushNamed(context, '/student_calendar').then((_) => setState(() {}));
+            // Navigator.pushNamed(context, '/student_calendar');
             Navigator.of(context).pop(true);
             return; // student 로그인 성공 시 바로 종료
           }
