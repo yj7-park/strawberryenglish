@@ -134,7 +134,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
     try {
       setState(() {});
-      // 결제창 표시
+      // TODO: 결제창 표시
       bool? confirm = await ConfirmDialog.show(
           context: context,
           title: "수강료 결제",
@@ -146,17 +146,17 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       if (confirm == true) {
         // 성공 시 동작
         Student? updatedStudent = await studentProvider.getStudent();
-        updatedStudent!.name = name;
-        updatedStudent.birthDate = birthDate;
-        updatedStudent.phoneNumber = phoneNumber;
-        updatedStudent.lessonDay = lessonDay;
-        updatedStudent.lessonTime = lessonTime;
-        updatedStudent.country = country;
-        updatedStudent.skypeId = skypeId;
-        updatedStudent.studyPurpose = studyPurpose;
-        updatedStudent.referralSource = referralSource;
-        updatedStudent.lessonStartDate = lessonStartDate;
-        studentProvider.updateStudentToFirestore(updatedStudent);
+        updatedStudent!.data['name'] = name;
+        updatedStudent.data['birthDate'] = birthDate;
+        updatedStudent.data['phoneNumber'] = phoneNumber;
+        updatedStudent.data['lessonDay'] = lessonDay;
+        updatedStudent.data['lessonTime'] = lessonTime;
+        updatedStudent.data['country'] = country;
+        updatedStudent.data['skypeId'] = skypeId;
+        updatedStudent.data['studyPurpose'] = studyPurpose;
+        updatedStudent.data['referralSource'] = referralSource;
+        updatedStudent.data['lessonStartDate'] = lessonStartDate;
+        studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
 
         Navigator.of(context).pop(true);
       }

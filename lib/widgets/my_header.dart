@@ -8,7 +8,8 @@ class MyHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double verticalPadding = (screenHeight * 0.05).clamp(25, 50);
     return Theme(
       data: customTheme,
       child: Container(
@@ -16,29 +17,23 @@ class MyHeader extends StatelessWidget {
         // color: customTheme.colorScheme.secondary,
         color: Colors.grey.withOpacity(0.1),
         alignment: Alignment.center,
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    headerText,
-                    style: TextStyle(
-                      // color: Colors.white,
-                      fontSize: (screenWidth * 0.04).clamp(14, 32),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.justify,
-                  ),
-                ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                headerText,
+                style: const TextStyle(
+                  // color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.start,
               ),
-            ),
-            const SizedBox(height: 50),
-          ],
+            ],
+          ),
         ),
       ),
     );

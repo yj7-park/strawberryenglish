@@ -40,7 +40,7 @@ class HomeScreen5Founder extends StatelessWidget {
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
                 fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
           ],
         ),

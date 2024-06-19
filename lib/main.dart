@@ -100,8 +100,8 @@ class MyApp extends StatelessWidget {
 
           // 마이페이지
           '/student_calendar': (context) => const StudentCalendarScreen(),
-          '/tutor_calendar': (context) => const TutorCalendarScreen(),
-          '/admin': (context) => const AdminScreen(),
+          // '/tutor_calendar': (context) => const TutorCalendarScreen(),
+          // '/admin': (context) => const AdminScreen(),
           // Add more routes if needed
         },
       ),

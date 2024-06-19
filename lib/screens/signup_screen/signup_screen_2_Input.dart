@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class SignupScreen2Input extends StatefulWidget {
@@ -20,6 +21,45 @@ class SignupScreen2Input extends StatefulWidget {
 }
 
 class SignupScreen2InputState extends State<SignupScreen2Input> {
+  Future<void> _selectDate(BuildContext context) async {
+    String initialDate = widget.birthDateController.value.text;
+    final DateTime? picked = await showDatePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: customTheme
+                    .colorScheme.secondary, // header background color
+                onPrimary:
+                    customTheme.colorScheme.onPrimary, // header text color
+                onSurface: customTheme.colorScheme.onSurface, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor:
+                      customTheme.colorScheme.primary, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+        context: context,
+        initialDate: DateTime.tryParse(initialDate) ?? DateTime.now(),
+        firstDate: DateTime(1950, 1),
+        lastDate: DateTime(2030, 12));
+    if (picked != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+
+      if (formattedDate != initialDate) {
+        setState(() {
+          widget.birthDateController.value =
+              TextEditingValue(text: formattedDate);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -61,12 +101,11 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
             ),
             const Text('* 실제 수강하는 사람의 이름을 적어주세요.'),
             const SizedBox(height: 30),
-            // TODO: 생년월일
             TextFormField(
               controller: widget.birthDateController,
               decoration: InputDecoration(
                 labelText: '*생년월일',
-                hintText: 'YYYY-MM-DD',
+                // hintText: 'YYYY-MM-DD',
                 border: const OutlineInputBorder(),
                 enabledBorder: myOutlineInputBorder(widget.birthDateController),
                 focusedBorder: myOutlineInputBorder(widget.birthDateController),
@@ -82,6 +121,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
                 ),
                 // MaskedInputFormatter('####-##-##')
               ],
+              onTap: () => _selectDate(context),
               onChanged: (_) {
                 setState(() {});
               },

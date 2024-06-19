@@ -1,3 +1,4 @@
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/topics_screen/topics_screen_1_announcement.dart';
@@ -47,6 +48,7 @@ class TopicsScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

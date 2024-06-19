@@ -8,8 +8,6 @@ import 'package:flutter/services.dart';
 
 class TrialScreen1Input extends StatefulWidget {
   final TextEditingController phoneNumberController;
-  final TextEditingController lessonDayController;
-  final TextEditingController lessonTimeController;
   final TextEditingController countryController;
   final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
@@ -18,8 +16,6 @@ class TrialScreen1Input extends StatefulWidget {
   const TrialScreen1Input({
     super.key,
     required this.phoneNumberController,
-    required this.lessonDayController,
-    required this.lessonTimeController,
     required this.countryController,
     required this.skypeIdController,
     required this.studyPurposeController,
@@ -98,51 +94,6 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
               },
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 30),
-            TextFormField(
-              controller: widget.lessonDayController,
-              decoration: InputDecoration(
-                labelText: '*희망 수업 요일',
-                hintText: 'ex) 월, 수, 금',
-                border: const OutlineInputBorder(),
-                enabledBorder: myOutlineInputBorder(widget.lessonDayController),
-                focusedBorder: myOutlineInputBorder(widget.lessonDayController),
-                labelStyle: TextStyle(
-                  color: widget.lessonDayController.text.isEmpty
-                      ? Colors.redAccent
-                      : Colors.black,
-                ),
-              ),
-              onChanged: (_) {
-                setState(() {});
-              },
-              textInputAction: TextInputAction.next,
-            ),
-            const Text('* 희망 수업 요일을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
-            const SizedBox(height: 30),
-            TextFormField(
-              controller: widget.lessonTimeController,
-              decoration: InputDecoration(
-                labelText: '*희망 수업 시간',
-                hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
-                border: const OutlineInputBorder(),
-                enabledBorder:
-                    myOutlineInputBorder(widget.lessonTimeController),
-                focusedBorder:
-                    myOutlineInputBorder(widget.lessonTimeController),
-                labelStyle: TextStyle(
-                  color: widget.lessonTimeController.text.isEmpty
-                      ? Colors.redAccent
-                      : Colors.black,
-                ),
-              ),
-              onChanged: (_) {
-                setState(() {});
-              },
-              textInputAction: TextInputAction.next,
-            ),
-            const Text('* 모든 시간은 한국 시간을 기준으로 입력해 주세요.'),
-            const Text('* 희망 수업 시간을 여러 개 입력해 주시면 더 빠르게 수업이 확정됩니다.'),
             const SizedBox(height: 30),
             TextFormField(
               controller: widget.skypeIdController,

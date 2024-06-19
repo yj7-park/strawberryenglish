@@ -1,5 +1,5 @@
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
-import 'package:universal_html/js.dart' as js;
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
@@ -74,6 +74,7 @@ class StudentCalendarScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

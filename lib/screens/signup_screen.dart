@@ -4,6 +4,7 @@ import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.da
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -79,6 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

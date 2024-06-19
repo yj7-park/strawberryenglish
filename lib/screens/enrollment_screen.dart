@@ -1,4 +1,3 @@
-import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
@@ -9,6 +8,7 @@ import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.da
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 
 class EnrollmentScreen extends StatefulWidget {
@@ -63,21 +63,23 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                   );
                 } else if (snapshot.hasData) {
                   // 데이터가 로드되었을 때 표시할 화면
-                  widget.nameController.text = snapshot.data!.name ?? '';
+                  widget.nameController.text =
+                      snapshot.data!.data['name'] ?? '';
                   widget.birthDateController.text =
-                      snapshot.data!.birthDate ?? '';
-
+                      snapshot.data!.data['birthDate'] ?? '';
                   widget.phoneNumberController.text =
-                      snapshot.data!.phoneNumber ?? '';
-                  widget.countryController.text = snapshot.data!.country ?? '';
-                  widget.skypeIdController.text = snapshot.data!.skypeId ?? '';
+                      snapshot.data!.data['phoneNumber'] ?? '';
+                  widget.countryController.text =
+                      snapshot.data!.data['country'] ?? '';
+                  widget.skypeIdController.text =
+                      snapshot.data!.data['skypeId'] ?? '';
                   widget.studyPurposeController.text =
-                      snapshot.data!.studyPurpose ?? '';
+                      snapshot.data!.data['studyPurpose'] ?? '';
                   widget.referralSourceController.text =
-                      snapshot.data!.referralSource ?? '';
+                      snapshot.data!.data['referralSource'] ?? '';
                   return ListView(
                     padding: const EdgeInsets.only(
-                        top: 56), // Make space for the AppBar
+                        top: 93), // Make space for the AppBar
                     children: [
                       // 제목
                       const MyHeader('수강신청'),
@@ -88,8 +90,6 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       ),
                       TrialScreen1Input(
                         phoneNumberController: widget.phoneNumberController,
-                        lessonDayController: widget.lessonDayController,
-                        lessonTimeController: widget.lessonTimeController,
                         countryController: widget.countryController,
                         skypeIdController: widget.skypeIdController,
                         studyPurposeController: widget.studyPurposeController,
@@ -99,6 +99,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       EnrollmentScreen1Input(
                         lessonStartDateController:
                             widget.lessonStartDateController,
+                        lessonDayController: widget.lessonDayController,
+                        lessonTimeController: widget.lessonTimeController,
                       ),
                       EnrollmentScreen4Button(
                         nameController: widget.nameController,
@@ -126,25 +128,26 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                 }
               },
             ),
-            Positioned(
-              bottom: 30,
-              right: 30,
-              child: InkWell(
-                onTap: () {
-                  js.context
-                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-                },
-                child: Image.asset(
-                  'assets/images/kakao_talk.png',
-                  width: 70,
-                ),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 30,
+            //   right: 30,
+            //   child: InkWell(
+            //     onTap: () {
+            //       js.context
+            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/kakao_talk.png',
+            //       width: 70,
+            //     ),
+            //   ),
+            // ),
             const Positioned(
               child: MyMenuAppBar(),
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

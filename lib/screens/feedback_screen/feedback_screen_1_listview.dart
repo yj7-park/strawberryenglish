@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -47,6 +45,7 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isMobile = screenWidth < 800;
     var itemCount = data.length;
     return Theme(
       data: customTheme,
@@ -73,46 +72,62 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
                 ),
                 // tileColor: Colors.white,
                 leading: Text('${itemCount - index}'),
-                title: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Diago. D.",
-                      style: TextStyle(
-                        color: customTheme.colorScheme.secondary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                title: Builder(
+                  builder: (contexxt) {
+                    var children = [
+                      Text(
+                        "Diago. D.",
+                        style: TextStyle(
+                          color: customTheme.colorScheme.secondary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 50),
-                    Text(
-                      "$id 학생 후기",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(width: 50),
+                      Text(
+                        "$id 학생 후기",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ];
+                    return isMobile
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: children,
+                          )
+                        : Row(children: children);
+                  },
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      id,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
+                trailing: Builder(
+                  builder: (contexxt) {
+                    var children = [
+                      Text(
+                        id,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 50),
-                    Text(
-                      DateFormat('yyyy-MM-dd').format(doc!['date'].toDate()),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
+                      const SizedBox(width: 50),
+                      Text(
+                        DateFormat('yyyy-MM-dd').format(doc!['date'].toDate()),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                  ],
+                    ];
+                    return isMobile
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: children,
+                          )
+                        : Row(
+                            mainAxisSize: MainAxisSize.min, children: children);
+                  },
                 ),
                 children: [
                   Container(
@@ -120,7 +135,7 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
                     width: double.infinity,
                     color: Colors.grey[100],
                     child: Text(
-                      doc['body'].join('\n\n'),
+                      doc!['body'].join('\n\n'),
                       textAlign: TextAlign.left,
                     ),
                   ),

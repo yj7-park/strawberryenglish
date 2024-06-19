@@ -24,7 +24,8 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
   Widget build(BuildContext context) {
     setState(() {});
     double screenWidth = MediaQuery.of(context).size.width;
-    double widgetPadding = ((screenWidth - 1000) / 2).clamp(20, double.nan);
+    double widgetPadding = ((screenWidth - 1000) / 2).clamp(10, double.nan);
+    bool isMobile = screenWidth < 1000;
     bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
     return Stack(
       children: [
@@ -39,6 +40,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
         ),
         Column(
           children: [
+            // if (!isMobile)
             Container(
               height: 35,
               color: customTheme.colorScheme.secondary,
@@ -125,7 +127,8 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
               decoration: const BoxDecoration(color: Colors.white),
               clipBehavior: Clip.hardEdge,
               child: Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: EdgeInsets.symmetric(
+                    vertical: 8, horizontal: widgetPadding),
                 child: OverflowBox(
                   maxHeight: double.infinity,
                   alignment: Alignment.topCenter,
@@ -133,13 +136,12 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: widgetPadding),
                       InkWell(
                         onTap: () {
                           Navigator.pushNamed(context, '/');
                         },
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                          padding: const EdgeInsets.only(top: 5),
                           child: Row(
                             children: [
                               Image.asset(
@@ -159,133 +161,149 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 180),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          MouseRegion(
-                            onEnter: (_) {
-                              setState(() {
-                                _height = _expendedHeight;
-                              });
-                            },
-                            onExit: (_) {
-                              setState(() {
-                                _height = _defaultHeight;
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                myMenuItemButton(
-                                    context, '딸기영어', '/introduction'),
-                                myMenuItemButton(
-                                    context, '뭐가달라?', '/introduction'),
-                                myMenuItemButton(
-                                    context, '공지사항', '/announcement'),
-                              ],
+                      if (!isMobile) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MouseRegion(
+                              onEnter: (_) {
+                                setState(() {
+                                  _height = _expendedHeight;
+                                });
+                              },
+                              onExit: (_) {
+                                setState(() {
+                                  _height = _defaultHeight;
+                                });
+                              },
+                              child: Column(
+                                children: [
+                                  myMenuItemButton(
+                                      context, '딸기영어', '/introduction'),
+                                  myMenuItemButton(
+                                      context, '뭐가달라?', '/introduction'),
+                                  myMenuItemButton(
+                                      context, '공지사항', '/announcement'),
+                                ],
+                              ),
                             ),
-                          ),
-                          // ),
-                          MouseRegion(
-                            onEnter: (_) {
-                              setState(() {
-                                _height = _expendedHeight;
-                              });
-                            },
-                            onExit: (_) {
-                              setState(() {
-                                _height = _defaultHeight;
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                myMenuItemButton(context, '수업안내', '/lectures'),
-                                myMenuItemButton(context, '수강안내', '/lectures'),
-                                myMenuItemButton(context, '수업토픽', '/topics'),
-                                myMenuItemButton(context, '튜터소개', '/tutors'),
-                                myMenuItemButton(context, '수강료', '/tuitionfee'),
-                                myMenuItemButton(context, 'FAQ', '/faq'),
-                              ],
+                            // ),
+                            MouseRegion(
+                              onEnter: (_) {
+                                setState(() {
+                                  _height = _expendedHeight;
+                                });
+                              },
+                              onExit: (_) {
+                                setState(() {
+                                  _height = _defaultHeight;
+                                });
+                              },
+                              child: Column(
+                                children: [
+                                  myMenuItemButton(
+                                      context, '수업안내', '/lectures'),
+                                  myMenuItemButton(
+                                      context, '수강안내', '/lectures'),
+                                  myMenuItemButton(context, '수업토픽', '/topics'),
+                                  myMenuItemButton(context, '튜터소개', '/tutors'),
+                                  myMenuItemButton(
+                                      context, '수강료', '/tuitionfee'),
+                                  myMenuItemButton(context, 'FAQ', '/faq'),
+                                ],
+                              ),
                             ),
-                          ),
-                          MouseRegion(
-                            onEnter: (_) {
-                              setState(() {
-                                _height = _expendedHeight;
-                              });
-                            },
-                            onExit: (_) {
-                              setState(() {
-                                _height = _defaultHeight;
-                              });
-                            },
-                            child:
-                                myMenuItemButton(context, '딸기후기', '/feedbacks'),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Column(
-                        children: [
-                          const SizedBox(height: 4),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor:
-                                      customTheme.colorScheme.secondary,
-                                  backgroundColor: Colors.white,
-                                  shadowColor: Colors.white,
-                                  side: BorderSide(
-                                    color: customTheme.colorScheme.secondary,
-                                    width: 2,
+                            MouseRegion(
+                              onEnter: (_) {
+                                setState(() {
+                                  _height = _expendedHeight;
+                                });
+                              },
+                              onExit: (_) {
+                                setState(() {
+                                  _height = _defaultHeight;
+                                });
+                              },
+                              child: myMenuItemButton(
+                                  context, '딸기후기', '/feedbacks'),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const SizedBox(height: 4),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor:
+                                        customTheme.colorScheme.secondary,
+                                    backgroundColor: Colors.white,
+                                    shadowColor: Colors.white,
+                                    side: BorderSide(
+                                      color: customTheme.colorScheme.secondary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/trial');
+                                    if (FirebaseAuth.instance.currentUser ==
+                                        null) {
+                                      Navigator.popAndPushNamed(
+                                              context, '/login')
+                                          .then((_) => setState(() {}));
+                                    }
+                                  },
+                                  child: const Text(
+                                    '체험하기',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/trial');
-                                  if (FirebaseAuth.instance.currentUser ==
-                                      null) {
-                                    Navigator.popAndPushNamed(context, '/login')
-                                        .then((_) => setState(() {}));
-                                  }
-                                },
-                                child: const Text(
-                                  '체험하기',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                const SizedBox(width: 10),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor:
+                                        customTheme.colorScheme.secondary,
+                                    shadowColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/enrollment');
+                                    if (FirebaseAuth.instance.currentUser ==
+                                        null) {
+                                      Navigator.popAndPushNamed(
+                                              context, '/login')
+                                          .then((_) => setState(() {}));
+                                    }
+                                  },
+                                  child: const Text(
+                                    '수강신청',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor:
-                                      customTheme.colorScheme.secondary,
-                                  shadowColor: Colors.white,
-                                ),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/enrollment');
-                                  if (FirebaseAuth.instance.currentUser ==
-                                      null) {
-                                    Navigator.popAndPushNamed(context, '/login')
-                                        .then((_) => setState(() {}));
-                                  }
-                                },
-                                child: const Text(
-                                  '수강신청',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: widgetPadding),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        const Spacer(),
+                        DrawerButton(
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                        ),
+                        //   child:
+                        // Icon(Icons.list_alt_rounded,
+                        //     size: 40, color: customTheme.colorScheme.secondary),onTap: drawer,),
+                      ],
                     ],
                   ),
                 ),
@@ -294,7 +312,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
             Container(
               height: 2,
               color: customTheme.colorScheme.secondary,
-            )
+            ),
           ],
         ),
       ],

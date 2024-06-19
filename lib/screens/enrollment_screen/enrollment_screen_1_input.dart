@@ -45,10 +45,14 @@ class EnrollmentScreen1Input extends StatefulWidget {
   );
 
   final TextEditingController lessonStartDateController;
+  final TextEditingController lessonDayController;
+  final TextEditingController lessonTimeController;
 
   const EnrollmentScreen1Input({
     super.key,
     required this.lessonStartDateController,
+    required this.lessonDayController,
+    required this.lessonTimeController,
   });
 
   @override
@@ -56,6 +60,45 @@ class EnrollmentScreen1Input extends StatefulWidget {
 }
 
 class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
+  Future<void> _selectDate(BuildContext context) async {
+    String initialDate = widget.lessonStartDateController.value.text;
+    final DateTime? picked = await showDatePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: customTheme
+                    .colorScheme.secondary, // header background color
+                onPrimary:
+                    customTheme.colorScheme.onPrimary, // header text color
+                onSurface: customTheme.colorScheme.onSurface, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor:
+                      customTheme.colorScheme.primary, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+        context: context,
+        initialDate: DateTime.tryParse(initialDate) ?? DateTime.now(),
+        firstDate: DateTime(1950, 1),
+        lastDate: DateTime(2030, 12));
+    if (picked != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+
+      if (formattedDate != initialDate) {
+        setState(() {
+          widget.lessonStartDateController.value =
+              TextEditingValue(text: formattedDate);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -78,12 +121,11 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
               ),
             ),
             const SizedBox(height: 30),
-            // TODO: 날짜
             TextFormField(
               controller: widget.lessonStartDateController,
               decoration: InputDecoration(
                 labelText: '*수업시작일',
-                hintText: 'YYYY-MM-DD',
+                // hintText: 'YYYY-MM-DD',
                 border: const OutlineInputBorder(),
                 enabledBorder:
                     myOutlineInputBorder(widget.lessonStartDateController),
@@ -95,6 +137,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                       : Colors.black,
                 ),
               ),
+              onTap: () => _selectDate(context),
               onChanged: (_) {
                 setState(() {});
               },
@@ -106,6 +149,50 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
               ],
               textInputAction: TextInputAction.next,
             ),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: widget.lessonDayController,
+              decoration: InputDecoration(
+                labelText: '*희망 수업 요일',
+                hintText: 'ex) 월, 수, 금',
+                border: const OutlineInputBorder(),
+                enabledBorder: myOutlineInputBorder(widget.lessonDayController),
+                focusedBorder: myOutlineInputBorder(widget.lessonDayController),
+                labelStyle: TextStyle(
+                  color: widget.lessonDayController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black,
+                ),
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
+              textInputAction: TextInputAction.next,
+            ),
+            const Text('* 평일 수업만 가능합니다.'),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: widget.lessonTimeController,
+              decoration: InputDecoration(
+                labelText: '*희망 수업 시간',
+                hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
+                border: const OutlineInputBorder(),
+                enabledBorder:
+                    myOutlineInputBorder(widget.lessonTimeController),
+                focusedBorder:
+                    myOutlineInputBorder(widget.lessonTimeController),
+                labelStyle: TextStyle(
+                  color: widget.lessonTimeController.text.isEmpty
+                      ? Colors.redAccent
+                      : Colors.black,
+                ),
+              ),
+              onChanged: (_) {
+                setState(() {});
+              },
+              textInputAction: TextInputAction.next,
+            ),
+            const Text('* 수업 가능 시간대를 넓게 주시면 수업 확정이 더 빠르게 진행 됩니다.'),
             const SizedBox(height: 30),
             const Text('*구독기간', style: TextStyle(fontSize: 16)),
             const SizedBox(height: 10),

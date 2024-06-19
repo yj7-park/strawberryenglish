@@ -1,3 +1,4 @@
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
@@ -54,6 +55,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }
