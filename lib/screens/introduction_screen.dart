@@ -1,3 +1,4 @@
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/introduction_screen/introduction_screen_1_text.dart';
@@ -53,6 +54,7 @@ class IntroductionScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

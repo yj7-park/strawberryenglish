@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
+import 'package:strawberryenglish/screens/enrollment_screen/trial_screen_2_input.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_3_button.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 
 class TrialScreen extends StatefulWidget {
@@ -20,8 +22,8 @@ class TrialScreen extends StatefulWidget {
   //     TextEditingController();
 
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController lessonDayController = TextEditingController();
-  final TextEditingController lessonTimeController = TextEditingController();
+  final TextEditingController trialDayController = TextEditingController();
+  final TextEditingController trialTimeController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
   final TextEditingController skypeIdController = TextEditingController();
   final TextEditingController studyPurposeController = TextEditingController();
@@ -61,21 +63,39 @@ class _TrialScreenState extends State<TrialScreen> {
                   );
                 } else if (snapshot.hasData) {
                   // 데이터가 로드되었을 때 표시할 화면
-                  widget.nameController.text = snapshot.data!.name ?? '';
-                  widget.birthDateController.text =
-                      snapshot.data!.birthDate ?? '';
+                  // widget.nameController.text = snapshot.data!.name ?? '';
+                  // widget.birthDateController.text =
+                  //     snapshot.data!.birthDate ?? '';
 
+                  // widget.phoneNumberController.text =
+                  //     snapshot.data!.phoneNumber ?? '';
+                  // widget.countryController.text = snapshot.data!.country ?? '';
+                  // widget.skypeIdController.text = snapshot.data!.skypeId ?? '';
+                  // widget.studyPurposeController.text =
+                  //     snapshot.data!.studyPurpose ?? '';
+                  // widget.referralSourceController.text =
+                  //     snapshot.data!.referralSource ?? '';
+                  widget.nameController.text =
+                      snapshot.data!.data['name'] ?? '';
+                  widget.birthDateController.text =
+                      snapshot.data!.data['birthDate'] ?? '';
                   widget.phoneNumberController.text =
-                      snapshot.data!.phoneNumber ?? '';
-                  widget.countryController.text = snapshot.data!.country ?? '';
-                  widget.skypeIdController.text = snapshot.data!.skypeId ?? '';
+                      snapshot.data!.data['phoneNumber'] ?? '';
+                  widget.countryController.text =
+                      snapshot.data!.data['country'] ?? '';
+                  widget.skypeIdController.text =
+                      snapshot.data!.data['skypeId'] ?? '';
                   widget.studyPurposeController.text =
-                      snapshot.data!.studyPurpose ?? '';
+                      snapshot.data!.data['studyPurpose'] ?? '';
                   widget.referralSourceController.text =
-                      snapshot.data!.referralSource ?? '';
+                      snapshot.data!.data['referralSource'] ?? '';
+                  widget.trialDayController.text =
+                      snapshot.data!.data['trialDay'] ?? '';
+                  widget.trialTimeController.text =
+                      snapshot.data!.data['trialTime'] ?? '';
                   return ListView(
                     padding: const EdgeInsets.only(
-                        top: 56), // Make space for the AppBar
+                        top: 93), // Make space for the AppBar
                     children: [
                       // 제목
                       const MyHeader('체험하기'),
@@ -86,20 +106,22 @@ class _TrialScreenState extends State<TrialScreen> {
                       ),
                       TrialScreen1Input(
                         phoneNumberController: widget.phoneNumberController,
-                        lessonDayController: widget.lessonDayController,
-                        lessonTimeController: widget.lessonTimeController,
                         countryController: widget.countryController,
                         skypeIdController: widget.skypeIdController,
                         studyPurposeController: widget.studyPurposeController,
                         referralSourceController:
                             widget.referralSourceController,
                       ),
+                      TrialScreen2Input(
+                        trialDayController: widget.trialDayController,
+                        trialTimeController: widget.trialTimeController,
+                      ),
                       TrialScreen3Button(
                         nameController: widget.nameController,
                         birthDateController: widget.birthDateController,
                         phoneNumberController: widget.phoneNumberController,
-                        lessonDayController: widget.lessonDayController,
-                        lessonTimeController: widget.lessonTimeController,
+                        trialDayController: widget.trialDayController,
+                        trialTimeController: widget.trialTimeController,
                         countryController: widget.countryController,
                         skypeIdController: widget.skypeIdController,
                         studyPurposeController: widget.studyPurposeController,
@@ -136,6 +158,7 @@ class _TrialScreenState extends State<TrialScreen> {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

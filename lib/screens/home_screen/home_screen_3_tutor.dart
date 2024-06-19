@@ -67,7 +67,7 @@ class HomeScreen3Tutor extends StatelessWidget {
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
                 fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 16),
             Text(
@@ -76,7 +76,7 @@ class HomeScreen3Tutor extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 8),
             Text(
@@ -85,7 +85,7 @@ class HomeScreen3Tutor extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 8),
             Text(
@@ -94,7 +94,7 @@ class HomeScreen3Tutor extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 40),
             // [튜터소개]로 이동 버튼

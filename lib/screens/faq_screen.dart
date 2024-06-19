@@ -1,3 +1,4 @@
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/faq_screen/faq_screen_1_listview.dart';
@@ -48,6 +49,7 @@ class FaqScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

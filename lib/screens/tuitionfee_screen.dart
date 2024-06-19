@@ -3,6 +3,7 @@ import 'package:strawberryenglish/screens/tuitionfee_screen/tuitionfee_screen_1_
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 
 class TuitionfeeScreen extends StatelessWidget {
@@ -46,6 +47,7 @@ class TuitionfeeScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }

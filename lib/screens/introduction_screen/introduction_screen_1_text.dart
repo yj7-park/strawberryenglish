@@ -38,7 +38,7 @@ class IntroductionScreen1Text extends StatelessWidget {
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
                 fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 16),
             const Text(
@@ -61,7 +61,7 @@ class IntroductionScreen1Text extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: 18,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
           ],
         ),

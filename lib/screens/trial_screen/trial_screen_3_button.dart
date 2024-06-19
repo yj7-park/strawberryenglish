@@ -1,3 +1,4 @@
+import 'package:universal_html/js.dart' as js;
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
@@ -11,8 +12,8 @@ class TrialScreen3Button extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController birthDateController;
   final TextEditingController phoneNumberController;
-  final TextEditingController lessonDayController;
-  final TextEditingController lessonTimeController;
+  final TextEditingController trialDayController;
+  final TextEditingController trialTimeController;
   final TextEditingController countryController;
   final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
@@ -23,8 +24,8 @@ class TrialScreen3Button extends StatefulWidget {
     required this.nameController,
     required this.birthDateController,
     required this.phoneNumberController,
-    required this.lessonDayController,
-    required this.lessonTimeController,
+    required this.trialDayController,
+    required this.trialTimeController,
     required this.countryController,
     required this.skypeIdController,
     required this.studyPurposeController,
@@ -59,7 +60,9 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
                 ),
-                onPressed: register,
+                onPressed: () {
+                  register();
+                },
                 child: const Text(
                   '체험하기',
                   style: TextStyle(
@@ -81,8 +84,8 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     final name = widget.nameController.text.trim();
     final birthDate = widget.birthDateController.text.trim();
     final phoneNumber = widget.phoneNumberController.text.trim();
-    final lessonDay = widget.lessonDayController.text.trim();
-    final lessonTime = widget.lessonTimeController.text.trim();
+    final trialDay = widget.trialDayController.text.trim();
+    final trialTime = widget.trialTimeController.text.trim();
     final country = widget.countryController.text.trim();
     final skypeId = widget.skypeIdController.text.trim();
     final studyPurpose = widget.studyPurposeController.text.trim();
@@ -93,8 +96,8 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     if (name.isEmpty ||
         birthDate.isEmpty ||
         phoneNumber.isEmpty ||
-        lessonDay.isEmpty ||
-        lessonTime.isEmpty ||
+        trialDay.isEmpty ||
+        trialTime.isEmpty ||
         country.isEmpty ||
         skypeId.isEmpty) {
       setState(() {
@@ -109,27 +112,39 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
 
       // 성공 시 동작
       Student? updatedStudent = await studentProvider.getStudent();
-      updatedStudent!.name = name;
-      updatedStudent.birthDate = birthDate;
-      updatedStudent.phoneNumber = phoneNumber;
-      updatedStudent.lessonDay = lessonDay;
-      updatedStudent.lessonTime = lessonTime;
-      updatedStudent.country = country;
-      updatedStudent.skypeId = skypeId;
-      updatedStudent.studyPurpose = studyPurpose;
-      updatedStudent.referralSource = referralSource;
-      studentProvider.updateStudentToFirestore(updatedStudent);
+      // updatedStudent!.name = name;
+      // updatedStudent.birthDate = birthDate;
+      // updatedStudent.phoneNumber = phoneNumber;
+      // updatedStudent.trialDay = trialDay;
+      // updatedStudent.trialTime = trialTime;
+      // updatedStudent.country = country;
+      // updatedStudent.skypeId = skypeId;
+      // updatedStudent.studyPurpose = studyPurpose;
+      // updatedStudent.referralSource = referralSource;
+      updatedStudent!.data['name'] = name;
+      updatedStudent.data['birthDate'] = birthDate;
+      updatedStudent.data['phoneNumber'] = phoneNumber;
+      updatedStudent.data['trialDay'] = trialDay;
+      updatedStudent.data['trialTime'] = trialTime;
+      updatedStudent.data['country'] = country;
+      updatedStudent.data['skypeId'] = skypeId;
+      updatedStudent.data['studyPurpose'] = studyPurpose;
+      updatedStudent.data['referralSource'] = referralSource;
+      studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
 
       // 확인 창
-      await ConfirmDialog.show(
-        context: context,
-        title: "수강신청 완료",
-        body: "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
-        trueButton: "카카오톡 채널로 문의하기",
-        falseButton: "마이페이지로 이동",
-      );
+      bool? confirm = await ConfirmDialog.show(
+          context: context,
+          title: "체험 수업 신청 완료",
+          body: "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
+          trueButton: "카카오톡 채널로 문의하기",
+          falseButton: "마이페이지로 이동",
+          routeToOnLeft: '/student_calendar');
 
-      Navigator.of(context).pop(true);
+      if (confirm == true) {
+        Navigator.of(context).pop(true);
+        js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+      }
     } catch (e) {
       setState(() {
         errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');

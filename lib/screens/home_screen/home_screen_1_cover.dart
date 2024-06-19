@@ -8,6 +8,7 @@ class HomeScreen1Cover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Stack(
       children: [
         // 이미지
@@ -15,7 +16,7 @@ class HomeScreen1Cover extends StatelessWidget {
           'assets/images/home-1.jpg',
           fit: BoxFit.cover,
           width: double.infinity,
-          height: 700, // 적당한 높이 조절
+          height: (screenWidth * 0.5).clamp(0, screenHeight * 0.8), // 적당한 높이 조절
           colorBlendMode: BlendMode.darken,
           color: Colors.black38,
         ),

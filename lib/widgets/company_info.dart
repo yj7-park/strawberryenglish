@@ -15,7 +15,7 @@ class CompanyInfo extends StatelessWidget {
         color: Colors.grey.withOpacity(0.1),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: (screenWidth - 400).clamp(0, 200), vertical: 30),
+              horizontal: (screenWidth - 400).clamp(20, 200), vertical: 30),
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

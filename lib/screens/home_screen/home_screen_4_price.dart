@@ -58,7 +58,7 @@ class HomeScreen4Price extends StatelessWidget {
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
                 fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             Text(
               '과도한 고정비와 마케팅비였습니다.',
@@ -67,7 +67,7 @@ class HomeScreen4Price extends StatelessWidget {
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
                 fontWeight: FontWeight.bold,
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 16),
             Text(
@@ -76,7 +76,7 @@ class HomeScreen4Price extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 8),
             Text(
@@ -85,7 +85,7 @@ class HomeScreen4Price extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 8),
             Text(
@@ -94,7 +94,7 @@ class HomeScreen4Price extends StatelessWidget {
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
               ),
-              textAlign: TextAlign.justify,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 40),
             // [체험하기]로 이동 버튼

@@ -41,6 +41,8 @@ class ConfirmDialog {
     String body = "",
     required String trueButton,
     String falseButton = "",
+    String routeToOnLeft = "",
+    String routeToOnRight = "",
   }) async {
     return await showDialog(
       context: context,
@@ -87,13 +89,17 @@ class ConfirmDialog {
               if (falseButton != "")
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false);
+                    routeToOnLeft.isEmpty
+                        ? Navigator.of(context).pop(false)
+                        : Navigator.pushNamed(context, routeToOnLeft);
                   },
                   child: Text(falseButton),
                 ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(true);
+                  routeToOnRight.isEmpty
+                      ? Navigator.of(context).pop(true)
+                      : Navigator.pushNamed(context, routeToOnRight);
                 },
                 child: Text(trueButton),
               ),

@@ -1,3 +1,4 @@
+import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/screens/lectures_screen/lectures_screen_1_announcement.dart';
@@ -48,6 +49,7 @@ class LecturesScreen extends StatelessWidget {
             ),
           ],
         ),
+        drawer: MyDrawer(),
       ),
     );
   }
