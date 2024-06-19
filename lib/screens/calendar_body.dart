@@ -39,22 +39,32 @@ class CalendarBodyState extends State<CalendarBody> {
         child: Column(
           children: [
             // 수업 중인 상태
-            if (widget.user.data.containsKey('lessonStartDate')) ...[
+            if (widget.user.data.containsKey('tutor')) ...[
               const Divider(),
               // 여기에 사용자 정보를 보여주는 위젯 추가
               _buildStudentDetails(screenHeight > 1000),
               const Divider(),
               _buildCalendar(),
             ]
+            // 수강 신청 중인 상태
+            else if (widget.user.data.containsKey('lessonDay')) ...[
+              const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
+              const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
+              const Text('신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
+            ]
             // 체험 중인 상태
-            else if (widget.user.data.containsKey('trialDate'))
-              Text(widget.user.data['trialDate'])
+            else if (widget.user.data.containsKey('trialDate')) ...[
+              const Text('체험 수업 일정이 확정되었습니다.'),
+              Text(widget.user.data['trialDate']),
+            ]
             // 체험 신청 중인 상태
             else if (widget.user.data.containsKey('trialDay')) ...[
               const Text('체험 수업 신청이 완료되어, 일정을 확인 중입니다.'),
               const Text('체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
               const Text('신청 정보 수정이 필요하시면 [체험하기] 버튼을 눌러 수정하실 수 있습니다.'),
-            ] else ...[
+            ]
+            // 회원 가입만 된 상태
+            else ...[
               const Text('딸기영어에 오신 것을 환영합니다.'),
               const Text('[체험하기] 버튼을 눌러 체험 수업을 신청하시거나,'),
               const Text('[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.'),
@@ -102,7 +112,7 @@ class CalendarBodyState extends State<CalendarBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInfoRow('수업 시간', widget.user.data['lessonTime']!),
+                  _buildInfoRow('수업 시간', widget.user.data['lessonTime']),
                 ],
               ),
             ),
@@ -112,7 +122,7 @@ class CalendarBodyState extends State<CalendarBody> {
                 children: [
                   // _buildInfoRow('수업 요일', widget.user.data['lessonDay']),
                   _buildInfoRow('적립금',
-                      '${NumberFormat("###,###").format(widget.user.data['points']!)} 원'),
+                      '${NumberFormat("###,###").format(widget.user.data['points'] ?? 0)} 원'),
                 ],
               ),
             ),
@@ -166,8 +176,7 @@ class CalendarBodyState extends State<CalendarBody> {
             showAgenda: true,
             navigationDirection: MonthNavigationDirection.horizontal,
             monthCellStyle: MonthCellStyle(
-              backgroundColor: Color.fromARGB(255, 246, 246, 246),
-              todayBackgroundColor: Color.fromARGB(255, 246, 246, 246),
+              backgroundColor: Colors.white,
             ),
           ),
           // monthCellBuilder: _buildMonthCell,
@@ -181,10 +190,10 @@ class CalendarBodyState extends State<CalendarBody> {
                       details.date!.isAtSameMomentAs(startDate)) {
                     String formattedDate =
                         DateFormat('yyyy-MM-dd').format(details.date!);
-                    widget.user.data['holdRequestDates']!
+                    widget.user.data['holdRequestDates']
                         .add('$selectedHoldStartDate~$formattedDate');
                     widget.user.data['holdCountLeft'] =
-                        widget.user.data['holdCountLeft']! - 1;
+                        widget.user.data['holdCountLeft'] - 1;
                     selectedHoldStartDate = '';
                     _bottomSheetController?.close();
                     _updateLastLessonDate();
@@ -214,9 +223,9 @@ class CalendarBodyState extends State<CalendarBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoRow('튜터', widget.user.data['tutor']!),
-              _buildInfoRow('프로그램', widget.user.data['program']!),
-              _buildInfoRow('토픽', widget.user.data['topic']!),
+              _buildInfoRow('튜터', widget.user.data['tutor'] ?? ''),
+              _buildInfoRow('프로그램', widget.user.data['program'] ?? ''),
+              _buildInfoRow('토픽', widget.user.data['topic'] ?? ''),
             ],
           ),
         ),
@@ -224,9 +233,11 @@ class CalendarBodyState extends State<CalendarBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoRow('수업 시작일', widget.user.data['lessonStartDate']!),
+              _buildInfoRow('수업 시작일', widget.user.data['lessonStartDate']),
               _buildInfoRow(
-                  '수업 종료일', widget.user.data['modifiedLessonEndDate']!),
+                  '수업 종료일',
+                  widget.user.data['modifiedLessonEndDate'] ??
+                      widget.user.data['lessonEndDate']),
             ],
           ),
         ),
@@ -236,13 +247,13 @@ class CalendarBodyState extends State<CalendarBody> {
             children: [
               _buildInfoRow(
                 '수업 취소',
-                '${widget.user.data['cancelCountLeft']}회',
+                '${widget.user.data['cancelCountLeft'] ?? 0}회',
                 // '수업 취소 (잔여/전체)',
                 // '${widget.user.data['cancelCountLeft']}회 / ${widget.user.data['cancelCountTotal']}회',
               ),
               _buildInfoRow(
                 '장기 홀드',
-                '${widget.user.data['holdCountLeft']}회',
+                '${widget.user.data['holdCountLeft'] ?? 0}회',
                 // '장기 홀드 (잔여/전체)',
                 // '${widget.user.data['holdCountLeft']}회 / ${widget.user.data['holdCountTotal']}회',
               ),
@@ -294,33 +305,57 @@ class CalendarBodyState extends State<CalendarBody> {
     List<dynamic> holdRequestDates = [];
     try {
       lessonStartDate = DateTime.parse(
-          widget.user.data['lessonStartDate']!.replaceAll('. ', '-'));
+          widget.user.data['lessonStartDate'].replaceAll('. ', '-'));
       lastLessonDate = DateTime.parse(
-          widget.user.data['modifiedLessonEndDate']!.replaceAll('. ', '-'));
+          widget.user.data['modifiedLessonEndDate'].replaceAll('. ', '-'));
+    } catch (e) {
+      if (kDebugMode) {
+        print('lessonStartDate / modifiedLessonEndDate parsing failed. $e');
+      }
+      return StudentDataSource(appointments);
+    }
 
-      // lessonTime 파싱
-      lessonDates =
-          _getLessonDatesFromLessonTime(widget.user.data['lessonTime']!);
+    // lessonTime 파싱
+    lessonDates = _getLessonDatesFromLessonTime(widget.user.data['lessonTime']);
 
-      if (widget.user.data['cancelDates'] != null) {
-        cancelDates = widget.user.data['cancelDates']!
+    if (widget.user.data.containsKey('cancelDates')) {
+      try {
+        cancelDates = widget.user.data['cancelDates']
             .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
             .toList();
+      } catch (e) {
+        if (kDebugMode) {
+          print('cancelDates parsing failed. $e');
+        }
       }
-      if (widget.user.data['tutorCancelDates'] != null) {
-        tutorCancelDates = widget.user.data['tutorCancelDates']!
+    }
+    if (widget.user.data.containsKey('tutorCancelDates')) {
+      try {
+        tutorCancelDates = widget.user.data['tutorCancelDates']
             .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
             .toList();
+      } catch (e) {
+        if (kDebugMode) {
+          print('tutorCancelDates parsing failed. $e');
+        }
       }
-      if (widget.user.data['cancelRequestDates'] != null) {
-        cancelRequestDates = widget.user.data['cancelRequestDates']!
+    }
+    if (widget.user.data.containsKey('cancelRequestDates')) {
+      try {
+        cancelRequestDates = widget.user.data['cancelRequestDates']
             .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
             .toList();
+      } catch (e) {
+        if (kDebugMode) {
+          print('cancelRequestDates parsing failed. $e');
+        }
       }
-      if (widget.user.data['holdDates'] != null) {
+    }
+    if (widget.user.data.containsKey('holdDates')) {
+      try {
         List<DateTime> parsedHoldDates = [];
 
-        for (String range in widget.user.data['holdDates']!) {
+        for (String range in widget.user.data['holdDates']) {
           List<String> dateParts =
               range.split('~').map((e) => e.trim()).toList();
           if (dateParts.length == 2) {
@@ -341,10 +376,15 @@ class CalendarBodyState extends State<CalendarBody> {
           }
         }
         holdDates = parsedHoldDates;
+      } catch (e) {
+        if (kDebugMode) {
+          print('holdDates parsing failed. $e');
+        }
       }
-
-      if (widget.user.data['holdRequestDates'] != null) {
-        for (String range in widget.user.data['holdRequestDates']!) {
+    }
+    if (widget.user.data.containsKey('holdRequestDates')) {
+      try {
+        for (String range in widget.user.data['holdRequestDates']) {
           List<String> dateParts =
               range.split('~').map((e) => e.trim()).toList();
           if (dateParts.length == 2) {
@@ -364,12 +404,11 @@ class CalendarBodyState extends State<CalendarBody> {
             }
           }
         }
+      } catch (e) {
+        if (kDebugMode) {
+          print('holdRequestDates parsing failed. $e');
+        }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('cal date parsing failed. $e');
-      }
-      return StudentDataSource(appointments);
     }
 
     DateTime currentLessonDate = lessonStartDate;
@@ -539,7 +578,7 @@ class CalendarBodyState extends State<CalendarBody> {
 
   //   return Opacity(
   //       opacity:
-  //           isSameMonth(date, _calendarController.displayDate!) ? 1.0 : 0.2,
+  //           isSameMonth(date, _calendarController.displayDate) ? 1.0 : 0.2,
   //       child: Container(
   //           decoration: BoxDecoration(
   //             border: Border.all(color: borderColor, width: 2.0),
@@ -648,17 +687,17 @@ class CalendarBodyState extends State<CalendarBody> {
             message = '정상 수업 예정입니다.';
             buttonText.add((
               '수업 취소',
-              '잔여 횟수 : ${widget.user.data['cancelCountLeft']}/${widget.user.data['cancelCountTotal']}',
+              '잔여 횟수 : ${widget.user.data['cancelCountLeft'] ?? 0}/${widget.user.data['cancelCountTotal'] ?? 0}',
               Icons.play_disabled_outlined,
               Colors.redAccent,
-              widget.user.data['cancelCountLeft']! > 0
+              widget.user.data['cancelCountLeft'] ?? 0 > 0
             ));
             buttonText.add((
               '장기 홀드',
-              '잔여 횟수 : ${widget.user.data['holdCountLeft']}/${widget.user.data['holdCountTotal']}',
+              '잔여 횟수 : ${widget.user.data['holdCountLeft'] ?? 0}/${widget.user.data['holdCountTotal'] ?? 0}',
               Icons.sync_disabled_outlined,
               Colors.orangeAccent,
-              widget.user.data['holdCountLeft']! > 0
+              widget.user.data['holdCountLeft'] ?? 0 > 0
             ));
           }
         }
@@ -697,22 +736,22 @@ class CalendarBodyState extends State<CalendarBody> {
               String formattedDate =
                   DateFormat('yyyy-MM-dd').format(details.date!);
               if (items.$1 == '수업 취소') {
-                if (!widget.user.data['cancelRequestDates']!
+                if (!widget.user.data['cancelRequestDates']
                     .contains(formattedDate)) {
-                  widget.user.data['cancelRequestDates']!.add(formattedDate);
+                  widget.user.data['cancelRequestDates'].add(formattedDate);
                   widget.user.data['cancelCountLeft'] =
-                      widget.user.data['cancelCountLeft']! - 1;
+                      widget.user.data['cancelCountLeft'] - 1;
                 }
               } else if (items.$1 == '수업 재개') {
-                if (widget.user.data['cancelRequestDates']!
+                if (widget.user.data['cancelRequestDates']
                     .remove(formattedDate)) {
                   widget.user.data['cancelCountLeft'] =
-                      widget.user.data['cancelCountLeft']! + 1;
+                      widget.user.data['cancelCountLeft'] + 1;
                 }
               } else if (items.$1 == '장기 홀드') {
-                // widget.user.data['holdCountLeft'] = widget.user.data['holdCountLeft']! - 1;
+                // widget.user.data['holdCountLeft'] = widget.user.data['holdCountLeft'] - 1;
                 selectedHoldStartDate = formattedDate;
-                // widget.user.data['holdRequestDates']!.add(formattedDate);
+                // widget.user.data['holdRequestDates'].add(formattedDate);
                 _bottomSheetController?.close(); // Close the bottom sheet
                 _bottomSheetController = showBottomSheet(
                   context: context,
@@ -754,7 +793,7 @@ class CalendarBodyState extends State<CalendarBody> {
                 });
                 return;
               } else if (items.$1 == '장기 홀드 해제') {
-                for (String range in widget.user.data['holdRequestDates']!) {
+                for (String range in widget.user.data['holdRequestDates']) {
                   List<String> dateParts =
                       range.split('~').map((e) => e.trim()).toList();
                   if (dateParts.length == 2) {
@@ -765,9 +804,9 @@ class CalendarBodyState extends State<CalendarBody> {
                         details.date!.isAtSameMomentAs(endDate) |
                         (details.date!.isBefore(endDate) &&
                             details.date!.isAfter(startDate))) {
-                      widget.user.data['holdRequestDates']!.remove(range);
+                      widget.user.data['holdRequestDates'].remove(range);
                       widget.user.data['holdCountLeft'] =
-                          widget.user.data['holdCountLeft']! + 1;
+                          widget.user.data['holdCountLeft'] + 1;
                       break;
                     }
                   }
@@ -789,26 +828,26 @@ class CalendarBodyState extends State<CalendarBody> {
 
     // 취소일 count
     // Student 취소일
-    // int cancelCount = widget.user.data['cancelDates']!.length;
-    num cancelCount = widget.user.data['cancelCountTotal']! -
-        widget.user.data['cancelCountLeft']!;
+    // int cancelCount = widget.user.data['cancelDates'].length;
+    num cancelCount = (widget.user.data['cancelCountTotal'] ?? 0) -
+        (widget.user.data['cancelCountLeft'] ?? 0);
 
     // Tutor 취소일
-    cancelCount += widget.user.data['tutorCancelDates']!.length;
+    cancelCount += (widget.user.data['tutorCancelDates'] ?? []).length;
 
     List<int> lessonDays =
-        _getLessonDatesFromLessonTime(widget.user.data['lessonTime']!)
+        _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
             .keys
             .toList();
 
     // holdDays 계산
-    if (widget.user.data['holdDates'] != null) {
+    if (widget.user.data.containsKey('holdDates')) {
       List<int> lessonDays =
-          _getLessonDatesFromLessonTime(widget.user.data['lessonTime']!)
+          _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
               .keys
               .toList();
 
-      for (String dateRange in widget.user.data['holdDates']!) {
+      for (String dateRange in widget.user.data['holdDates']) {
         List<String> dateRangeParts = dateRange.split("~");
         if (dateRangeParts.length == 2) {
           DateTime startDate =
@@ -833,13 +872,13 @@ class CalendarBodyState extends State<CalendarBody> {
       }
     }
     // holdRequestDays 계산
-    if (widget.user.data['holdRequestDates'] != null) {
+    if (widget.user.data.containsKey('holdRequestDates')) {
       List<int> lessonDays =
-          _getLessonDatesFromLessonTime(widget.user.data['lessonTime']!)
+          _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
               .keys
               .toList();
 
-      for (String dateRange in widget.user.data['holdRequestDates']!) {
+      for (String dateRange in widget.user.data['holdRequestDates']) {
         List<String> dateRangeParts = dateRange.split("~");
         if (dateRangeParts.length == 2) {
           DateTime startDate =
@@ -864,8 +903,8 @@ class CalendarBodyState extends State<CalendarBody> {
       }
     }
 
-    var lastLessonDate = DateTime.parse(
-        widget.user.data['lessonEndDate']!.replaceAll('. ', '-'));
+    var lastLessonDate =
+        DateTime.parse(widget.user.data['lessonEndDate'].replaceAll('. ', '-'));
     while (!lessonDays.contains(lastLessonDate.weekday)) {
       lastLessonDate = lastLessonDate.subtract(const Duration(days: 1));
     }

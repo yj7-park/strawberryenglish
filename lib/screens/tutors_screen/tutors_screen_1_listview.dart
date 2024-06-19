@@ -44,6 +44,7 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isMobile = screenWidth < 800;
     return Theme(
       data: customTheme,
       child: Padding(
@@ -85,89 +86,131 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                   });
                 },
                 // tileColor: Colors.white,
-                title: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
+                title: Builder(
+                  builder: (context) {
+                    var image = Image.asset(
                       'assets/images/tutors/$name.png',
-                      width: 200,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "★ $score",
-                            style: TextStyle(
-                              color: customTheme.colorScheme.secondary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            license,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            body,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: widget.controllers[index] ? 100 : 3,
-                          ),
-                        ],
+                      width: isMobile ? 150 : 200,
+                    );
+                    var score_name = [
+                      Text(
+                        "★ $score",
+                        style: TextStyle(
+                          color: customTheme.colorScheme.secondary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ];
+                    var license_body = [
+                      Text(
+                        license,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        body,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: widget.controllers[index] ? 100 : 3,
+                      ),
+                    ];
+                    return !isMobile
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              image,
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ...score_name,
+                                    ...license_body,
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  image,
+                                  const SizedBox(width: 16),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [...score_name],
+                                  ),
+                                ],
+                              ),
+                              ...license_body,
+                            ],
+                          );
+                  },
                 ),
                 children: [
                   Container(
                     color: Colors.grey.withOpacity(0.1),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // calendar
-                          SizedBox(
-                            width: 450,
-                            height: 450 / 16 * 9,
-                            child: SfCalendar(
-                              view: CalendarView.workWeek,
-                              showNavigationArrow: true,
-                              dataSource: _getCalendarDataSource(calendar),
-                              // controller: _calendarController,
-                              showDatePickerButton: true,
-                              headerDateFormat: 'yyyy년 M월 ', // 원하는 형식으로 지정
-                              todayHighlightColor: const Color(0xfffcc021),
-                              timeSlotViewSettings: const TimeSlotViewSettings(
-                                startHour: 8,
-                                timeIntervalHeight: 20,
+                      child: Builder(
+                        builder: (context) {
+                          var children = [
+                            // TODO: Tutor 스케쥴
+                            // SizedBox(
+                            //   width: 450,
+                            //   height: 450 / 16 * 9,
+                            //   child: SfCalendar(
+                            //     view: CalendarView.workWeek,
+                            //     showNavigationArrow: true,
+                            //     dataSource: _getCalendarDataSource(calendar),
+                            //     // controller: _calendarController,
+                            //     showDatePickerButton: true,
+                            //     headerDateFormat: 'yyyy년 M월 ', // 원하는 형식으로 지정
+                            //     todayHighlightColor: const Color(0xfffcc021),
+                            //     timeSlotViewSettings:
+                            //         const TimeSlotViewSettings(
+                            //       startHour: 8,
+                            //       timeIntervalHeight: 20,
+                            //     ),
+                            //   ),
+                            // ),
+                            SizedBox(
+                              width: 450,
+                              child: YoutubePlayer(
+                                aspectRatio: 16 / 9,
+                                controller: YoutubePlayerController.fromVideoId(
+                                  videoId: youtube,
+                                  autoPlay: false,
+                                  params: const YoutubePlayerParams(
+                                      showFullscreenButton: true),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 450,
-                            child: YoutubePlayer(
-                              aspectRatio: 16 / 9,
-                              controller: YoutubePlayerController.fromVideoId(
-                                videoId: youtube,
-                                autoPlay: false,
-                                params: const YoutubePlayerParams(
-                                    showFullscreenButton: true),
-                              ),
-                            ),
-                          ),
-                        ],
+                          ];
+                          return !isMobile
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: children,
+                                )
+                              : Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: children,
+                                );
+                        },
                       ),
                     ),
                   ),

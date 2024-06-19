@@ -77,6 +77,12 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       snapshot.data!.data['studyPurpose'] ?? '';
                   widget.referralSourceController.text =
                       snapshot.data!.data['referralSource'] ?? '';
+                  widget.lessonStartDateController.text =
+                      snapshot.data!.data['lessonStartDate'] ?? '';
+                  widget.lessonDayController.text =
+                      snapshot.data!.data['lessonDay'] ?? '';
+                  widget.lessonTimeController.text =
+                      snapshot.data!.data['lessonTime'] ?? '';
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 93), // Make space for the AppBar

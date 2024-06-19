@@ -4,9 +4,6 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -17,9 +14,6 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  static const _defaultHeight = 56.0;
-  static const _expendedHeight = 256.0;
-  double _height = _defaultHeight;
   bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
   @override
@@ -75,7 +69,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text('${FirebaseAuth.instance.currentUser!.email!} 님'),
-                      SizedBox(height: 3),
+                      const SizedBox(height: 3),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -180,6 +174,7 @@ class _MyDrawerState extends State<MyDrawer> {
           Positioned(
             bottom: 0,
             left: 0,
+            width: 250,
             child: Container(
               decoration: BoxDecoration(
                   border: Border(
@@ -190,9 +185,8 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                   color: Colors.white),
               child: Padding(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   vertical: 15,
-                  horizontal: 15,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
