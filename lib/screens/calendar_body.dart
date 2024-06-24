@@ -47,15 +47,34 @@ class CalendarBodyState extends State<CalendarBody> {
               _buildCalendar(),
             ]
             // 수강 신청 중인 상태
-            else if (widget.user.data.containsKey('lessonDay')) ...[
+            else if (widget.user.data.containsKey('Tutor')) ...[
               const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
               const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
               const Text('신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
             ]
             // 체험 중인 상태
-            else if (widget.user.data.containsKey('trialDate')) ...[
-              const Text('체험 수업 일정이 확정되었습니다.'),
-              Text(widget.user.data['trialDate']),
+            else if (widget.user.data.containsKey('trialTutor')) ...[
+              Text(
+                """
+*트라이얼 수업 확정
+
+김찬미 님의 트라이얼 수업이 확정되었습니다 :)
+
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(widget.user.data['trialDate'].toDate())} ${_getWeekdayFromNumber(widget.user.data['trialDate'].toDate().weekday)}요일
+
+시간: ${DateFormat('hh시 mm분').format(widget.user.data['trialDate'].toDate())} (한국시간)
+
+Tutor: ${widget.user.data['trialTutor'] ?? ''}
+ 
+트라이얼 수업은 20분간 레벨 테스트 목적으로 진행되며 정규 수업과 수업 방식이 다르다는 점 안내드립니다 :)
+
+튜터 분이 스카이프를 통해 친구 요청 메시지를 전달 드릴 예정입니다.
+원활한 트라이얼 수업 진행을 위해 수업 시작 30분 전까지 친구 수락이 되어야 트라이얼 수업이 확정된다는 점 꼭 확인해 주세요.
+
+감사합니다.
+Enjoy your English with 🍓""",
+                textAlign: TextAlign.center,
+              ),
             ]
             // 체험 신청 중인 상태
             else if (widget.user.data.containsKey('trialDay')) ...[
@@ -502,6 +521,10 @@ class CalendarBodyState extends State<CalendarBody> {
     return '월화수목금토일'.indexOf(weekday) + 1;
   }
 
+  String _getWeekdayFromNumber(int weekday) {
+    return '월화수목금토일'[weekday];
+  }
+
   // Widget _buildCustomAppointment(BuildContext context,
   //     CalendarAppointmentDetails calendarAppointmentDetails) {
   //   final Appointment appointment =
@@ -690,14 +713,14 @@ class CalendarBodyState extends State<CalendarBody> {
               '잔여 횟수 : ${widget.user.data['cancelCountLeft'] ?? 0}/${widget.user.data['cancelCountTotal'] ?? 0}',
               Icons.play_disabled_outlined,
               Colors.redAccent,
-              widget.user.data['cancelCountLeft'] ?? 0 > 0
+              (widget.user.data['cancelCountLeft'] ?? 0) > 0,
             ));
             buttonText.add((
               '장기 홀드',
               '잔여 횟수 : ${widget.user.data['holdCountLeft'] ?? 0}/${widget.user.data['holdCountTotal'] ?? 0}',
               Icons.sync_disabled_outlined,
               Colors.orangeAccent,
-              widget.user.data['holdCountLeft'] ?? 0 > 0
+              (widget.user.data['holdCountLeft'] ?? 0) > 0,
             ));
           }
         }

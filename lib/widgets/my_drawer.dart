@@ -14,11 +14,12 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
-
   @override
   Widget build(BuildContext context) {
     setState(() {});
+    bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    bool isAdmin = FirebaseAuth.instance.currentUser != null &&
+        FirebaseAuth.instance.currentUser!.email == 'admin@admin.com';
     return Drawer(
       width: 250,
       backgroundColor: Colors.white,
@@ -68,7 +69,13 @@ class _MyDrawerState extends State<MyDrawer> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('${FirebaseAuth.instance.currentUser!.email!} 님'),
+                      Text(
+                        isLoggedIn
+                            ? isAdmin
+                                ? '🛠관리자모드🛠'
+                                : '${FirebaseAuth.instance.currentUser!.email} 님'
+                            : '',
+                      ),
                       const SizedBox(height: 3),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -164,6 +171,12 @@ class _MyDrawerState extends State<MyDrawer> {
                       const SizedBox(height: 20),
                       MyDrawerTile(context, '딸기후기', '/feedbacks',
                           highlight: true),
+                      if (isAdmin) ...[
+                        const SizedBox(height: 20),
+                        MyDrawerTile(context, '🛠관리자메뉴', '/admin_students',
+                            highlight: true),
+                        MyDrawerTile(context, '🛠학생정보', '/admin_students'),
+                      ],
                       const SizedBox(height: 75),
                     ],
                   ),
@@ -171,76 +184,77 @@ class _MyDrawerState extends State<MyDrawer> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            width: 250,
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: customTheme.colorScheme.secondary,
-                      width: 2,
+          if (!isAdmin)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              width: 250,
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: customTheme.colorScheme.secondary,
+                        width: 2,
+                      ),
                     ),
+                    color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
                   ),
-                  color: Colors.white),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: customTheme.colorScheme.secondary,
-                        backgroundColor: Colors.white,
-                        shadowColor: Colors.white,
-                        side: BorderSide(
-                          color: customTheme.colorScheme.secondary,
-                          width: 2,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: customTheme.colorScheme.secondary,
+                          backgroundColor: Colors.white,
+                          shadowColor: Colors.white,
+                          side: BorderSide(
+                            color: customTheme.colorScheme.secondary,
+                            width: 2,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/trial');
+                          if (FirebaseAuth.instance.currentUser == null) {
+                            Navigator.popAndPushNamed(context, '/login')
+                                .then((_) => setState(() {}));
+                          }
+                        },
+                        child: const Text(
+                          '체험하기',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/trial');
-                        if (FirebaseAuth.instance.currentUser == null) {
-                          Navigator.popAndPushNamed(context, '/login')
-                              .then((_) => setState(() {}));
-                        }
-                      },
-                      child: const Text(
-                        '체험하기',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: customTheme.colorScheme.secondary,
+                          shadowColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/enrollment');
+                          if (FirebaseAuth.instance.currentUser == null) {
+                            Navigator.popAndPushNamed(context, '/login')
+                                .then((_) => setState(() {}));
+                          }
+                        },
+                        child: const Text(
+                          '수강신청',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: customTheme.colorScheme.secondary,
-                        shadowColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/enrollment');
-                        if (FirebaseAuth.instance.currentUser == null) {
-                          Navigator.popAndPushNamed(context, '/login')
-                              .then((_) => setState(() {}));
-                        }
-                      },
-                      child: const Text(
-                        '수강신청',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

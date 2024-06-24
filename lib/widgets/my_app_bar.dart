@@ -26,7 +26,10 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
     double screenWidth = MediaQuery.of(context).size.width;
     double widgetPadding = ((screenWidth - 1000) / 2).clamp(10, double.nan);
     bool isMobile = screenWidth < 1000;
+    // TODO: 모바일일 경우에는 화면이 크더라도 isMobile true로 설정 필요
     bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    bool isAdmin = FirebaseAuth.instance.currentUser != null &&
+        FirebaseAuth.instance.currentUser!.email == 'admin@admin.com';
     return Stack(
       children: [
         SizedBox(
@@ -49,7 +52,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                 children: [
                   Text(
                     isLoggedIn
-                        ? '${FirebaseAuth.instance.currentUser!.email} 님'
+                        ? isAdmin
+                            ? '🛠관리자모드🛠'
+                            : '${FirebaseAuth.instance.currentUser!.email} 님'
                         : '',
                     style: const TextStyle(
                       fontSize: 12,
@@ -229,68 +234,92 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                               child: myMenuItemButton(
                                   context, '딸기후기', '/feedbacks'),
                             ),
+                            if (isAdmin)
+                              MouseRegion(
+                                onEnter: (_) {
+                                  setState(() {
+                                    _height = _expendedHeight;
+                                  });
+                                },
+                                onExit: (_) {
+                                  setState(() {
+                                    _height = _defaultHeight;
+                                  });
+                                },
+                                child: Column(
+                                  children: [
+                                    myMenuItemButton(
+                                        context, '🛠관리자메뉴', '/admin_students'),
+                                    myMenuItemButton(
+                                        context, '🛠학생정보', '/admin_students'),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                         Column(
                           children: [
                             const SizedBox(height: 4),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor:
-                                        customTheme.colorScheme.secondary,
-                                    backgroundColor: Colors.white,
-                                    shadowColor: Colors.white,
-                                    side: BorderSide(
-                                      color: customTheme.colorScheme.secondary,
-                                      width: 2,
+                            if (!isAdmin)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor:
+                                          customTheme.colorScheme.secondary,
+                                      backgroundColor: Colors.white,
+                                      shadowColor: Colors.white,
+                                      side: BorderSide(
+                                        color:
+                                            customTheme.colorScheme.secondary,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/trial');
+                                      if (FirebaseAuth.instance.currentUser ==
+                                          null) {
+                                        Navigator.popAndPushNamed(
+                                                context, '/login')
+                                            .then((_) => setState(() {}));
+                                      }
+                                    },
+                                    child: const Text(
+                                      '체험하기',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/trial');
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      Navigator.popAndPushNamed(
-                                              context, '/login')
-                                          .then((_) => setState(() {}));
-                                    }
-                                  },
-                                  child: const Text(
-                                    '체험하기',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                  const SizedBox(width: 10),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor:
+                                          customTheme.colorScheme.secondary,
+                                      shadowColor: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, '/enrollment');
+                                      if (FirebaseAuth.instance.currentUser ==
+                                          null) {
+                                        Navigator.popAndPushNamed(
+                                                context, '/login')
+                                            .then((_) => setState(() {}));
+                                      }
+                                    },
+                                    child: const Text(
+                                      '수강신청',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor:
-                                        customTheme.colorScheme.secondary,
-                                    shadowColor: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/enrollment');
-                                    if (FirebaseAuth.instance.currentUser ==
-                                        null) {
-                                      Navigator.popAndPushNamed(
-                                              context, '/login')
-                                          .then((_) => setState(() {}));
-                                    }
-                                  },
-                                  child: const Text(
-                                    '수강신청',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                           ],
                         ),
                       ] else ...[

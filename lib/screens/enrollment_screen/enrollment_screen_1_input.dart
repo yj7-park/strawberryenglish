@@ -36,7 +36,15 @@ class EnrollmentScreen1Input extends StatefulWidget {
         30: 119000,
         55: 209000,
       },
-    }
+    },
+  };
+  static final cancelCount = {
+    1: {2: 2, 3: 3, 5: 5},
+    3: {2: 5, 3: 7, 5: 12},
+  };
+  static final holdCount = {
+    1: {2: 1, 3: 1, 5: 1},
+    3: {2: 3, 3: 3, 5: 3},
   };
 
   static const _textStyle = TextStyle(

@@ -122,8 +122,6 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         lessonTime.isEmpty ||
         country.isEmpty ||
         skypeId.isEmpty ||
-        studyPurpose.isEmpty ||
-        referralSource.isEmpty ||
         lessonStartDate.isEmpty) {
       setState(() {
         // errorMessage = 'All fields are required.';
@@ -156,6 +154,31 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['studyPurpose'] = studyPurpose;
         updatedStudent.data['referralSource'] = referralSource;
         updatedStudent.data['lessonStartDate'] = lessonStartDate;
+        updatedStudent.data['lessonTime'] = '$lessonDay-$lessonTime';
+        updatedStudent.data['lessonPeriod'] =
+            EnrollmentScreen.selectedMins.first;
+
+        // 수업 종료 일자 계산
+        updatedStudent.data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(
+            DateTime.parse(lessonStartDate).add(
+                Duration(days: 7 * 4 * EnrollmentScreen.selectedMonths.first)));
+
+        // 수업 취소 횟수 계산
+        updatedStudent.data['cancelCountTotal'] =
+            updatedStudent.data['cancelCountLeft'] = EnrollmentScreen1Input
+                    .cancelCount[EnrollmentScreen.selectedMonths.first]![
+                EnrollmentScreen.selectedDays.first];
+        updatedStudent.data['cancelDates'] = [];
+        updatedStudent.data['cancelRequestDates'] = [];
+
+        // 장기 홀드 횟수 계산
+        updatedStudent.data['holdCountTotal'] =
+            updatedStudent.data['holdCountLeft'] = EnrollmentScreen1Input
+                    .holdCount[EnrollmentScreen.selectedMonths.first]![
+                EnrollmentScreen.selectedDays.first];
+        updatedStudent.data['holdDates'] = [];
+        updatedStudent.data['holdRequestDates'] = [];
+        // EnrollmentScreen.selectedDays.first;
         studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
 
         Navigator.of(context).pop(true);

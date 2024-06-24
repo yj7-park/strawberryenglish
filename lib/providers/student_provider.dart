@@ -23,8 +23,8 @@ class StudentProvider extends ChangeNotifier {
       await sheetApiProvider.init();
       if (currentUser!.email != 'admin@admin.com') {
         _student = await getStudent();
+        notifyListeners();
       }
-      notifyListeners();
     }
   }
 
@@ -57,7 +57,8 @@ class StudentProvider extends ChangeNotifier {
       }
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser!.email == 'admin@admin.com') {
-        _student = null;
+        _student = Student(data: {'admin': true});
+        notifyListeners();
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
         // _student = await getStudentFromGoogleSheets(username);

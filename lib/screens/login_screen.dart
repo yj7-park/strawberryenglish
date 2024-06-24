@@ -147,10 +147,10 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     if (username.isNotEmpty && password.isNotEmpty) {
-      if (username == 'admin@admin.com') {
-        Navigator.pushNamed(context, '/admin');
-        return; // admin 계정으로 로그인 시 바로 종료
-      }
+      // if (username == 'admin@admin.com') {
+      //   Navigator.pushNamed(context, '/admin');
+      //   return; // admin 계정으로 로그인 시 바로 종료
+      // }
 
       try {
         _errorMessage = await tutorProvider.loginTutor(username, password);
