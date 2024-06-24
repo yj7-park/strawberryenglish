@@ -94,6 +94,18 @@ class _AdminStudentsScreen1ListviewState
                 var id = d.keys.elementAt(index);
                 var doc = Map.fromEntries(d[id]!.entries.toList()
                   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
+                var status = '';
+                if (doc.containsKey('tutor')) {
+                  status = '수업 중';
+                } else if (doc.containsKey('lessonEndDate')) {
+                  status = '수강 신청 중';
+                } else if (doc.containsKey('trialTutor')) {
+                  status = '무료 체험 중';
+                } else if (doc.containsKey('trialDay')) {
+                  status = '무료 체험 신청 중';
+                } else {
+                  status = '회원 가입 중';
+                }
                 return Card(
                   elevation: 0.0,
                   child: ExpansionTile(
@@ -106,7 +118,7 @@ class _AdminStudentsScreen1ListviewState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          id,
+                          status,
                           style: TextStyle(
                             color: customTheme.colorScheme.secondary,
                             fontSize: 16,

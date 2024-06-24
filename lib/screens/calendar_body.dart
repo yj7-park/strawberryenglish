@@ -47,7 +47,7 @@ class CalendarBodyState extends State<CalendarBody> {
               _buildCalendar(),
             ]
             // 수강 신청 중인 상태
-            else if (widget.user.data.containsKey('Tutor')) ...[
+            else if (widget.user.data.containsKey('lessonEndDate')) ...[
               const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
               const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
               const Text('신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
