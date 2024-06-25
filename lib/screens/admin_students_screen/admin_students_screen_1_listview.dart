@@ -14,9 +14,16 @@ class AdminStudentsScreen1Listview extends StatefulWidget {
 
 class _AdminStudentsScreen1ListviewState
     extends State<AdminStudentsScreen1Listview> {
-  Map<String, Map<String, dynamic>> data = {};
+  Map<String, Map<String, dynamic>> userData = {};
   Map<String, Map<String, dynamic>> searchedData = {};
   TextEditingController controller = TextEditingController();
+  Map<String, TextEditingController> controllers = {};
+
+  bool cancelFiltered = false;
+  bool holdFiltered = false;
+
+  var cancelRequestsCount = 0;
+  var holdRequestsCount = 0;
 
   Future<dynamic> getData() async {
     final collection = FirebaseFirestore.instance.collection("users");
@@ -25,12 +32,26 @@ class _AdminStudentsScreen1ListviewState
         .get()
         .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
       setState(() {
-        data = {
+        userData = {
           for (var doc in snapshot.docs) doc.id: doc.data(),
         };
       });
     });
     // searchedData = data;
+    for (var e in userData.entries) {
+      var d = e.value;
+      // 수업 취소 요청
+      if (d.containsKey('cancelRequestDates') &&
+          d['cancelRequestDates'].isNotEmpty) {
+        cancelRequestsCount++;
+      }
+
+      // 장기 홀드 요청
+      if (d.containsKey('holdRequestDates') &&
+          d['holdRequestDates'].isNotEmpty) {
+        holdRequestsCount++;
+      }
+    }
   }
 
   @override
@@ -42,6 +63,8 @@ class _AdminStudentsScreen1ListviewState
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool noFilter =
+        controller.text.isNotEmpty || cancelFiltered || holdFiltered;
     return Theme(
       data: customTheme,
       child: Padding(
@@ -51,34 +74,87 @@ class _AdminStudentsScreen1ListviewState
         ),
         child: Column(
           children: [
-            Container(
-              color: Theme.of(context).primaryColor,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.search),
-                    title: TextField(
-                      controller: controller,
-                      decoration: const InputDecoration(
-                          hintText: 'Search', border: InputBorder.none),
-                      onChanged: onSearchTextChanged,
+            SizedBox(
+              width: 400,
+              height: 50,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var (t, c, n, f, v) in [
+                    (
+                      '취소 요청',
+                      Colors.redAccent,
+                      cancelRequestsCount,
+                      (v) {
+                        cancelFiltered = v;
+                        filterData(v);
+                      },
+                      cancelFiltered,
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                            '${controller.text.isNotEmpty ? searchedData.length : data.length}/${data.length}'),
-                        IconButton(
-                          icon: const Icon(Icons.cancel),
-                          onPressed: () {
-                            controller.clear();
-                            onSearchTextChanged('');
-                          },
+                    (
+                      '홀드 요청',
+                      Colors.orangeAccent,
+                      holdRequestsCount,
+                      (v) {
+                        holdFiltered = v;
+                        filterData(v);
+                      },
+                      holdFiltered,
+                    ),
+                  ])
+                    // InkWell(
+                    //   child:
+                    Expanded(
+                      child: Card(
+                        margin: const EdgeInsets.only(left: 10),
+                        color: n > 0 ? c : Colors.grey,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: CheckboxListTile(
+                            value: v,
+                            onChanged: f,
+                            enabled: n > 0,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text(
+                              '$t $n',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      ],
+                      ),
                     ),
+                  //   onTap: f,
+                  // ),
+                ],
+              ),
+            ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.search),
+                title: TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    hintText: 'Search',
+                    border: InputBorder.none,
                   ),
+                  // enabled: !cancelFiltered && !holdFiltered,
+                  onChanged: filterData,
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        '${noFilter ? searchedData.length : userData.length}/${userData.length}'),
+                    IconButton(
+                      icon: const Icon(Icons.cancel),
+                      onPressed: () {
+                        controller.clear();
+                        filterData('');
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -86,25 +162,43 @@ class _AdminStudentsScreen1ListviewState
               shrinkWrap: true,
               separatorBuilder: (_, __) =>
                   Container(height: 1.5, color: Colors.grey[300]),
-              itemCount: controller.text.isNotEmpty
-                  ? searchedData.length
-                  : data.length,
+              itemCount: noFilter ? searchedData.length : userData.length,
               itemBuilder: (context, index) {
-                var d = controller.text.isNotEmpty ? searchedData : data;
+                // 검색
+                var d = noFilter ? searchedData : userData;
+                // 이메일 주소
                 var id = d.keys.elementAt(index);
+                // 데이터 정렬
                 var doc = Map.fromEntries(d[id]!.entries.toList()
                   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
+                // 날짜 표시 (수업 날짜)
+                var date = doc.containsKey('lessonEndDate')
+                    ? '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
+                        .replaceAll('.', '-')
+                    : '';
+                var cancelRequest = 0;
+                var holdRequest = 0;
+
+                // 회원 상태
                 var status = '';
                 if (doc.containsKey('tutor')) {
-                  status = '수업 중';
+                  if (doc.containsKey('lessonEndDate') &&
+                      DateTime.parse(doc['lessonEndDate'])
+                          .isAfter(DateTime.now())) {
+                    status = '🟢 정상수강 중';
+                    cancelRequest = (doc['cancelRequestDates'] ?? []).length;
+                    holdRequest = (doc['holdRequestDates'] ?? []).length;
+                  } else {
+                    status = '🔴 수업종료';
+                  }
                 } else if (doc.containsKey('lessonEndDate')) {
-                  status = '수강 신청 중';
+                  status = '🟡 수강신청 대기';
                 } else if (doc.containsKey('trialTutor')) {
-                  status = '무료 체험 중';
+                  status = '🟢 무료체험 중';
                 } else if (doc.containsKey('trialDay')) {
-                  status = '무료 체험 신청 중';
+                  status = '🟡 체험신청 대기';
                 } else {
-                  status = '회원 가입 중';
+                  status = '⚫ 유령회원';
                 }
                 return Card(
                   elevation: 0.0,
@@ -117,13 +211,38 @@ class _AdminStudentsScreen1ListviewState
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          status,
-                          style: TextStyle(
-                            color: customTheme.colorScheme.secondary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              status,
+                              style: TextStyle(
+                                color: customTheme.colorScheme.secondary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            ...[
+                              for (var (t, c, n) in [
+                                ('취소 요청', Colors.redAccent, cancelRequest),
+                                ('홀드 요청', Colors.orangeAccent, holdRequest),
+                              ])
+                                if (n > 0)
+                                  Card(
+                                    margin: const EdgeInsets.only(left: 10),
+                                    color: c,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Text(
+                                        '$t $n',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                            ],
+                          ],
                         ),
                         Text(
                           '${doc['name']} ($id)',
@@ -132,13 +251,13 @@ class _AdminStudentsScreen1ListviewState
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
-                              .replaceAll('.', '-'),
-                          style: const TextStyle(
-                            color: Colors.grey,
+                        if (date.isNotEmpty)
+                          Text(
+                            date,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     children: [
@@ -148,15 +267,25 @@ class _AdminStudentsScreen1ListviewState
                         color: Colors.grey[100],
                         child: Column(
                           children: [
-                            ...doc.entries.map(
-                              (e) => TextFormField(
+                            ...doc.entries.map((e) {
+                              controllers['${id}_${e.key}'] = TextEditingController(
+                                  text:
+                                      '${e.value.runtimeType == List ? e.value.join(', ') : e.value}');
+                              return TextFormField(
                                 decoration: InputDecoration(
                                   label: Text(e.key),
                                 ),
-                                initialValue:
-                                    '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                              ),
-                            ),
+                                controller: controllers['${id}_${e.key}'],
+                                // initialValue:
+                                //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                onEditingComplete: () {
+                                  userData[id]![e.key] =
+                                      controllers['${id}_${e.key}']!.text;
+                                  print(controllers['${id}_${e.key}']!.text);
+                                  setState(() {});
+                                },
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -171,139 +300,39 @@ class _AdminStudentsScreen1ListviewState
     );
   }
 
-  onSearchTextChanged(String text) async {
+  filterData(_) async {
     searchedData.clear();
-    if (text.isEmpty) {
-      // searchedData = data;
-      setState(() {});
-      return;
+    Map<String, Map<String, dynamic>> temp = Map.from(userData);
+    if (controller.text.isNotEmpty) {
+      var removes = [];
+      temp.forEach((k, v) {
+        if (!k.contains(controller.text) &&
+            !v['name'].contains(controller.text)) removes.add(k);
+      });
+      for (var e in removes) {
+        temp.remove(e);
+      }
     }
-
-    data.forEach((k, v) {
-      if (k.contains(text) || v['name'].contains(text)) searchedData[k] = v;
-    });
+    if (cancelFiltered) {
+      var removes = [];
+      temp.forEach((k, v) {
+        if ((v['cancelRequestDates'] ?? []).length == 0) removes.add(k);
+      });
+      for (var e in removes) {
+        temp.remove(e);
+      }
+    }
+    if (holdFiltered) {
+      var removes = [];
+      temp.forEach((k, v) {
+        if ((v['holdRequestDates'] ?? []).length == 0) removes.add(k);
+      });
+      for (var e in removes) {
+        temp.remove(e);
+      }
+    }
+    searchedData = temp;
 
     setState(() {});
   }
 }
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_database/firebase_database.dart';
-// import 'package:flutter/material.dart';
-// import 'package:strawberryenglish/themes/my_theme.dart';
-
-// import '../../models/adminstudents.dart';
-
-// class AdminStudentsScreen1Listview extends StatefulWidget {
-//   const AdminStudentsScreen1Listview({
-//     super.key,
-//   });
-
-//   @override
-//   State<AdminStudentsScreen1Listview> createState() =>
-//       _AdminStudentsScreen1ListviewState();
-// }
-
-// class _AdminStudentsScreen1ListviewState
-//     extends State<AdminStudentsScreen1Listview> {
-//   List<dynamic> data = [];
-
-//   Future<dynamic> getData() async {
-//     final document = FirebaseFirestore.instance.collection("adminstudents");
-
-//     await document.get().then<dynamic>((snapshot) async {
-//       setState(() {
-//         data = snapshot.docs;
-//       });
-//     });
-//   }
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     getData();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     double screenWidth = MediaQuery.of(context).size.width;
-//     return Theme(
-//       data: customTheme,
-//       child: Padding(
-//         padding: EdgeInsets.symmetric(
-//           horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
-//           vertical: 50.0,
-//         ),
-//         child: SizedBox(
-//           height: 500,
-//           child: StreamBuilder(
-//             stream: FirebaseFirestore.instance
-//                 .collection('adminstudents')
-//                 .snapshots(),
-//             builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) =>
-//                 ListView.builder(
-//               shrinkWrap: true,
-//               physics: const NeverScrollableScrollPhysics(),
-//               // separatorBuilder: (_, __) =>
-//               //     Container(height: 1.5, color: Colors.grey[300]),
-//               itemCount: streamSnapshot.data?.docs.length ?? 1,
-//               itemBuilder: (context, index) {
-//                 if (streamSnapshot.data == null) {
-//                   return null;
-//                 } else {
-//                   return Card(
-//                     elevation: 0.0,
-//                     child: ExpansionTile(
-//                       tilePadding: const EdgeInsets.symmetric(
-//                         vertical: 20,
-//                         horizontal: 10,
-//                       ),
-//                       // tileColor: Colors.white,
-//                       title: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             "공지",
-//                             style: TextStyle(
-//                               color: customTheme.colorScheme.secondary,
-//                               fontSize: 16,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                           Text(
-//                             data[index]['title'],
-//                             style: const TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                           Text(
-//                             "2024.04.0${index + 1}",
-//                             style: const TextStyle(
-//                               color: Colors.grey,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                       children: [
-//                         Container(
-//                           padding: const EdgeInsets.all(20),
-//                           width: double.infinity,
-//                           color: Colors.grey[100],
-//                           child: Text(
-//                             data[index]['body'],
-//                             textAlign: TextAlign.center,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   );
-//                 }
-//               },
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

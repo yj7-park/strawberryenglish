@@ -58,7 +58,7 @@ class CalendarBodyState extends State<CalendarBody> {
                 """
 *트라이얼 수업 확정
 
-김찬미 님의 트라이얼 수업이 확정되었습니다 :)
+${widget.user.data['name']} 님의 트라이얼 수업이 확정되었습니다 :)
 
 날짜: ${DateFormat('yyyy년 MM월 dd일').format(widget.user.data['trialDate'].toDate())} ${_getWeekdayFromNumber(widget.user.data['trialDate'].toDate().weekday)}요일
 
@@ -679,7 +679,7 @@ Enjoy your English with 🍓""",
         if ((appointment as Appointment).subject.contains('[수업 취소]')) {
           message = '해당 일자의 수업은 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
         } else if (appointment.subject.contains('[수업 취소중]')) {
-          message = '해당 일자의 수업은 취소 상태입니다.';
+          message = '해당 일자의 수업은 취소 요청 상태입니다.';
           buttonText.add((
             '수업 재개',
             '',
@@ -690,7 +690,7 @@ Enjoy your English with 🍓""",
         } else if (appointment.subject.contains('[장기 홀드]')) {
           message = '해당 일자의 수업은 장기 홀드 처리되었습니다.\n해제를 원하시면 관리자에게 문의하세요.';
         } else if (appointment.subject.contains('[장기 홀드중]')) {
-          message = '해당 일자의 수업은 장기 홀드 상태입니다.';
+          message = '해당 일자의 수업은 장기 홀드 요청 상태입니다.';
           buttonText.add((
             '장기 홀드 해제',
             '',
