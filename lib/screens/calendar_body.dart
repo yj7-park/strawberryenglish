@@ -8,8 +8,11 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarBody extends StatefulWidget {
   final Student user;
+  final bool? isAdmin;
 
-  const CalendarBody({super.key, required this.user});
+  final ValueChanged<String>? updated;
+  const CalendarBody(
+      {super.key, required this.user, this.isAdmin, this.updated});
 
   @override
   CalendarBodyState createState() => CalendarBodyState();
@@ -60,9 +63,9 @@ class CalendarBodyState extends State<CalendarBody> {
 
 ${widget.user.data['name']} 님의 트라이얼 수업이 확정되었습니다 :)
 
-날짜: ${DateFormat('yyyy년 MM월 dd일').format(widget.user.data['trialDate'].toDate())} ${_getWeekdayFromNumber(widget.user.data['trialDate'].toDate().weekday)}요일
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${_getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
 
-시간: ${DateFormat('hh시 mm분').format(widget.user.data['trialDate'].toDate())} (한국시간)
+시간: ${DateFormat('hh시 mm분').format(DateTime.parse(widget.user.data['trialDate']))} (한국시간)
 
 Tutor: ${widget.user.data['trialTutor'] ?? ''}
  
@@ -217,7 +220,12 @@ Enjoy your English with 🍓""",
                     _bottomSheetController?.close();
                     _updateLastLessonDate();
                     Provider.of<StudentProvider>(context, listen: false)
-                        .updateStudentToFirestoreWithMap(widget.user);
+                        .updateStudentToFirestoreWithMap(widget.user)
+                        .then((context) {
+                      setState(() {
+                        widget.updated!('');
+                      });
+                    });
                   }
                 },
         ),
@@ -676,8 +684,28 @@ Enjoy your English with 🍓""",
             appointment.startTime.day == details.date!.day)
         .forEach(
       (appointment) {
-        if ((appointment as Appointment).subject.contains('[수업 취소]')) {
-          message = '해당 일자의 수업은 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
+        if ((appointment as Appointment).subject.contains('[수업 취소] 학생 취소')) {
+          message = '해당 일자의 수업은 학생의 요청에 의해 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
+          if (widget.isAdmin == true) {
+            buttonText.add((
+              '🛡수업 재개 (학생 취소)',
+              '',
+              Icons.play_circle_outlined,
+              Colors.indigoAccent,
+              true,
+            ));
+          }
+        } else if (appointment.subject.contains('[수업 취소] 튜터 취소')) {
+          message = '해당 일자의 수업은 튜터에 의해 취소 처리되었습니다.\n자세한 내용은 관리자에게 문의하세요.';
+          if (widget.isAdmin == true) {
+            buttonText.add((
+              '🛡수업 재개 (튜터 취소)',
+              '',
+              Icons.play_circle_outlined,
+              Colors.indigoAccent,
+              true,
+            ));
+          }
         } else if (appointment.subject.contains('[수업 취소중]')) {
           message = '해당 일자의 수업은 취소 요청 상태입니다.';
           buttonText.add((
@@ -687,8 +715,26 @@ Enjoy your English with 🍓""",
             Colors.indigoAccent,
             true,
           ));
+          if (widget.isAdmin == true) {
+            buttonText.add((
+              '🛡수업 취소 확정',
+              '',
+              Icons.check_circle_outline_outlined,
+              Colors.redAccent,
+              true,
+            ));
+          }
         } else if (appointment.subject.contains('[장기 홀드]')) {
           message = '해당 일자의 수업은 장기 홀드 처리되었습니다.\n해제를 원하시면 관리자에게 문의하세요.';
+          if (widget.isAdmin == true) {
+            buttonText.add((
+              '🛡장기 홀드 취소',
+              '',
+              Icons.play_circle_outlined,
+              Colors.indigoAccent,
+              true,
+            ));
+          }
         } else if (appointment.subject.contains('[장기 홀드중]')) {
           message = '해당 일자의 수업은 장기 홀드 요청 상태입니다.';
           buttonText.add((
@@ -698,6 +744,15 @@ Enjoy your English with 🍓""",
             Colors.lightBlueAccent,
             true,
           ));
+          if (widget.isAdmin == true) {
+            buttonText.add((
+              '🛡장기 홀드 확정',
+              '',
+              Icons.check_circle_outline_outlined,
+              Colors.redAccent,
+              true,
+            ));
+          }
         } else if (appointment.subject.contains('[수업 종료]')) {
           message = '종료된 수업입니다.';
         } else if (appointment.subject.contains('[수업]')) {
@@ -722,6 +777,15 @@ Enjoy your English with 🍓""",
               Colors.orangeAccent,
               (widget.user.data['holdCountLeft'] ?? 0) > 0,
             ));
+            if (widget.isAdmin == true) {
+              buttonText.add((
+                '🛡튜터 취소',
+                '',
+                Icons.check_circle_outline_outlined,
+                Colors.blueAccent,
+                true,
+              ));
+            }
           }
         }
       },
@@ -834,11 +898,66 @@ Enjoy your English with 🍓""",
                     }
                   }
                 }
+              } else if (items.$1 == '🛡수업 취소 확정') {
+                widget.user.data['cancelRequestDates'].remove(formattedDate);
+                widget.user.data['cancelDates'].add(formattedDate);
+              } else if (items.$1 == '🛡수업 재개 (학생 취소)') {
+                if (widget.user.data['cancelDates'].remove(formattedDate)) {
+                  widget.user.data['cancelCountLeft'] =
+                      widget.user.data['cancelCountLeft'] + 1;
+                }
+              } else if (items.$1 == '🛡장기 홀드 확정') {
+                for (String range in widget.user.data['holdRequestDates']) {
+                  List<String> dateParts =
+                      range.split('~').map((e) => e.trim()).toList();
+                  if (dateParts.length == 2) {
+                    DateTime startDate = DateTime.parse(dateParts[0]);
+                    DateTime endDate = DateTime.parse(dateParts[1]);
+
+                    if (details.date!.isAtSameMomentAs(startDate) |
+                        details.date!.isAtSameMomentAs(endDate) |
+                        (details.date!.isBefore(endDate) &&
+                            details.date!.isAfter(startDate))) {
+                      widget.user.data['holdRequestDates'].remove(range);
+                      widget.user.data['holdDates'].add(range);
+                      break;
+                    }
+                  }
+                }
+              } else if (items.$1 == '🛡장기 홀드 취소') {
+                for (String range in widget.user.data['holdDates']) {
+                  List<String> dateParts =
+                      range.split('~').map((e) => e.trim()).toList();
+                  if (dateParts.length == 2) {
+                    DateTime startDate = DateTime.parse(dateParts[0]);
+                    DateTime endDate = DateTime.parse(dateParts[1]);
+
+                    if (details.date!.isAtSameMomentAs(startDate) |
+                        details.date!.isAtSameMomentAs(endDate) |
+                        (details.date!.isBefore(endDate) &&
+                            details.date!.isAfter(startDate))) {
+                      widget.user.data['holdDates'].remove(range);
+                      widget.user.data['holdCountLeft'] =
+                          widget.user.data['holdCountLeft'] + 1;
+                      break;
+                    }
+                  }
+                }
+              } else if (items.$1 == '🛡튜터 취소') {
+                widget.user.data['tutorCancelDates'].add(formattedDate);
+              } else if (items.$1 == '🛡수업 재개 (튜터 취소)') {
+                if (widget.user.data['tutorCancelDates']
+                    .remove(formattedDate)) {}
               }
               _bottomSheetController?.close();
               _updateLastLessonDate();
               Provider.of<StudentProvider>(context, listen: false)
-                  .updateStudentToFirestoreWithMap(widget.user);
+                  .updateStudentToFirestoreWithMap(widget.user)
+                  .then((context) {
+                setState(() {
+                  widget.updated!('');
+                });
+              });
             },
           );
         },

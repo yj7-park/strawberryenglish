@@ -53,7 +53,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                   Text(
                     isLoggedIn
                         ? isAdmin
-                            ? '🛠관리자모드🛠'
+                            ? '🛡관리자모드🛡'
                             : '${FirebaseAuth.instance.currentUser!.email} 님'
                         : '',
                     style: const TextStyle(
@@ -249,9 +249,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                 child: Column(
                                   children: [
                                     myMenuItemButton(
-                                        context, '🛠관리자메뉴', '/admin_students'),
+                                        context, '🛡관리자메뉴', '/admin_students'),
                                     myMenuItemButton(
-                                        context, '🛠학생정보', '/admin_students'),
+                                        context, '🛡학생정보', '/admin_students'),
                                   ],
                                 ),
                               ),

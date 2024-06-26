@@ -185,15 +185,16 @@ class StudentProvider extends ChangeNotifier {
 
   Future<void> updateStudentToFirestoreWithMap(Student updatedStudent) async {
     try {
-      currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
-        // Google Sheets에서 기존 사용자 데이터 가져오기
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser!.email)
-            .set(updatedStudent.data);
-        notifyListeners();
-      }
+      // currentUser = FirebaseAuth.instance.currentUser;
+      // if (currentUser != null) {
+      // Google Sheets에서 기존 사용자 데이터 가져오기
+      FirebaseFirestore.instance
+          .collection('users')
+          // .doc(currentUser!.email)
+          .doc(updatedStudent.data['email'])
+          .set(updatedStudent.data);
+      notifyListeners();
+      // }
     } catch (e) {
       if (kDebugMode) {
         print('Student 데이터 업데이트 중 오류 발생: $e');
