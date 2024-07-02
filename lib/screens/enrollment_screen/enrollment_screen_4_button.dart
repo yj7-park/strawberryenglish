@@ -21,6 +21,7 @@ class EnrollmentScreen4Button extends StatefulWidget {
   final TextEditingController studyPurposeController;
   final TextEditingController referralSourceController;
   final TextEditingController lessonStartDateController;
+  final TextEditingController cashReceiptNumberController;
 
   const EnrollmentScreen4Button({
     super.key,
@@ -34,6 +35,7 @@ class EnrollmentScreen4Button extends StatefulWidget {
     required this.studyPurposeController,
     required this.referralSourceController,
     required this.lessonStartDateController,
+    required this.cashReceiptNumberController,
   });
 
   @override
@@ -112,6 +114,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     final studyPurpose = widget.studyPurposeController.text.trim();
     final referralSource = widget.referralSourceController.text.trim();
     final lessonStartDate = widget.lessonStartDateController.text.trim();
+    final cashReceiptNumber = widget.cashReceiptNumberController.text.trim();
     errorMessage = '';
 
     // 필수 필드 값 확인
@@ -130,14 +133,23 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       return;
     }
 
+    if (!EnrollmentScreen.check) {
+      setState(() {
+        errorMessage = '필수 항목의 동의가 필요합니다.';
+      });
+      return;
+    }
+
     try {
       setState(() {});
-      // TODO: 결제창 표시
       bool? confirm = await ConfirmDialog.show(
           context: context,
           title: "수강료 결제",
-          body:
-              "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n수업길이 : ${EnrollmentScreen.selectedMins.first}분\n수업토픽 : Power/Fluency\n결제금액 : ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원${EnrollmentScreen.selectedMonths.first > 1 ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)" : ""}",
+          body: "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n"
+              "수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n"
+              "수업길이 : ${EnrollmentScreen.selectedMins.first}분\n"
+              "수업토픽 : ${EnrollmentScreen1Input.topic.values.elementAt(EnrollmentScreen.selectedTopic)[EnrollmentScreen.selectedTopicDetail]}\n"
+              "결제금액 : ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원${EnrollmentScreen.selectedMonths.first > 1 ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)" : ""}",
           trueButton: "결제하기",
           falseButton: "나중에 결제하기");
 
@@ -157,6 +169,12 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['lessonTime'] = '$lessonDay-$lessonTime';
         updatedStudent.data['lessonPeriod'] =
             EnrollmentScreen.selectedMins.first;
+        updatedStudent.data['cashReceiptNumber'] = cashReceiptNumber;
+        updatedStudent.data['program'] = EnrollmentScreen1Input.topic.keys
+            .elementAt(EnrollmentScreen.selectedTopic);
+        updatedStudent.data['topic'] = EnrollmentScreen1Input.topic.values
+                .elementAt(EnrollmentScreen.selectedTopic)[
+            EnrollmentScreen.selectedTopicDetail];
 
         // 수업 종료 일자 계산
         updatedStudent.data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(

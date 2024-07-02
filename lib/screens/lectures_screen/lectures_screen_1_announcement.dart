@@ -3,7 +3,7 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class LecturesScreen1Announcement extends StatelessWidget {
-  final String videoId = 'gVtH8X8peZk'; // TODO: youtube 영상 ID 추가
+  final String videoId = 'f8aIT__EL70'; // TODO: youtube 영상 ID 추가
 
   const LecturesScreen1Announcement({
     super.key,

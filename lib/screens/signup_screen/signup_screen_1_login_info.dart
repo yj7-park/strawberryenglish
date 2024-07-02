@@ -144,24 +144,24 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                     ],
                   ),
                   InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(50),
-                                  child: Scrollbar(
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(50),
+                                child: Scrollbar(
+                                  controller: scrollController,
+                                  interactive: true,
+                                  thumbVisibility: true,
+                                  child: SingleChildScrollView(
                                     controller: scrollController,
-                                    interactive: true,
-                                    thumbVisibility: true,
-                                    child: SingleChildScrollView(
-                                      controller: scrollController,
-                                      scrollDirection: Axis.vertical,
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(20),
-                                        child: Text("""
+                                    scrollDirection: Axis.vertical,
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Text("""
 [필수] 개인정보 수집이용 동의
 
 딸기아카데미는 고객님의 개인정보 보호를 위해 최소한의 정보만 수집합니다.
@@ -265,17 +265,18 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
 
 개인정보를 처리하는 데이터베이스시스템에 대한 접근권한의 부여,변경,말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며 침입차단시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.
                                   """),
-                                      ),
                                     ),
                                   ),
                                 ),
-                              );
-                            });
-                      },
-                      child: const Text(
-                        '내용 보기',
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      )),
+                              ),
+                            );
+                          });
+                    },
+                    child: const Text(
+                      '내용 보기',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -538,12 +539,12 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                           builder: (context) {
                             return Container(
                               color: Colors.white,
-                              child: Scrollbar(
-                                controller: scrollController,
-                                interactive: true,
-                                thumbVisibility: true,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(50),
+                              child: Padding(
+                                padding: const EdgeInsets.all(50),
+                                child: Scrollbar(
+                                  controller: scrollController,
+                                  interactive: true,
+                                  thumbVisibility: true,
                                   child: SingleChildScrollView(
                                     controller: scrollController,
                                     scrollDirection: Axis.vertical,

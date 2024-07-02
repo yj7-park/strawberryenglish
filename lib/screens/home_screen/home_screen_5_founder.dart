@@ -3,7 +3,7 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class HomeScreen5Founder extends StatelessWidget {
-  final String videoId = 'gVtH8X8peZk'; // TODO: youtube 영상 ID 추가
+  final String videoId = 'f8aIT__EL70'; // TODO: youtube 영상 ID 추가
   final String title;
 
   const HomeScreen5Founder({super.key, this.title = ''});

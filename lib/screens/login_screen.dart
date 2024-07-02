@@ -19,6 +19,7 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
+  bool isClicked = false;
 
   late StudentProvider studentProvider;
   late TutorProvider tutorProvider;
@@ -92,19 +93,33 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                      width: constrainedSize, // 최대 너비를 300으로 설정
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize:
-                              const Size(double.infinity, 50), // 버튼 사이즈 조정
-                        ),
-                        onPressed: () async {
+                    width: constrainedSize, // 최대 너비를 300으로 설정
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize:
+                            const Size(double.infinity, 50), // 버튼 사이즈 조정
+                      ),
+                      onPressed: () {
+                        isClicked = true;
+                        setState(() {});
+                        () async {
                           await handleLogin();
-                        },
-                        child: const Text(
-                          'Login',
-                        ),
-                      )),
+                        };
+                        isClicked = false;
+                      },
+                      child: isClicked
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: customTheme.colorScheme.primary,
+                              ),
+                            )
+                          : const Text(
+                              'Login',
+                            ),
+                    ),
+                  ),
                   TextButton(
                     onPressed: () async {
                       try {
@@ -152,23 +167,23 @@ class LoginScreenState extends State<LoginScreen> {
       //   return; // admin 계정으로 로그인 시 바로 종료
       // }
 
-      try {
-        _errorMessage = await tutorProvider.loginTutor(username, password);
+      // try {
+      //   _errorMessage = await tutorProvider.loginTutor(username, password);
 
-        if (_errorMessage.isEmpty) {
-          if (tutorProvider.tutor != null) {
-            // Navigator.pushNamed(context, '/tutor_calendar');
-            Navigator.of(context).pop();
-            return; // tutor 로그인 성공 시 바로 종료
-          } else {
-            _errorMessage = "Login failed. Please check ID / Password.";
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Tutor login 오류 발생: $e');
-        }
-      }
+      //   if (_errorMessage.isEmpty) {
+      //     if (tutorProvider.tutor != null) {
+      //       // Navigator.pushNamed(context, '/tutor_calendar');
+      //       Navigator.of(context).pop();
+      //       return; // tutor 로그인 성공 시 바로 종료
+      //     } else {
+      //       _errorMessage = "Login failed. Please check ID / Password.";
+      //     }
+      //   }
+      // } catch (e) {
+      //   if (kDebugMode) {
+      //     print('Tutor login 오류 발생: $e');
+      //   }
+      // }
 
       try {
         _errorMessage = await studentProvider.loginStudent(username, password);

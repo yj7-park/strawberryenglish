@@ -103,6 +103,7 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
             const SizedBox(height: 30),
             TextFormField(
               controller: widget.birthDateController,
+              readOnly: true,
               decoration: InputDecoration(
                 labelText: '*생년월일',
                 // hintText: 'YYYY-MM-DD',
@@ -115,12 +116,12 @@ class SignupScreen2InputState extends State<SignupScreen2Input> {
                       : Colors.black,
                 ),
               ),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp("[0-9-]"),
-                ),
-                // MaskedInputFormatter('####-##-##')
-              ],
+              // inputFormatters: [
+              //   FilteringTextInputFormatter.allow(
+              //     RegExp("[0-9-]"),
+              //   ),
+              //   // MaskedInputFormatter('####-##-##')
+              // ],
               onTap: () => _selectDate(context),
               onChanged: (_) {
                 setState(() {});

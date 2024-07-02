@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
+import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_2_payment_input.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_4_button.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';
@@ -28,9 +29,15 @@ class EnrollmentScreen extends StatefulWidget {
 
   final TextEditingController lessonStartDateController =
       TextEditingController();
+  final TextEditingController cashReceiptNumberController =
+      TextEditingController();
   static Set<int> selectedMonths = {3};
   static Set<int> selectedDays = {3};
   static Set<int> selectedMins = {55};
+  static int selectedTopic = 0;
+  static int selectedTopicDetail = 0;
+
+  static bool check = false;
 
   @override
   State<EnrollmentScreen> createState() => _EnrollmentScreenState();
@@ -83,6 +90,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       snapshot.data!.data['lessonDay'] ?? '';
                   widget.lessonTimeController.text =
                       snapshot.data!.data['lessonTime'] ?? '';
+                  widget.cashReceiptNumberController.text =
+                      snapshot.data!.data['cashReceiptNumber'] ?? '';
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 93), // Make space for the AppBar
@@ -108,6 +117,10 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         lessonDayController: widget.lessonDayController,
                         lessonTimeController: widget.lessonTimeController,
                       ),
+                      EnrollmentScreen2PaymentInput(
+                        cashReceiptNumberController:
+                            widget.cashReceiptNumberController,
+                      ),
                       EnrollmentScreen4Button(
                         nameController: widget.nameController,
                         birthDateController: widget.birthDateController,
@@ -121,6 +134,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                             widget.referralSourceController,
                         lessonStartDateController:
                             widget.lessonStartDateController,
+                        cashReceiptNumberController:
+                            widget.cashReceiptNumberController,
                       ),
                       // 회사정보
                       // const CompanyInfo(),

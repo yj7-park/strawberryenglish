@@ -340,8 +340,7 @@ class _AdminStudentsScreen1ListviewState
                       } else if (doc.containsKey('lessonEndDate')) {
                         status = '🟠 수강대기';
                       } else if (doc.containsKey('trialTutor')) {
-                        var trialDate =
-                            DateTime.tryParse(doc['trialDate'] ?? '');
+                        var trialDate = DateTime.tryParse(doc['trialDate']);
                         if (trialDate != null &&
                             trialDate.isBefore(DateTime.now())) {
                           status = '🔴 체험종료';
