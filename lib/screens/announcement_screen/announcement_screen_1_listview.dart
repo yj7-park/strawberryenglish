@@ -59,6 +59,7 @@ class _AnnouncementScreen1ListviewState
                 var id = data.keys.elementAt(index);
                 var doc = data[id];
                 return Card(
+                  margin: EdgeInsets.zero,
                   elevation: 0.0,
                   child: ExpansionTile(
                     tilePadding: const EdgeInsets.symmetric(

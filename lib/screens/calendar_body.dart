@@ -104,8 +104,9 @@ Enjoy your English with 🍓""",
     return ExpansionTile(
         // backgroundColor: Color.fromARGB(255, 246, 246, 246),
         // collapsedBackgroundColor: Color.fromARGB(255, 246, 246, 246),
-        tilePadding: const EdgeInsets.only(
-            left: 16.0, right: 16.0), // ListTile의 contentPadding 조절
+        shape: InputBorder.none,
+        tilePadding: const EdgeInsets.symmetric(
+            horizontal: 16.0, vertical: 0), // ListTile의 contentPadding 조절
         initiallyExpanded: isExpanded,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +119,7 @@ Enjoy your English with 🍓""",
           ],
         ),
         subtitle: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Column(
@@ -273,13 +274,13 @@ Enjoy your English with 🍓""",
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildInfoRow(
-                '수업 취소',
+                '잔여 수업 취소',
                 '${widget.user.data['cancelCountLeft'] ?? 0}회',
                 // '수업 취소 (잔여/전체)',
                 // '${widget.user.data['cancelCountLeft']}회 / ${widget.user.data['cancelCountTotal']}회',
               ),
               _buildInfoRow(
-                '장기 홀드',
+                '잔여 장기 홀드',
                 '${widget.user.data['holdCountLeft'] ?? 0}회',
                 // '장기 홀드 (잔여/전체)',
                 // '${widget.user.data['holdCountLeft']}회 / ${widget.user.data['holdCountTotal']}회',
@@ -295,20 +296,28 @@ Enjoy your English with 🍓""",
   }
 
   Widget _buildInfoRow(String label, String content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      shrinkWrap: true,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+        SizedBox(
+          width: 100,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
         ),
-        Text(
-          content,
-          style: const TextStyle(
-            fontSize: 18,
+        SizedBox(
+          width: 100,
+          child: Text(
+            content,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -981,6 +990,7 @@ Enjoy your English with 🍓""",
         _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
             .keys
             .toList();
+    if (lessonDays.isEmpty) return;
 
     // holdDays 계산
     if (widget.user.data.containsKey('holdDates')) {

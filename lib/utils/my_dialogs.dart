@@ -38,50 +38,39 @@ class ConfirmDialog {
   static Future<bool?> show({
     required BuildContext context,
     required String title,
-    String body = "",
     required String trueButton,
+    List<Widget>? body,
     String falseButton = "",
     String routeToOnLeft = "",
     String routeToOnRight = "",
   }) async {
+    Widget? content;
+    if (body != null) {
+      content = Padding(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: body,
+        ),
+      );
+    }
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return Theme(
           data: customTheme, // customTheme을 적용
           child: AlertDialog(
-            title: Column(
-              children: [
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 50),
-                if (body != "")
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(3),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            body,
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
+            title: Text(
+              title,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: customTheme.colorScheme.primary,
+              ),
+              textAlign: TextAlign.center,
             ),
+            content: content,
             backgroundColor: Colors.white,
             titleTextStyle:
                 const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),

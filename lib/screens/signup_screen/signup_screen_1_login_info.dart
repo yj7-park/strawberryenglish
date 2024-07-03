@@ -146,6 +146,9 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                   InkWell(
                     onTap: () {
                       showModalBottomSheet(
+                          constraints: const BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
                           context: context,
                           builder: (context) {
                             return Container(
@@ -304,6 +307,9 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                   InkWell(
                     onTap: () {
                       showModalBottomSheet(
+                          constraints: const BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
                           context: context,
                           builder: (context) {
                             return Container(
@@ -535,6 +541,9 @@ class SignupScreen1LoginInfoState extends State<SignupScreen1LoginInfo> {
                   InkWell(
                     onTap: () {
                       showModalBottomSheet(
+                          constraints: const BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
                           context: context,
                           builder: (context) {
                             return Container(

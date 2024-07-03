@@ -71,6 +71,7 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
             var youtube = doc['youtube'];
 
             return Card(
+              margin: EdgeInsets.zero,
               elevation: 0.0,
               child: ExpansionTile(
                 // initiallyExpanded: widget.controllers[index],

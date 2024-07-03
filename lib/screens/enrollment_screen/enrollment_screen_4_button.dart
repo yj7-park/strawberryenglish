@@ -1,13 +1,16 @@
+import 'package:universal_html/js.dart' as js;
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/utils/my_dialogs.dart';
 
 class EnrollmentScreen4Button extends StatefulWidget {
@@ -104,6 +107,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
   // submit 처리
   void submit() async {
+    final TextEditingController pointsController = TextEditingController();
     final name = widget.nameController.text.trim();
     final birthDate = widget.birthDateController.text.trim();
     final phoneNumber = widget.phoneNumberController.text.trim();
@@ -143,19 +147,192 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     try {
       setState(() {});
       bool? confirm = await ConfirmDialog.show(
-          context: context,
-          title: "수강료 결제",
-          body: "구독기간 : ${EnrollmentScreen.selectedMonths.first} 개월\n"
-              "수업횟수 : 주 ${EnrollmentScreen.selectedDays.first}회\n"
-              "수업길이 : ${EnrollmentScreen.selectedMins.first}분\n"
-              "수업토픽 : ${EnrollmentScreen1Input.topic.values.elementAt(EnrollmentScreen.selectedTopic)[EnrollmentScreen.selectedTopicDetail]}\n"
-              "결제금액 : ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원${EnrollmentScreen.selectedMonths.first > 1 ? "(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)" : ""}",
-          trueButton: "결제하기",
-          falseButton: "나중에 결제하기");
+        context: context,
+        title: "수강료 결제",
+        body: [
+          StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                children: [
+                  Container(
+                    width: 300,
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(color: customTheme.colorScheme.secondary),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            '${EnrollmentScreen.selectedMonths.first}개월 수강권',
+                          ),
+                          Text(
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            '( 주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분 )',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Text(
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: customTheme.colorScheme.primary,
+                          ),
+                          '정가'),
+                      const Spacer(),
+                      Builder(
+                        builder: (context) {
+                          var price = EnrollmentScreen1Input.fee[
+                                          EnrollmentScreen
+                                              .selectedMonths.first]![
+                                      EnrollmentScreen.selectedDays.first]![
+                                  EnrollmentScreen.selectedMins.first]! *
+                              EnrollmentScreen.selectedMonths.first;
+                          return Text(
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: customTheme.colorScheme.primary,
+                            ),
+                            '${NumberFormat("###,###").format(price)} 원',
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  // 적립금 사용
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Text(
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: customTheme.colorScheme.primary,
+                          ),
+                          ' - 적립금 할인'),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: TextField(
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: customTheme.colorScheme.primary,
+                              ),
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.all(5),
+                                hintText: '0',
+                                border: OutlineInputBorder(),
+                              ),
+                              controller: pointsController,
+                              maxLines: 1,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              onChanged: (v) {
+                                int pointsHas =
+                                    studentProvider.student?.data['points'] ??
+                                        0;
+                                int pointsUse = int.tryParse(v) ?? 0;
+                                if (pointsUse > pointsHas) {
+                                  pointsUse = pointsHas;
+                                  pointsController.text = pointsHas.toString();
+                                }
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                          Text(
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: customTheme.colorScheme.primary,
+                            ),
+                            ' 원',
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: customTheme.colorScheme.primary,
+                      ),
+                      '보유 적립금: ${NumberFormat("###,###").format(studentProvider.student?.data['points'] ?? 0)} 원',
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: customTheme.colorScheme.primary,
+                        ),
+                        '결제금액',
+                      ),
+                      const Spacer(),
+                      Builder(
+                        builder: (context) {
+                          var price = EnrollmentScreen1Input.fee[
+                                          EnrollmentScreen
+                                              .selectedMonths.first]![
+                                      EnrollmentScreen.selectedDays.first]![
+                                  EnrollmentScreen.selectedMins.first]! *
+                              EnrollmentScreen.selectedMonths.first;
+                          var pointDiscount =
+                              int.tryParse(pointsController.text) ?? 0;
+                          var finalPrice = price - pointDiscount;
+                          return Text(
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: customTheme.colorScheme.secondary,
+                            ),
+                            '${NumberFormat("###,###").format(finalPrice)} 원',
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+        trueButton: "결제하기",
+        falseButton: "나중에 결제하기",
+      );
 
       if (confirm == true) {
         // 성공 시 동작
-        Student? updatedStudent = await studentProvider.getStudent();
+        Student? updatedStudent = studentProvider.student;
         updatedStudent!.data['name'] = name;
         updatedStudent.data['birthDate'] = birthDate;
         updatedStudent.data['phoneNumber'] = phoneNumber;
@@ -175,6 +352,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['topic'] = EnrollmentScreen1Input.topic.values
                 .elementAt(EnrollmentScreen.selectedTopic)[
             EnrollmentScreen.selectedTopicDetail];
+        updatedStudent.data['points'] -=
+            int.tryParse(pointsController.text) ?? 0;
 
         // 수업 종료 일자 계산
         updatedStudent.data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(
@@ -199,7 +378,67 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         // EnrollmentScreen.selectedDays.first;
         studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
 
-        Navigator.of(context).pop(true);
+        // 확인 창
+        bool? confirm2 = await ConfirmDialog.show(
+            context: context,
+            title: "수강 신청 완료",
+            body: [
+              // 입금계좌 정보
+              Text(
+                '입금계좌 정보',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: customTheme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Container(
+                width: 300,
+                height: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(color: customTheme.colorScheme.secondary),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: const Text(
+                  "국민은행\n"
+                  "613202-04-131166\n"
+                  "(예금주: 윤소명)",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              const Text(
+                "*등록자 성함을 반드시 적어서 입금해주세요.",
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "입금 후, 카톡 채널로 '입금 완료'라고 말씀해주세요.\n"
+                "담당자가 확인 후 수업 확정 안내드리도록 하겠습니다.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: customTheme.colorScheme.primary,
+                ),
+              ),
+            ],
+            trueButton: "카카오톡 채널로 문의하기",
+            falseButton: "마이페이지로 이동",
+            routeToOnLeft: '/student_calendar');
+
+        if (confirm2 == true) {
+          js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+          Navigator.of(context).pop(true);
+        }
       }
     } catch (e) {
       setState(() {

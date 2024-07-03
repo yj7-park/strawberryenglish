@@ -108,10 +108,10 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     }
 
     try {
-      setState(() {});
+      // setState(() {});
 
       // 성공 시 동작
-      Student? updatedStudent = await studentProvider.getStudent();
+      Student? updatedStudent = studentProvider.student;
       // updatedStudent!.name = name;
       // updatedStudent.birthDate = birthDate;
       // updatedStudent.phoneNumber = phoneNumber;
@@ -136,14 +136,35 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
       bool? confirm = await ConfirmDialog.show(
           context: context,
           title: "체험 수업 신청 완료",
-          body: "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
+          body: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(3),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
+                child: Text(
+                  "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.\n"
+                  "담당자가 확인 후 수업 확정 안내드리도록 하겠습니다.",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
           trueButton: "카카오톡 채널로 문의하기",
           falseButton: "마이페이지로 이동",
           routeToOnLeft: '/student_calendar');
 
       if (confirm == true) {
-        Navigator.of(context).pop(true);
         js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+
+        // TODO: 뒤로 돌아가기
+        Navigator.of(context).pop(true);
       }
     } catch (e) {
       setState(() {

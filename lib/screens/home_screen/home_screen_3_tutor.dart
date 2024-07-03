@@ -101,7 +101,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             Center(
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/feedbacks');
+                  Navigator.pushNamed(context, '/tutors');
                 },
                 child: Stack(
                   children: [

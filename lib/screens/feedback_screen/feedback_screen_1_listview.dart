@@ -64,6 +64,7 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
             var id = data.keys.elementAt(index);
             var doc = data[id];
             return Card(
+              margin: EdgeInsets.zero,
               elevation: 0.0,
               child: ExpansionTile(
                 tilePadding: const EdgeInsets.symmetric(
@@ -73,7 +74,7 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
                 // tileColor: Colors.white,
                 leading: Text('${itemCount - index}'),
                 title: Builder(
-                  builder: (contexxt) {
+                  builder: (context) {
                     var children = [
                       Text(
                         "Diago. D.",
@@ -101,7 +102,7 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
                   },
                 ),
                 trailing: Builder(
-                  builder: (contexxt) {
+                  builder: (context) {
                     var children = [
                       Text(
                         id,

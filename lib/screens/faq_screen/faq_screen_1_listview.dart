@@ -128,6 +128,7 @@ class FaqScreen1Listview extends StatelessWidget {
               itemCount: faqMap.length,
               itemBuilder: (context, index) {
                 return Card(
+                  margin: EdgeInsets.zero,
                   elevation: 0.0,
                   child: ExpansionTile(
                     tilePadding: const EdgeInsets.symmetric(

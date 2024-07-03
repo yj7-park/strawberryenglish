@@ -192,6 +192,7 @@ class _AdminStudentsScreen1ListviewState
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isMobile = screenWidth < 1000;
     bool noFilter = controller.text.isNotEmpty ||
         [for (var e in filters.values) e.$1].contains(true);
     return Theme(
@@ -353,104 +354,242 @@ class _AdminStudentsScreen1ListviewState
                         status = '⚫ 유령회원';
                       }
                       return Card(
+                        margin: EdgeInsets.zero,
                         elevation: 0.0,
                         child: ExpansionTile(
                           tilePadding: const EdgeInsets.symmetric(
-                            vertical: 20,
+                            vertical: 5,
                             horizontal: 10,
                           ),
                           // tileColor: Colors.white,
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    status,
-                                    style: TextStyle(
-                                      color: customTheme.colorScheme.secondary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          // title: Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Row(
+                          //       children: [
+                          //         Text(
+                          //           status,
+                          //           style: TextStyle(
+                          //             color: customTheme.colorScheme.secondary,
+                          //             fontSize: 16,
+                          //             fontWeight: FontWeight.bold,
+                          //           ),
+                          //         ),
+                          //         ...[
+                          //           for (var (t, c, f) in [
+                          //             ...AdminStudentsScreen1Listview
+                          //                 .filterRequests,
+                          //             ...AdminStudentsScreen1Listview.filterDday
+                          //           ])
+                          //             if ((doc['flags']![f] ?? 0) > 0)
+                          //               Card(
+                          //                 margin:
+                          //                     const EdgeInsets.only(left: 10),
+                          //                 color: c,
+                          //                 child: Padding(
+                          //                   padding: const EdgeInsets.symmetric(
+                          //                       horizontal: 10),
+                          //                   child: Text(
+                          //                     // cancel과 hold만 갯수 출력
+                          //                     '$t${[
+                          //                       'cancel',
+                          //                       'hold'
+                          //                     ].contains(f) ? doc['flags']![f] : ''}',
+                          //                     style: const TextStyle(
+                          //                       color: Colors.white,
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //         ],
+                          //       ],
+                          //     ),
+                          //     Text(
+                          //       '${doc['name']} ($id)',
+                          //       style: const TextStyle(
+                          //         fontSize: 18,
+                          //         fontWeight: FontWeight.bold,
+                          //       ),
+                          //     ),
+                          //     Row(
+                          //       children: [
+                          //         const SizedBox(width: 10),
+                          //         if ((doc['tutor'] ?? '').isNotEmpty) ...[
+                          //           const Text(
+                          //             'TUTOR  ',
+                          //             style: TextStyle(
+                          //               fontSize: 10,
+                          //             ),
+                          //           ),
+                          //           Text(
+                          //             '${doc['tutor'] ?? ''}',
+                          //             // style: const TextStyle(
+                          //             //   fontWeight: FontWeight.bold,
+                          //             // ),
+                          //           ),
+                          //           const SizedBox(width: 30),
+                          //         ],
+                          //         if ((doc['trialTutor'] ?? '').isNotEmpty) ...[
+                          //           const Text(
+                          //             'TRIAL  ',
+                          //             style: TextStyle(
+                          //               fontSize: 10,
+                          //             ),
+                          //           ),
+                          //           Text(
+                          //             '${doc['trialTutor'] ?? ''}',
+                          //             // style: const TextStyle(
+                          //             //   fontWeight: FontWeight.bold,
+                          //             // ),
+                          //           ),
+                          //         ],
+                          //       ],
+                          //     ),
+                          //     if (date.isNotEmpty)
+                          //       Text(
+                          //         date,
+                          //         style: const TextStyle(
+                          //           color: Colors.grey,
+                          //         ),
+                          //       ),
+                          //   ],
+                          // ),
+                          title: Builder(
+                            builder: (contexxt) {
+                              var children = [
+                                Text(
+                                  status,
+                                  style: TextStyle(
+                                    color: customTheme.colorScheme.secondary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  ...[
-                                    for (var (t, c, f) in [
-                                      ...AdminStudentsScreen1Listview
-                                          .filterRequests,
-                                      ...AdminStudentsScreen1Listview.filterDday
-                                    ])
-                                      if ((doc['flags']![f] ?? 0) > 0)
-                                        Card(
-                                          margin:
-                                              const EdgeInsets.only(left: 10),
-                                          color: c,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Text(
-                                              // cancel과 hold만 갯수 출력
-                                              '$t${[
-                                                'cancel',
-                                                'hold'
-                                              ].contains(f) ? doc['flags']![f] : ''}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
+                                ),
+                                const SizedBox(width: 50),
+                                Text(
+                                  '${doc['name']} ($id)',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    ...[
+                                      for (var (t, c, f) in [
+                                        ...AdminStudentsScreen1Listview
+                                            .filterRequests,
+                                        ...AdminStudentsScreen1Listview
+                                            .filterDday
+                                      ])
+                                        if ((doc['flags']![f] ?? 0) > 0)
+                                          Card(
+                                            margin:
+                                                const EdgeInsets.only(left: 10),
+                                            color: c,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Text(
+                                                // cancel과 hold만 갯수 출력
+                                                '$t${[
+                                                  'cancel',
+                                                  'hold'
+                                                ].contains(f) ? doc['flags']![f] : ''}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
                                           ),
+                                    ],
+                                  ],
+                                ),
+                              ];
+                              return isMobile
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: children,
+                                    )
+                                  : Row(children: children);
+                            },
+                          ),
+                          trailing: Builder(
+                            builder: (context) {
+                              var tutor = doc['tutor'] ?? '';
+                              var trial = doc['trialTutor'] ?? '';
+                              var children = [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    // if (tutor.isNotEmpty) ...[
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '$tutor',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                  ],
-                                ],
-                              ),
-                              Text(
-                                '${doc['name']} ($id)',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 10),
-                                  if ((doc['tutor'] ?? '').isNotEmpty) ...[
-                                    const Text(
-                                      'TUTOR  ',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                      ),
+                                        const Text(
+                                          '  TUTOR',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      '${doc['tutor'] ?? ''}',
-                                      // style: const TextStyle(
-                                      //   fontWeight: FontWeight.bold,
-                                      // ),
-                                    ),
+                                    // ],
+                                    // if (trial.isNotEmpty) ...[
                                     const SizedBox(width: 30),
-                                  ],
-                                  if ((doc['trialTutor'] ?? '').isNotEmpty) ...[
-                                    const Text(
-                                      'TRIAL  ',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                      ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '$trial',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Text(
+                                          '  TRIAL',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      '${doc['trialTutor'] ?? ''}',
-                                      // style: const TextStyle(
-                                      //   fontWeight: FontWeight.bold,
-                                      // ),
-                                    ),
+                                    // ],
+                                    // const SizedBox(width: 50),
+                                    // Text(
+                                    //   DateFormat('yyyy-MM-dd')
+                                    //       .format(doc['date'].toDate()),
+                                    //   style: const TextStyle(
+                                    //     fontSize: 13,
+                                    //     color: Colors.grey,
+                                    //   ),
+                                    // ),
                                   ],
-                                ],
-                              ),
-                              if (date.isNotEmpty)
-                                Text(
-                                  date,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                  ),
                                 ),
-                            ],
+                              ];
+                              return isMobile
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: children,
+                                    )
+                                  : Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: children);
+                            },
                           ),
                           children: [
                             Row(
@@ -460,67 +599,72 @@ class _AdminStudentsScreen1ListviewState
                                 Container(
                                   padding: const EdgeInsets.all(20),
                                   width: 300,
+                                  height: 1000,
                                   color: Colors.grey[100],
-                                  child: Column(
-                                    children: [
-                                      ...doc.entries.map((e) {
-                                        var initialText =
-                                            e.value.runtimeType == List
-                                                ? '${e.value.join(',')}'
-                                                : '${e.value}';
-                                        controllers['${id}_${e.key}'] =
-                                            TextEditingController(
-                                                text: initialText);
-
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5),
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                              label: Text(e.key),
-                                            ),
-                                            controller:
-                                                controllers['${id}_${e.key}'],
-                                            // initialValue:
-                                            //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                                            onEditingComplete: () {
-                                              var inputText =
-                                                  controllers['${id}_${e.key}']!
-                                                      .text;
-                                              dynamic updateText;
-                                              if (listNames.contains(e.key)) {
-                                                updateText =
-                                                    inputText.split(',');
-                                                if (updateText[0].isEmpty) {
-                                                  updateText.length = 0;
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        ...doc.entries.map((e) {
+                                          var initialText =
+                                              e.value.runtimeType == List
+                                                  ? '${e.value.join(',')}'
+                                                  : '${e.value}';
+                                          controllers['${id}_${e.key}'] =
+                                              TextEditingController(
+                                                  text: initialText);
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            child: TextFormField(
+                                              decoration: InputDecoration(
+                                                label: Text(e.key),
+                                              ),
+                                              controller:
+                                                  controllers['${id}_${e.key}'],
+                                              // initialValue:
+                                              //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                              onEditingComplete: () {
+                                                var inputText = controllers[
+                                                        '${id}_${e.key}']!
+                                                    .text;
+                                                dynamic updateText;
+                                                if (listNames.contains(e.key)) {
+                                                  updateText =
+                                                      inputText.split(',');
+                                                  if (updateText[0].isEmpty) {
+                                                    updateText.length = 0;
+                                                  }
+                                                } else if (intNames
+                                                    .contains(e.key)) {
+                                                  updateText =
+                                                      int.tryParse(inputText) ??
+                                                          0;
+                                                } else {
+                                                  updateText = inputText;
                                                 }
-                                              } else if (intNames
-                                                  .contains(e.key)) {
-                                                updateText =
-                                                    int.tryParse(inputText) ??
-                                                        0;
-                                              } else {
-                                                updateText = inputText;
-                                              }
-                                              userData[id]![e.key] = updateText;
-                                              inputText.split(',').length = 0;
-                                              updateStudentToFirestoreAsAdmin(
-                                                      Student(
-                                                          data: userData[id]!))
-                                                  .then((context) {
-                                                Future.delayed(
-                                                    const Duration(
-                                                        milliseconds: 200), () {
-                                                  setState(() {
-                                                    getData();
+                                                userData[id]![e.key] =
+                                                    updateText;
+                                                inputText.split(',').length = 0;
+                                                updateStudentToFirestoreAsAdmin(
+                                                        Student(
+                                                            data:
+                                                                userData[id]!))
+                                                    .then((context) {
+                                                  Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 200),
+                                                      () {
+                                                    setState(() {
+                                                      getData();
+                                                    });
                                                   });
                                                 });
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      }),
-                                    ],
+                                              },
+                                            ),
+                                          );
+                                        }),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 Expanded(

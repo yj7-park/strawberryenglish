@@ -23,7 +23,7 @@ class AdminStudentsScreen extends StatelessWidget {
                   const EdgeInsets.only(top: 93), // Make space for the AppBar
               children: const [
                 // 제목
-                MyHeader('🛠학생정보'),
+                MyHeader('🛡학생정보'),
                 // 커버 페이지
                 AdminStudentsScreen1Listview(),
                 // 회사정보

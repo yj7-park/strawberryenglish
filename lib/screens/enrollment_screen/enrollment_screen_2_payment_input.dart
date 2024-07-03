@@ -59,16 +59,11 @@ class EnrollmentScreen2PaymentInputState
               keyboardType: TextInputType.phone,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
-                  RegExp("[0-9]"),
+                  RegExp("[0-9-]"),
                 ),
               ],
               textInputAction: TextInputAction.next,
             ),
-
-            // TODO: 입금계좌 정보
-            // const SizedBox(height: 30),
-            // TODO: 적립금 사용
-            // const SizedBox(height: 30),
 
             // 개인정보 취급방침 동의
             const SizedBox(height: 20),
@@ -96,6 +91,9 @@ class EnrollmentScreen2PaymentInputState
                   InkWell(
                     onTap: () {
                       showModalBottomSheet(
+                          constraints: const BoxConstraints(
+                            maxWidth: double.infinity,
+                          ),
                           context: context,
                           builder: (context) {
                             return Container(
@@ -230,52 +228,6 @@ class EnrollmentScreen2PaymentInputState
                     ),
                   ),
                 ],
-              ),
-            ),
-            // 결제 금액 요약
-            const SizedBox(height: 60),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: customTheme.colorScheme.secondary),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      '${EnrollmentScreen.selectedMonths.first}개월 수강권',
-                    ),
-                    const SizedBox(width: 30),
-                    Text(
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      '( 주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분 )',
-                    ),
-                    const Spacer(),
-                    Column(
-                      children: [
-                        Text(
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: customTheme.colorScheme.secondary,
-                            ),
-                            '${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원'),
-                        Text(
-                            '(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)'),
-                      ],
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
