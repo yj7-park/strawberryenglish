@@ -53,6 +53,9 @@ class StudentCalendarScreen extends StatelessWidget {
                     }
                   },
                 ),
+                const SizedBox(
+                  height: 100,
+                )
               ],
             ),
             // Positioned(

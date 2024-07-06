@@ -73,7 +73,8 @@ class _HomeScreen2FeedbackState extends State<HomeScreen2Feedback> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        border: Border.all(color: Colors.black12),
+                        // border: Border.all(color: Colors.black12),
+                        border: Border.all(color: Colors.amber),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Padding(

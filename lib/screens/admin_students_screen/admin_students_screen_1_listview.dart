@@ -49,6 +49,7 @@ class _AdminStudentsScreen1ListviewState
   Set<String> intNames = {};
 
   bool isValidAccess = false;
+  bool _isOpen = false;
 
   Future<dynamic> getData() async {
     final collection = FirebaseFirestore.instance.collection("users");
@@ -298,10 +299,10 @@ class _AdminStudentsScreen1ListviewState
                       var doc = Map.fromEntries(d[id]!.entries.toList()
                         ..sort((e1, e2) => e1.key.compareTo(e2.key)));
                       // 날짜 표시 (수업 날짜)
-                      var date = doc.containsKey('lessonEndDate')
-                          ? '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
-                              .replaceAll('.', '-')
-                          : '';
+                      // var date = doc.containsKey('lessonEndDate')
+                      //     ? '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
+                      //         .replaceAll('.', '-')
+                      //     : '';
                       // var cancelRequest = 0;
                       // var holdRequest = 0;
 
@@ -579,16 +580,9 @@ class _AdminStudentsScreen1ListviewState
                                   ],
                                 ),
                               ];
-                              return isMobile
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: children,
-                                    )
-                                  : Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: children);
+                              return Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: children);
                             },
                           ),
                           children: [
@@ -596,77 +590,151 @@ class _AdminStudentsScreen1ListviewState
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // DB 직접 수정 widget
+
                                 Container(
-                                  padding: const EdgeInsets.all(20),
-                                  width: 300,
-                                  height: 1000,
+                                  // duration: const Duration(milliseconds: 2000),
+                                  // duration: const Duration(milliseconds: 200),
+                                  // width: 300,
+                                  height: 800,
                                   color: Colors.grey[100],
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        ...doc.entries.map((e) {
-                                          var initialText =
-                                              e.value.runtimeType == List
-                                                  ? '${e.value.join(',')}'
-                                                  : '${e.value}';
-                                          controllers['${id}_${e.key}'] =
-                                              TextEditingController(
-                                                  text: initialText);
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            child: TextFormField(
-                                              decoration: InputDecoration(
-                                                label: Text(e.key),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        child: Container(
+                                          width: 20,
+                                          height: double.infinity,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(top: 10),
+                                            child: RotatedBox(
+                                              quarterTurns: 1,
+                                              child: Text(
+                                                '▲ Edit Database',
+                                                style: TextStyle(
+                                                  color: customTheme
+                                                      .colorScheme.secondary,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                              controller:
-                                                  controllers['${id}_${e.key}'],
-                                              // initialValue:
-                                              //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                                              onEditingComplete: () {
-                                                var inputText = controllers[
-                                                        '${id}_${e.key}']!
-                                                    .text;
-                                                dynamic updateText;
-                                                if (listNames.contains(e.key)) {
-                                                  updateText =
-                                                      inputText.split(',');
-                                                  if (updateText[0].isEmpty) {
-                                                    updateText.length = 0;
-                                                  }
-                                                } else if (intNames
-                                                    .contains(e.key)) {
-                                                  updateText =
-                                                      int.tryParse(inputText) ??
-                                                          0;
-                                                } else {
-                                                  updateText = inputText;
-                                                }
-                                                userData[id]![e.key] =
-                                                    updateText;
-                                                inputText.split(',').length = 0;
-                                                updateStudentToFirestoreAsAdmin(
-                                                        Student(
-                                                            data:
-                                                                userData[id]!))
-                                                    .then((context) {
-                                                  Future.delayed(
-                                                      const Duration(
-                                                          milliseconds: 200),
-                                                      () {
-                                                    setState(() {
-                                                      getData();
-                                                    });
-                                                  });
-                                                });
-                                              },
                                             ),
-                                          );
-                                        }),
-                                      ],
-                                    ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _isOpen = !_isOpen;
+                                          });
+                                        },
+                                      ),
+                                      if (_isOpen)
+                                        SizedBox(
+                                          // duration:
+                                          //     const Duration(milliseconds: 500),
+                                          width: 200,
+                                          child: SingleChildScrollView(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(20),
+                                              child: Column(
+                                                children: [
+                                                  // Text(
+                                                  //   'Database',
+                                                  //   style: TextStyle(
+                                                  //     color: customTheme
+                                                  //         .colorScheme
+                                                  //         .secondary,
+                                                  //     fontSize: 16,
+                                                  //     fontWeight:
+                                                  //         FontWeight.bold,
+                                                  //   ),
+                                                  // ),
+                                                  // Divider(),
+                                                  ...doc.entries.map((e) {
+                                                    var initialText = e.value
+                                                                .runtimeType ==
+                                                            List
+                                                        ? '${e.value.join(',')}'
+                                                        : '${e.value}';
+                                                    controllers[
+                                                            '${id}_${e.key}'] =
+                                                        TextEditingController(
+                                                            text: initialText);
+                                                    return Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 5),
+                                                      child: TextFormField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          label: Text(e.key),
+                                                        ),
+                                                        controller: controllers[
+                                                            '${id}_${e.key}'],
+                                                        // initialValue:
+                                                        //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                                        onEditingComplete: () {
+                                                          var inputText =
+                                                              controllers[
+                                                                      '${id}_${e.key}']!
+                                                                  .text;
+                                                          dynamic updateText;
+                                                          if (listNames
+                                                              .contains(
+                                                                  e.key)) {
+                                                            updateText =
+                                                                inputText
+                                                                    .split(',');
+                                                            if (updateText[0]
+                                                                .isEmpty) {
+                                                              updateText
+                                                                  .length = 0;
+                                                            }
+                                                          } else if (intNames
+                                                              .contains(
+                                                                  e.key)) {
+                                                            updateText =
+                                                                int.tryParse(
+                                                                        inputText) ??
+                                                                    0;
+                                                          } else {
+                                                            updateText =
+                                                                inputText;
+                                                          }
+                                                          userData[id]![e.key] =
+                                                              updateText;
+                                                          inputText
+                                                              .split(',')
+                                                              .length = 0;
+                                                          updateStudentToFirestoreAsAdmin(
+                                                                  Student(
+                                                                      data: userData[
+                                                                          id]!))
+                                                              .then((context) {
+                                                            Future.delayed(
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        200),
+                                                                () {
+                                                              setState(() {
+                                                                getData();
+                                                              });
+                                                            });
+                                                          });
+                                                        },
+                                                      ),
+                                                    );
+                                                  }),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                 ),
+                                // 마이페이지
                                 Expanded(
                                   child: Container(
                                     color: Colors.white,

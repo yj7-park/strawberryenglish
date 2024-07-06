@@ -10,7 +10,7 @@ class CalendarBody extends StatefulWidget {
   final Student user;
   final bool? isAdmin;
 
-  final ValueChanged<String>? updated;
+  final ValueChanged<String>? updated; // for 관리자메뉴 학생정보
   const CalendarBody(
       {super.key, required this.user, this.isAdmin, this.updated});
 
@@ -19,24 +19,29 @@ class CalendarBody extends StatefulWidget {
 }
 
 class CalendarBodyState extends State<CalendarBody> {
-  late CalendarController _calendarController;
+  late CalendarController calendarController;
   String selectedHoldStartDate = '';
+  DateTime selectedDate = DateTime.now();
+  bool isBottomSheetOpened = false;
 
   @override
   void initState() {
     super.initState();
-    _calendarController = CalendarController();
-    _calendarController.selectedDate = DateTime.now();
+    calendarController = CalendarController();
+    calendarController.selectedDate = DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isMobile = screenWidth < 1000 || widget.updated != null;
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
-        vertical: 50.0,
+        horizontal: widget.updated == null
+            ? ((screenWidth - 1000) / 2).clamp(20, double.nan)
+            : 20,
+        vertical: widget.updated == null ? 50.0 : 20,
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -45,7 +50,7 @@ class CalendarBodyState extends State<CalendarBody> {
             if (widget.user.data.containsKey('tutor')) ...[
               const Divider(),
               // 여기에 사용자 정보를 보여주는 위젯 추가
-              _buildStudentDetails(screenHeight > 1000),
+              _buildStudentDetails(screenHeight > 1000, isMobile),
               const Divider(),
               _buildCalendar(),
             ]
@@ -91,16 +96,13 @@ Enjoy your English with 🍓""",
               const Text('[체험하기] 버튼을 눌러 체험 수업을 신청하시거나,'),
               const Text('[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.'),
             ],
-            const SizedBox(
-              height: 100,
-            )
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStudentDetails(bool isExpanded) {
+  Widget _buildStudentDetails(bool isExpanded, bool isMobile) {
     return ExpansionTile(
         // backgroundColor: Color.fromARGB(255, 246, 246, 246),
         // collapsedBackgroundColor: Color.fromARGB(255, 246, 246, 246),
@@ -108,62 +110,56 @@ Enjoy your English with 🍓""",
         tilePadding: const EdgeInsets.symmetric(
             horizontal: 16.0, vertical: 0), // ListTile의 contentPadding 조절
         initiallyExpanded: isExpanded,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Text(
-            //   'Information',
-            //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            // ),
-            // SizedBox(height: 10),
-          ],
+        title:
+            // const Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            const Text(
+          'Information',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
         ),
-        subtitle: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoRow('이름', '${widget.user.data['name']}'
-                      // '\n${widget.user.data['email']}'
-                      ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoRow('수업 시간', widget.user.data['lessonTime']),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // _buildInfoRow('수업 요일', widget.user.data['lessonDay']),
-                  _buildInfoRow('적립금',
-                      '${NumberFormat("###,###").format(widget.user.data['points'] ?? 0)} 원'),
-                ],
-              ),
-            ),
-          ],
-        ),
+        //   ],
+        // ),
+        // subtitle: Row(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Expanded(
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           _buildInfoRow('이름', '${widget.user.data['name']}'),
+        //         ],
+        //       ),
+        //     ),
+        //     Expanded(
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           _buildInfoRow('수업 시간', widget.user.data['lessonTime']),
+        //         ],
+        //       ),
+        //     ),
+        //     Expanded(
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           // _buildInfoRow('수업 요일', widget.user.data['lessonDay']),
+        //           _buildInfoRow('적립금',
+        //               '${NumberFormat("###,###").format(widget.user.data['points'] ?? 0)} 원'),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // ),
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            child:
                 // const SizedBox(height: 10),
                 // _buildEarningInfo(student),
-                _buildLessonInfo(),
-                // _buildActionButtons(widget.user),
-              ],
-            ),
-          )
+                _buildLessonInfo(isMobile),
+            // _buildActionButtons(widget.user),
+          ),
         ]);
   }
 
@@ -181,7 +177,7 @@ Enjoy your English with 🍓""",
           // ),
           showNavigationArrow: true,
           dataSource: _getCalendarDataSource(),
-          controller: _calendarController,
+          controller: calendarController,
           showDatePickerButton: true,
           headerDateFormat: 'yyyy년 M월', // 원하는 형식으로 지정
           todayHighlightColor: const Color(0xfffcc021),
@@ -224,7 +220,7 @@ Enjoy your English with 🍓""",
                         .updateStudentToFirestoreWithMap(widget.user)
                         .then((context) {
                       setState(() {
-                        widget.updated!('');
+                        if (widget.updated != null) widget.updated!('');
                       });
                     });
                   }
@@ -243,85 +239,100 @@ Enjoy your English with 🍓""",
 //   );
 // }
 
-  Widget _buildLessonInfo() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildLessonInfo(bool isMobile) {
+    return Column(
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoRow('튜터', widget.user.data['tutor'] ?? ''),
-              _buildInfoRow('프로그램', widget.user.data['program'] ?? ''),
-              _buildInfoRow('토픽', widget.user.data['topic'] ?? ''),
-            ],
-          ),
+        Row(
+          crossAxisAlignment:
+              isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: [
+            _buildInfoRow('이름', '${widget.user.data['name']}', isMobile),
+            _buildInfoRow('튜터', widget.user.data['tutor'] ?? '', isMobile),
+            // _buildInfoRow('토픽', widget.user.data['topic'] ?? ''),
+            _buildInfoRow(
+                '토픽',
+                '${widget.user.data['program'] ?? ''}\n(${widget.user.data['topic'] ?? ''})',
+                isMobile),
+          ],
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoRow('수업 시작일', widget.user.data['lessonStartDate']),
-              _buildInfoRow(
-                  '수업 종료일',
-                  widget.user.data['modifiedLessonEndDate'] ??
-                      widget.user.data['lessonEndDate']),
-            ],
-          ),
+        const SizedBox(height: 10),
+        Row(
+          crossAxisAlignment:
+              isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: [
+            _buildInfoRow('수업 시간', widget.user.data['lessonTime'], isMobile),
+            _buildInfoRow(
+                '수업 시작일', widget.user.data['lessonStartDate'], isMobile),
+            _buildInfoRow(
+                '수업 종료일',
+                widget.user.data['modifiedLessonEndDate'] ??
+                    widget.user.data['lessonEndDate'],
+                isMobile),
+          ],
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoRow(
-                '잔여 수업 취소',
-                '${widget.user.data['cancelCountLeft'] ?? 0}회',
+        const SizedBox(height: 10),
+        Row(
+          crossAxisAlignment:
+              isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+          children: [
+            _buildInfoRow('수업 취소',
+                '${widget.user.data['cancelCountLeft'] ?? 0}회', isMobile
                 // '수업 취소 (잔여/전체)',
                 // '${widget.user.data['cancelCountLeft']}회 / ${widget.user.data['cancelCountTotal']}회',
-              ),
-              _buildInfoRow(
-                '잔여 장기 홀드',
-                '${widget.user.data['holdCountLeft'] ?? 0}회',
+                ),
+            _buildInfoRow(
+                '장기 홀드', '${widget.user.data['holdCountLeft'] ?? 0}회', isMobile
                 // '장기 홀드 (잔여/전체)',
                 // '${widget.user.data['holdCountLeft']}회 / ${widget.user.data['holdCountTotal']}회',
-              ),
-            ],
-          ),
+                ),
+            _buildInfoRow(
+                '적립금',
+                '${NumberFormat("###,###").format(widget.user.data['points'] ?? 0)}원',
+                isMobile),
+          ],
         ),
-        const SizedBox(
-          width: 32.0,
-        )
       ],
     );
   }
 
-  Widget _buildInfoRow(String label, String content) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        SizedBox(
-          width: 100,
+  Widget _buildInfoRow(String label, String content, bool isMobile) {
+    var children = [
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.amber[100],
+        ),
+        width: 120,
+        height: 32,
+        child: Center(
           child: Text(
             label,
-            textAlign: TextAlign.center,
             style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+              // color: Colors.white,
+              // fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
           ),
         ),
-        SizedBox(
-          width: 100,
-          child: Text(
-            content,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-            ),
-          ),
+      ),
+      const SizedBox(width: 10),
+      Text(
+        content,
+        textAlign: !isMobile ? TextAlign.left : TextAlign.center,
+        style: const TextStyle(
+          fontSize: 14,
         ),
-        const SizedBox(height: 10),
-      ],
+      ),
+      // const SizedBox(height: 10),
+    ];
+    return Expanded(
+      child: !isMobile
+          ? Row(
+              children: children,
+            )
+          : Column(
+              children: children,
+            ),
     );
   }
 
@@ -656,20 +667,27 @@ Enjoy your English with 🍓""",
   PersistentBottomSheetController? _bottomSheetController;
 
   void _buildOnTapWidget(CalendarTapDetails details) {
-    if (details.targetElement == CalendarElement.calendarCell) {
-      DateTime selectedDate = details.date!;
+    if (selectedDate == details.date! && isBottomSheetOpened) {
+      _bottomSheetController?.close();
+      isBottomSheetOpened = false;
+      return;
+    }
+    if (details.targetElement == CalendarElement.calendarCell ||
+        details.targetElement == CalendarElement.appointment) {
+      selectedDate = details.date!;
+      calendarController.selectedDate = selectedDate;
       List selectedAppointments = details.appointments!
           .where((appointment) =>
               appointment.startTime.year == selectedDate.year &&
               appointment.startTime.month == selectedDate.month &&
               appointment.startTime.day == selectedDate.day)
           .toList();
-
       if (selectedAppointments.isNotEmpty) {
         _bottomSheetController = showBottomSheet(
           context: context,
           backgroundColor: Colors.grey[200],
           builder: (BuildContext context) {
+            isBottomSheetOpened = true;
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: _buildLessonCancelMenu(details),
@@ -964,7 +982,7 @@ Enjoy your English with 🍓""",
                   .updateStudentToFirestoreWithMap(widget.user)
                   .then((context) {
                 setState(() {
-                  widget.updated!('');
+                  if (widget.updated != null) widget.updated!('');
                 });
               });
             },
