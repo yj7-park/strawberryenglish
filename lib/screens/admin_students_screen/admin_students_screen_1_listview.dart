@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/screens/calendar_body.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
@@ -48,8 +50,8 @@ class _AdminStudentsScreen1ListviewState
   Set<String> listNames = {};
   Set<String> intNames = {};
 
+  Map<String, Map<String, dynamic>> customData = {};
   bool isValidAccess = false;
-  bool _isOpen = false;
 
   Future<dynamic> getData() async {
     final collection = FirebaseFirestore.instance.collection("users");
@@ -70,7 +72,12 @@ class _AdminStudentsScreen1ListviewState
           var v = e.value;
           var k = e.key;
           var flag = '';
-          userData[k]!['flags'] = {};
+          // customData 초기화
+          customData[k] = {};
+          customData[k]!['isFunctionTabOpened'] = true;
+          customData[k]!['functionTabMessage'] = '';
+          customData[k]!['isDBEditTabOpened'] = false;
+          customData[k]!['status'] = '';
           // 수업 취소 요청
           flag = 'cancel';
           for (var e2 in v.entries) {
@@ -81,10 +88,10 @@ class _AdminStudentsScreen1ListviewState
           if (v.containsKey('cancelRequestDates') &&
               v['cancelRequestDates'].isNotEmpty) {
             filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!userData[k]!['flags'].containsKey(flag)) {
-              userData[k]!['flags'][flag] = 0;
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
             }
-            userData[k]!['flags'][flag] = v['cancelRequestDates'].length;
+            customData[k]![flag] = v['cancelRequestDates'].length;
           }
 
           // 장기 홀드 요청
@@ -94,10 +101,10 @@ class _AdminStudentsScreen1ListviewState
               v['holdRequestDates'].isNotEmpty) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!userData[k]!['flags'].containsKey(flag)) {
-              userData[k]!['flags'][flag] = 0;
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
             }
-            userData[k]!['flags'][flag] = v['holdRequestDates'].length;
+            customData[k]![flag] = v['holdRequestDates'].length;
           }
 
           // 수강신청
@@ -107,10 +114,10 @@ class _AdminStudentsScreen1ListviewState
               (!v.containsKey('tutor') || (v['tutor'] ?? '').isEmpty)) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!userData[k]!['flags'].containsKey(flag)) {
-              userData[k]!['flags'][flag] = 0;
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
             }
-            userData[k]!['flags'][flag]++;
+            customData[k]![flag]++;
           }
 
           // 체험신청
@@ -121,10 +128,10 @@ class _AdminStudentsScreen1ListviewState
                   (v['trialTutor'] ?? '').isEmpty)) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!userData[k]!['flags'].containsKey(flag)) {
-              userData[k]!['flags'][flag] = 0;
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
             }
-            userData[k]!['flags'][flag]++;
+            customData[k]![flag]++;
           }
 
           // 수업 종료 기준 (D-n)
@@ -137,42 +144,86 @@ class _AdminStudentsScreen1ListviewState
                 flag = 'd-1';
                 if (!filters.containsKey(flag)) filters[flag] = (false, 0);
                 filters[flag] = (false, filters[flag]!.$2 + 1);
-                if (!userData[k]!['flags'].containsKey(flag)) {
-                  userData[k]!['flags'][flag] = 0;
+                if (!customData[k]!.containsKey(flag)) {
+                  customData[k]![flag] = 0;
                 }
-                userData[k]!['flags'][flag]++;
+                customData[k]![flag]++;
               } else if (date
                   .subtract(const Duration(days: 3))
                   .isBefore(DateTime.now())) {
                 flag = 'd-3';
                 if (!filters.containsKey(flag)) filters[flag] = (false, 0);
                 filters[flag] = (false, filters[flag]!.$2 + 1);
-                if (!userData[k]!['flags'].containsKey(flag)) {
-                  userData[k]!['flags'][flag] = 0;
+                if (!customData[k]!.containsKey(flag)) {
+                  customData[k]![flag] = 0;
                 }
-                userData[k]!['flags'][flag]++;
+                customData[k]![flag]++;
               } else if (date
                   .subtract(const Duration(days: 7))
                   .isBefore(DateTime.now())) {
                 flag = 'd-7';
                 if (!filters.containsKey(flag)) filters[flag] = (false, 0);
                 filters[flag] = (false, filters[flag]!.$2 + 1);
-                if (!userData[k]!['flags'].containsKey(flag)) {
-                  userData[k]!['flags'][flag] = 0;
+                if (!customData[k]!.containsKey(flag)) {
+                  customData[k]![flag] = 0;
                 }
-                userData[k]!['flags'][flag]++;
+                customData[k]![flag]++;
               } else if (date
                   .subtract(const Duration(days: 15))
                   .isBefore(DateTime.now())) {
                 flag = 'd-15';
                 if (!filters.containsKey(flag)) filters[flag] = (false, 0);
                 filters[flag] = (false, filters[flag]!.$2 + 1);
-                if (!userData[k]!['flags'].containsKey(flag)) {
-                  userData[k]!['flags'][flag] = 0;
+                if (!customData[k]!.containsKey(flag)) {
+                  customData[k]![flag] = 0;
                 }
-                userData[k]!['flags'][flag]++;
+                customData[k]![flag]++;
               }
             }
+          }
+
+          if (v.containsKey('tutor')) {
+            if (v.containsKey('lessonEndDate') &&
+                DateTime.parse(v['lessonEndDate']).isAfter(DateTime.now())) {
+              bool inHold = false;
+              for (String range in v['holdDates']) {
+                List<String> dateParts =
+                    range.split('~').map((e) => e.trim()).toList();
+                if (dateParts.length == 2) {
+                  DateTime startDate = DateTime.parse(dateParts[0]);
+                  DateTime endDate = DateTime.parse(dateParts[1])
+                      .add(const Duration(days: 1))
+                      .subtract(const Duration(microseconds: 1));
+
+                  var now = DateTime.now();
+                  if (startDate.isBefore(endDate) &&
+                      (startDate.isBefore(now) && endDate.isAfter(now))) {
+                    inHold = true;
+                    break;
+                  }
+                }
+              }
+              if (inHold) {
+                customData[k]!['status'] = '🟡 장기홀드';
+              } else {
+                customData[k]!['status'] = '🟢 정상수강';
+              }
+            } else {
+              customData[k]!['status'] = '🔴 수업종료';
+            }
+          } else if (v.containsKey('lessonEndDate')) {
+            customData[k]!['status'] = '🟠 수강대기';
+          } else if (v.containsKey('trialTutor')) {
+            var trialDate = DateTime.tryParse(v['trialDate']);
+            if (trialDate != null && trialDate.isBefore(DateTime.now())) {
+              customData[k]!['status'] = '🔴 체험종료';
+            } else {
+              customData[k]!['status'] = '🟢 무료체험';
+            }
+          } else if (v.containsKey('trialDay')) {
+            customData[k]!['status'] = '🟠 체험대기';
+          } else {
+            customData[k]!['status'] = '⚫ 유령회원';
           }
         }
       });
@@ -298,6 +349,10 @@ class _AdminStudentsScreen1ListviewState
                       // 데이터 정렬
                       var doc = Map.fromEntries(d[id]!.entries.toList()
                         ..sort((e1, e2) => e1.key.compareTo(e2.key)));
+                      if (!controllers.containsKey('${id}_points')) {
+                        controllers['${id}_points'] = TextEditingController(
+                            text: (doc['points'] ?? 0).toString());
+                      }
                       // 날짜 표시 (수업 날짜)
                       // var date = doc.containsKey('lessonEndDate')
                       //     ? '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
@@ -307,53 +362,6 @@ class _AdminStudentsScreen1ListviewState
                       // var holdRequest = 0;
 
                       // 회원 상태
-                      var status = '';
-                      if (doc.containsKey('tutor')) {
-                        if (doc.containsKey('lessonEndDate') &&
-                            DateTime.parse(doc['lessonEndDate'])
-                                .isAfter(DateTime.now())) {
-                          bool inHold = false;
-                          for (String range in doc['holdDates']) {
-                            List<String> dateParts =
-                                range.split('~').map((e) => e.trim()).toList();
-                            if (dateParts.length == 2) {
-                              DateTime startDate = DateTime.parse(dateParts[0]);
-                              DateTime endDate = DateTime.parse(dateParts[1])
-                                  .add(const Duration(days: 1))
-                                  .subtract(const Duration(microseconds: 1));
-
-                              var now = DateTime.now();
-                              if (startDate.isBefore(endDate) &&
-                                  (startDate.isBefore(now) &&
-                                      endDate.isAfter(now))) {
-                                inHold = true;
-                                break;
-                              }
-                            }
-                          }
-                          if (inHold) {
-                            status = '🟡 장기홀드';
-                          } else {
-                            status = '🟢 정상수강';
-                          }
-                        } else {
-                          status = '🔴 수업종료';
-                        }
-                      } else if (doc.containsKey('lessonEndDate')) {
-                        status = '🟠 수강대기';
-                      } else if (doc.containsKey('trialTutor')) {
-                        var trialDate = DateTime.tryParse(doc['trialDate']);
-                        if (trialDate != null &&
-                            trialDate.isBefore(DateTime.now())) {
-                          status = '🔴 체험종료';
-                        } else {
-                          status = '🟢 무료체험';
-                        }
-                      } else if (doc.containsKey('trialDay')) {
-                        status = '🟠 체험대기';
-                      } else {
-                        status = '⚫ 유령회원';
-                      }
                       return Card(
                         margin: EdgeInsets.zero,
                         elevation: 0.0,
@@ -362,104 +370,11 @@ class _AdminStudentsScreen1ListviewState
                             vertical: 5,
                             horizontal: 10,
                           ),
-                          // tileColor: Colors.white,
-                          // title: Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-                          //     Row(
-                          //       children: [
-                          //         Text(
-                          //           status,
-                          //           style: TextStyle(
-                          //             color: customTheme.colorScheme.secondary,
-                          //             fontSize: 16,
-                          //             fontWeight: FontWeight.bold,
-                          //           ),
-                          //         ),
-                          //         ...[
-                          //           for (var (t, c, f) in [
-                          //             ...AdminStudentsScreen1Listview
-                          //                 .filterRequests,
-                          //             ...AdminStudentsScreen1Listview.filterDday
-                          //           ])
-                          //             if ((doc['flags']![f] ?? 0) > 0)
-                          //               Card(
-                          //                 margin:
-                          //                     const EdgeInsets.only(left: 10),
-                          //                 color: c,
-                          //                 child: Padding(
-                          //                   padding: const EdgeInsets.symmetric(
-                          //                       horizontal: 10),
-                          //                   child: Text(
-                          //                     // cancel과 hold만 갯수 출력
-                          //                     '$t${[
-                          //                       'cancel',
-                          //                       'hold'
-                          //                     ].contains(f) ? doc['flags']![f] : ''}',
-                          //                     style: const TextStyle(
-                          //                       color: Colors.white,
-                          //                     ),
-                          //                   ),
-                          //                 ),
-                          //               ),
-                          //         ],
-                          //       ],
-                          //     ),
-                          //     Text(
-                          //       '${doc['name']} ($id)',
-                          //       style: const TextStyle(
-                          //         fontSize: 18,
-                          //         fontWeight: FontWeight.bold,
-                          //       ),
-                          //     ),
-                          //     Row(
-                          //       children: [
-                          //         const SizedBox(width: 10),
-                          //         if ((doc['tutor'] ?? '').isNotEmpty) ...[
-                          //           const Text(
-                          //             'TUTOR  ',
-                          //             style: TextStyle(
-                          //               fontSize: 10,
-                          //             ),
-                          //           ),
-                          //           Text(
-                          //             '${doc['tutor'] ?? ''}',
-                          //             // style: const TextStyle(
-                          //             //   fontWeight: FontWeight.bold,
-                          //             // ),
-                          //           ),
-                          //           const SizedBox(width: 30),
-                          //         ],
-                          //         if ((doc['trialTutor'] ?? '').isNotEmpty) ...[
-                          //           const Text(
-                          //             'TRIAL  ',
-                          //             style: TextStyle(
-                          //               fontSize: 10,
-                          //             ),
-                          //           ),
-                          //           Text(
-                          //             '${doc['trialTutor'] ?? ''}',
-                          //             // style: const TextStyle(
-                          //             //   fontWeight: FontWeight.bold,
-                          //             // ),
-                          //           ),
-                          //         ],
-                          //       ],
-                          //     ),
-                          //     if (date.isNotEmpty)
-                          //       Text(
-                          //         date,
-                          //         style: const TextStyle(
-                          //           color: Colors.grey,
-                          //         ),
-                          //       ),
-                          //   ],
-                          // ),
                           title: Builder(
                             builder: (contexxt) {
                               var children = [
                                 Text(
-                                  status,
+                                  customData[id]!['status'],
                                   style: TextStyle(
                                     color: customTheme.colorScheme.secondary,
                                     fontSize: 16,
@@ -483,7 +398,7 @@ class _AdminStudentsScreen1ListviewState
                                         ...AdminStudentsScreen1Listview
                                             .filterDday
                                       ])
-                                        if ((doc['flags']![f] ?? 0) > 0)
+                                        if ((customData[id]![f] ?? 0) > 0)
                                           Card(
                                             margin:
                                                 const EdgeInsets.only(left: 10),
@@ -497,7 +412,7 @@ class _AdminStudentsScreen1ListviewState
                                                 '$t${[
                                                   'cancel',
                                                   'hold'
-                                                ].contains(f) ? doc['flags']![f] : ''}',
+                                                ].contains(f) ? customData[id]![f] : ''}',
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                 ),
@@ -586,173 +501,371 @@ class _AdminStudentsScreen1ListviewState
                             },
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // DB 직접 수정 widget
-
-                                Container(
-                                  // duration: const Duration(milliseconds: 2000),
-                                  // duration: const Duration(milliseconds: 200),
-                                  // width: 300,
-                                  height: 800,
-                                  color: Colors.grey[100],
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        child: Container(
-                                          width: 20,
-                                          height: double.infinity,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(top: 10),
-                                            child: RotatedBox(
-                                              quarterTurns: 1,
-                                              child: Text(
-                                                '▲ Edit Database',
-                                                style: TextStyle(
-                                                  color: customTheme
-                                                      .colorScheme.secondary,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
+                            Container(
+                              height: 820,
+                              color: Colors.grey[100],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // DB 직접 수정 widget
+                                  Container(
+                                    // duration: const Duration(milliseconds: 200),
+                                    // width: 300,
+                                    height: 800,
+                                    color: Colors.grey[100],
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          child: Container(
+                                            width: 20,
+                                            height: double.infinity,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: RotatedBox(
+                                                quarterTurns: 1,
+                                                child: Text(
+                                                  '▲ Function Tab',
+                                                  style: TextStyle(
+                                                    color: customTheme
+                                                        .colorScheme.secondary,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
+                                          onTap: () {
+                                            setState(() {
+                                              customData[id]![
+                                                      'isFunctionTabOpened'] =
+                                                  !customData[id]![
+                                                      'isFunctionTabOpened'];
+                                            });
+                                          },
                                         ),
-                                        onTap: () {
-                                          setState(() {
-                                            _isOpen = !_isOpen;
-                                          });
-                                        },
-                                      ),
-                                      if (_isOpen)
-                                        SizedBox(
-                                          // duration:
-                                          //     const Duration(milliseconds: 500),
-                                          width: 200,
-                                          child: SingleChildScrollView(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(20),
-                                              child: Column(
-                                                children: [
-                                                  // Text(
-                                                  //   'Database',
-                                                  //   style: TextStyle(
-                                                  //     color: customTheme
-                                                  //         .colorScheme
-                                                  //         .secondary,
-                                                  //     fontSize: 16,
-                                                  //     fontWeight:
-                                                  //         FontWeight.bold,
-                                                  //   ),
-                                                  // ),
-                                                  // Divider(),
-                                                  ...doc.entries.map((e) {
-                                                    var initialText = e.value
-                                                                .runtimeType ==
-                                                            List
-                                                        ? '${e.value.join(',')}'
-                                                        : '${e.value}';
-                                                    controllers[
-                                                            '${id}_${e.key}'] =
-                                                        TextEditingController(
-                                                            text: initialText);
-                                                    return Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          vertical: 5),
-                                                      child: TextFormField(
-                                                        decoration:
-                                                            InputDecoration(
-                                                          label: Text(e.key),
-                                                        ),
-                                                        controller: controllers[
-                                                            '${id}_${e.key}'],
-                                                        // initialValue:
-                                                        //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                                                        onEditingComplete: () {
-                                                          var inputText =
-                                                              controllers[
-                                                                      '${id}_${e.key}']!
-                                                                  .text;
-                                                          dynamic updateText;
-                                                          if (listNames
-                                                              .contains(
-                                                                  e.key)) {
-                                                            updateText =
-                                                                inputText
-                                                                    .split(',');
-                                                            if (updateText[0]
-                                                                .isEmpty) {
-                                                              updateText
-                                                                  .length = 0;
-                                                            }
-                                                          } else if (intNames
-                                                              .contains(
-                                                                  e.key)) {
-                                                            updateText =
-                                                                int.tryParse(
-                                                                        inputText) ??
-                                                                    0;
-                                                          } else {
-                                                            updateText =
-                                                                inputText;
+                                        if (customData[id]![
+                                            'isFunctionTabOpened'])
+                                          SizedBox(
+                                            // duration:
+                                            //     const Duration(milliseconds: 500),
+                                            width: 200,
+                                            child: SingleChildScrollView(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      customData[id]![
+                                                          'functionTabMessage'],
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                    // 수강신청
+                                                    if ((customData[id]![
+                                                                'enroll'] ??
+                                                            0) >
+                                                        0)
+                                                      ElevatedButton(
+                                                        onPressed: (() {
+                                                          Clipboard.setData(
+                                                            ClipboardData(
+                                                                text: """
+*TRIAL CLASS DETAILS*
+"*Student's Name: ${doc['name']}
+*Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
+*Skype ID: ${doc['skypeId'] ?? '-'}
+*Times (KST): ${doc['lessonTime'] ?? '-'}
+*GOAL: ${doc['studyPurpose'] ?? 'No comment'}
+*Starting Date: ${DateFormat('d MMM, E').format(DateTime.tryParse(doc['lessonStartDate'] ?? '') ?? DateTime.now())}
+*Program: ${doc['program'] ?? '-'} (${doc['topic'] ?? '-'})
+*Student's Level: ${doc['studentLevel'] ?? '-'}
+"""),
+                                                          );
+                                                          setState(() {
+                                                            customData[id]![
+                                                                    'functionTabMessage'] =
+                                                                'Text copied to Clipboard';
+                                                          });
+                                                        }),
+                                                        child: Text('신청 정보 복사'),
+                                                      ),
+                                                    // 체험신청
+                                                    if ((customData[id]![
+                                                                'trial'] ??
+                                                            0) >
+                                                        0)
+                                                      ElevatedButton(
+                                                        onPressed: (() {
+                                                          Clipboard.setData(
+                                                            ClipboardData(
+                                                                text: """
+*TRIAL CLASS DETAILS*
+*Student's Name: ${doc['name']}
+*Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
+*Skype ID: ${doc['skypeId'] ?? '-'}
+*Date: ${DateFormat('d MMM, E').format(DateTime.tryParse(doc['trialDate'] ?? '') ?? DateTime.now())}
+*Time (KST): ${doc['trialTime'] ?? '-'} 
+*GOAL: ${doc['studyPurpose'] ?? '-'}
+"""),
+                                                          );
+                                                          setState(() {
+                                                            customData[id]![
+                                                                    'functionTabMessage'] =
+                                                                'Text copied to Clipboard';
+                                                          });
+                                                        }),
+                                                        child: Text('신청 정보 복사'),
+                                                      ),
+                                                    // 적립금
+                                                    TextFormField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        label: Text('적립금'),
+                                                      ),
+                                                      controller: controllers[
+                                                          '${id}_points'],
+                                                      // initialValue:
+                                                      //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                                      onEditingComplete: () {
+                                                        var inputText = controllers[
+                                                                '${id}_points']!
+                                                            .text;
+                                                        dynamic updateText;
+                                                        if (listNames.contains(
+                                                            'points')) {
+                                                          updateText = inputText
+                                                              .split(',');
+                                                          if (updateText[0]
+                                                              .isEmpty) {
+                                                            updateText.length =
+                                                                0;
                                                           }
-                                                          userData[id]![e.key] =
-                                                              updateText;
-                                                          inputText
-                                                              .split(',')
-                                                              .length = 0;
-                                                          updateStudentToFirestoreAsAdmin(
-                                                                  Student(
-                                                                      data: userData[
-                                                                          id]!))
-                                                              .then((context) {
-                                                            Future.delayed(
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        200),
-                                                                () {
-                                                              setState(() {
-                                                                getData();
-                                                              });
+                                                        } else if (intNames
+                                                            .contains(
+                                                                'points')) {
+                                                          updateText =
+                                                              int.tryParse(
+                                                                      inputText) ??
+                                                                  0;
+                                                        } else {
+                                                          updateText =
+                                                              inputText;
+                                                        }
+                                                        d[id]!['points'] =
+                                                            updateText;
+                                                        inputText
+                                                            .split(',')
+                                                            .length = 0;
+                                                        updateStudentToFirestoreAsAdmin(
+                                                                Student(
+                                                                    data:
+                                                                        d[id]!))
+                                                            .then((context) {
+                                                          Future.delayed(
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      200), () {
+                                                            setState(() {
+                                                              getData();
                                                             });
                                                           });
-                                                        },
-                                                      ),
-                                                    );
-                                                  }),
-                                                ],
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
+                                      ],
+                                    ),
+                                  ),
+                                  // 마이페이지
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Colors.grey[100]!,
+                                          width: 5,
                                         ),
-                                    ],
-                                  ),
-                                ),
-                                // 마이페이지
-                                Expanded(
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: CalendarBody(
-                                        user: Student(data: doc),
-                                        isAdmin: true,
-                                        updated: (_) {
-                                          Future.delayed(
-                                              const Duration(milliseconds: 200),
-                                              () {
-                                            setState(() {
-                                              getData();
+                                      ),
+                                      child: CalendarBody(
+                                          user: Student(data: doc),
+                                          isAdmin: true,
+                                          updated: (_) {
+                                            Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 200), () {
+                                              setState(() {
+                                                getData();
+                                              });
                                             });
-                                          });
-                                        }),
+                                          }),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  // 기능 버튼 창
+                                  Container(
+                                    height: 800,
+                                    color: Colors.grey[100],
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        if (customData[id]![
+                                            'isDBEditTabOpened'])
+                                          SizedBox(
+                                            // duration:
+                                            //     const Duration(milliseconds: 500),
+                                            width: 200,
+                                            child: SingleChildScrollView(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                child: Column(
+                                                  children: [
+                                                    // Text(
+                                                    //   'Database',
+                                                    //   style: TextStyle(
+                                                    //     color: customTheme
+                                                    //         .colorScheme
+                                                    //         .secondary,
+                                                    //     fontSize: 16,
+                                                    //     fontWeight:
+                                                    //         FontWeight.bold,
+                                                    //   ),
+                                                    // ),
+                                                    // Divider(),
+                                                    ...doc.entries.map((e) {
+                                                      var initialText = e.value
+                                                                  .runtimeType ==
+                                                              List
+                                                          ? '${e.value.join(',')}'
+                                                          : '${e.value}';
+                                                      controllers[
+                                                              '${id}_${e.key}'] =
+                                                          TextEditingController(
+                                                              text:
+                                                                  initialText);
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 5),
+                                                        child: TextFormField(
+                                                          decoration:
+                                                              InputDecoration(
+                                                            label: Text(e.key),
+                                                          ),
+                                                          controller: controllers[
+                                                              '${id}_${e.key}'],
+                                                          // initialValue:
+                                                          //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                                          onEditingComplete:
+                                                              () {
+                                                            var inputText =
+                                                                controllers[
+                                                                        '${id}_${e.key}']!
+                                                                    .text;
+                                                            dynamic updateText;
+                                                            if (listNames
+                                                                .contains(
+                                                                    e.key)) {
+                                                              updateText =
+                                                                  inputText
+                                                                      .split(
+                                                                          ',');
+                                                              if (updateText[0]
+                                                                  .isEmpty) {
+                                                                updateText
+                                                                    .length = 0;
+                                                              }
+                                                            } else if (intNames
+                                                                .contains(
+                                                                    e.key)) {
+                                                              updateText =
+                                                                  int.tryParse(
+                                                                          inputText) ??
+                                                                      0;
+                                                            } else {
+                                                              updateText =
+                                                                  inputText;
+                                                            }
+                                                            d[id]![e.key] =
+                                                                updateText;
+                                                            inputText
+                                                                .split(',')
+                                                                .length = 0;
+                                                            updateStudentToFirestoreAsAdmin(
+                                                                    Student(
+                                                                        data: d[
+                                                                            id]!))
+                                                                .then(
+                                                                    (context) {
+                                                              Future.delayed(
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          200),
+                                                                  () {
+                                                                setState(() {
+                                                                  getData();
+                                                                });
+                                                              });
+                                                            });
+                                                          },
+                                                        ),
+                                                      );
+                                                    }),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        InkWell(
+                                          child: Container(
+                                            width: 20,
+                                            height: double.infinity,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: RotatedBox(
+                                                quarterTurns: 1,
+                                                child: Text(
+                                                  '▼ Database Edit Tab',
+                                                  style: TextStyle(
+                                                    color: customTheme
+                                                        .colorScheme.secondary,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              customData[id]![
+                                                      'isDBEditTabOpened'] =
+                                                  !customData[id]![
+                                                      'isDBEditTabOpened'];
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -792,7 +905,7 @@ class _AdminStudentsScreen1ListviewState
       if (filters.containsKey(flag) && filters[flag]!.$1) {
         var removes = <String>{};
         temp.forEach((k, v) {
-          if (!v['flags'].keys.contains(flag)) {
+          if (!customData[k]!.keys.contains(flag)) {
             removes.add(k);
           }
         });
@@ -818,5 +931,12 @@ class _AdminStudentsScreen1ListviewState
         print('Student 데이터 업데이트 중 오류 발생: $e');
       }
     }
+  }
+
+  userAge(String usersBirthDate) {
+    Duration parse = DateTime.now()
+        .difference(DateTime.tryParse(usersBirthDate) ?? DateTime.now())
+        .abs();
+    return "${parse.inDays ~/ 360}";
   }
 }
