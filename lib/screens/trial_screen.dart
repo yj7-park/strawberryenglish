@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
@@ -63,18 +64,6 @@ class _TrialScreenState extends State<TrialScreen> {
                   );
                 } else if (snapshot.hasData) {
                   // 데이터가 로드되었을 때 표시할 화면
-                  // widget.nameController.text = snapshot.data!.name ?? '';
-                  // widget.birthDateController.text =
-                  //     snapshot.data!.birthDate ?? '';
-
-                  // widget.phoneNumberController.text =
-                  //     snapshot.data!.phoneNumber ?? '';
-                  // widget.countryController.text = snapshot.data!.country ?? '';
-                  // widget.skypeIdController.text = snapshot.data!.skypeId ?? '';
-                  // widget.studyPurposeController.text =
-                  //     snapshot.data!.studyPurpose ?? '';
-                  // widget.referralSourceController.text =
-                  //     snapshot.data!.referralSource ?? '';
                   widget.nameController.text =
                       snapshot.data!.data['name'] ?? '';
                   widget.birthDateController.text =
@@ -93,6 +82,14 @@ class _TrialScreenState extends State<TrialScreen> {
                       snapshot.data!.data['trialDay'] ?? '';
                   widget.trialTimeController.text =
                       snapshot.data!.data['trialTime'] ?? '';
+                  // trialDate가 있고, 날짜가 이미 지난 경우
+                  var isFinished = false;
+                  var trialDate = DateTime.tryParse(
+                          snapshot.data!.data['trialDate'] ?? '') ??
+                      DateTime.now();
+                  if (DateTime.now().isAfter(trialDate)) {
+                    isFinished = true;
+                  }
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 93), // Make space for the AppBar
@@ -100,36 +97,57 @@ class _TrialScreenState extends State<TrialScreen> {
                       // 제목
                       const MyHeader('체험하기'),
                       // 커버 페이지
-                      SignupScreen2Input(
-                        nameController: widget.nameController,
-                        birthDateController: widget.birthDateController,
-                      ),
-                      TrialScreen1Input(
-                        phoneNumberController: widget.phoneNumberController,
-                        countryController: widget.countryController,
-                        skypeIdController: widget.skypeIdController,
-                        studyPurposeController: widget.studyPurposeController,
-                        referralSourceController:
-                            widget.referralSourceController,
-                      ),
-                      TrialScreen2Input(
-                        trialDayController: widget.trialDayController,
-                        trialTimeController: widget.trialTimeController,
-                      ),
-                      TrialScreen3Button(
-                        nameController: widget.nameController,
-                        birthDateController: widget.birthDateController,
-                        phoneNumberController: widget.phoneNumberController,
-                        trialDayController: widget.trialDayController,
-                        trialTimeController: widget.trialTimeController,
-                        countryController: widget.countryController,
-                        skypeIdController: widget.skypeIdController,
-                        studyPurposeController: widget.studyPurposeController,
-                        referralSourceController:
-                            widget.referralSourceController,
-                      ),
-                      // 회사정보
-                      // const CompanyInfo(),
+                      if (isFinished) ...[
+                        SizedBox(height: 20),
+                        Text(
+                          """
+무료 체험은 계정당 1회만 신청 가능합니다.
+추가 문의사항은 카카오톡 채널을 이용해주시기 바랍니다.
+[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.
+
+*진행이 완료된 무료 체험
+
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(trialDate)}
+
+시간: ${DateFormat('hh시 mm분').format(trialDate)} (한국시간)
+
+Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
+ 
+""",
+                          textAlign: TextAlign.center,
+                        )
+                      ] else ...[
+                        SignupScreen2Input(
+                          nameController: widget.nameController,
+                          birthDateController: widget.birthDateController,
+                        ),
+                        TrialScreen1Input(
+                          phoneNumberController: widget.phoneNumberController,
+                          countryController: widget.countryController,
+                          skypeIdController: widget.skypeIdController,
+                          studyPurposeController: widget.studyPurposeController,
+                          referralSourceController:
+                              widget.referralSourceController,
+                        ),
+                        TrialScreen2Input(
+                          trialDayController: widget.trialDayController,
+                          trialTimeController: widget.trialTimeController,
+                        ),
+                        TrialScreen3Button(
+                          nameController: widget.nameController,
+                          birthDateController: widget.birthDateController,
+                          phoneNumberController: widget.phoneNumberController,
+                          trialDayController: widget.trialDayController,
+                          trialTimeController: widget.trialTimeController,
+                          countryController: widget.countryController,
+                          skypeIdController: widget.skypeIdController,
+                          studyPurposeController: widget.studyPurposeController,
+                          referralSourceController:
+                              widget.referralSourceController,
+                        ),
+                        // 회사정보
+                        // const CompanyInfo(),
+                      ]
                     ],
                   );
                 } else {

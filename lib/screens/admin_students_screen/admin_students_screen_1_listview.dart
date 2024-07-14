@@ -110,8 +110,7 @@ class _AdminStudentsScreen1ListviewState
           // 수강신청
           flag = 'enroll';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (v.containsKey('lessonEndDate') &&
-              (!v.containsKey('tutor') || (v['tutor'] ?? '').isEmpty)) {
+          if (v.containsKey('lessonEndDate') && ((v['tutor'] ?? '').isEmpty)) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
             if (!customData[k]!.containsKey(flag)) {
@@ -123,9 +122,7 @@ class _AdminStudentsScreen1ListviewState
           // 체험신청
           flag = 'trial';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (v.containsKey('trialDay') &&
-              (!v.containsKey('trialTutor') ||
-                  (v['trialTutor'] ?? '').isEmpty)) {
+          if (v.containsKey('trialDay') && (v['trialTutor'] ?? '').isEmpty) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
             if (!customData[k]!.containsKey(flag)) {
@@ -182,7 +179,7 @@ class _AdminStudentsScreen1ListviewState
             }
           }
 
-          if (v.containsKey('tutor')) {
+          if ((v['tutor'] ?? '').isNotEmpty) {
             if (v.containsKey('lessonEndDate') &&
                 DateTime.parse(v['lessonEndDate']).isAfter(DateTime.now())) {
               bool inHold = false;
@@ -213,14 +210,14 @@ class _AdminStudentsScreen1ListviewState
             }
           } else if (v.containsKey('lessonEndDate')) {
             customData[k]!['status'] = '🟠 수강대기';
-          } else if (v.containsKey('trialTutor')) {
+          } else if ((v['trialTutor'] ?? '').isNotEmpty) {
             var trialDate = DateTime.tryParse(v['trialDate']);
             if (trialDate != null && trialDate.isBefore(DateTime.now())) {
               customData[k]!['status'] = '🔴 체험종료';
             } else {
               customData[k]!['status'] = '🟢 무료체험';
             }
-          } else if (v.containsKey('trialDay')) {
+          } else if ((v['trialDay'] ?? '').isNotEmpty) {
             customData[k]!['status'] = '🟠 체험대기';
           } else {
             customData[k]!['status'] = '⚫ 유령회원';
@@ -349,10 +346,6 @@ class _AdminStudentsScreen1ListviewState
                       // 데이터 정렬
                       var doc = Map.fromEntries(d[id]!.entries.toList()
                         ..sort((e1, e2) => e1.key.compareTo(e2.key)));
-                      if (!controllers.containsKey('${id}_points')) {
-                        controllers['${id}_points'] = TextEditingController(
-                            text: (doc['points'] ?? 0).toString());
-                      }
                       // 날짜 표시 (수업 날짜)
                       // var date = doc.containsKey('lessonEndDate')
                       //     ? '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
@@ -552,33 +545,67 @@ class _AdminStudentsScreen1ListviewState
                                         ),
                                         if (customData[id]![
                                             'isFunctionTabOpened'])
-                                          SizedBox(
-                                            // duration:
-                                            //     const Duration(milliseconds: 500),
-                                            width: 200,
-                                            child: SingleChildScrollView(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(20),
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      customData[id]![
-                                                          'functionTabMessage'],
-                                                      style: TextStyle(
-                                                        color: Colors.red,
+                                          Builder(builder: (context) {
+                                            Map<String, bool> inputCondition =
+                                                {};
+                                            // 기본 정보
+                                            inputCondition['name'] = true;
+                                            inputCondition['points'] = true;
+
+                                            // 수강신청
+                                            bool isEnroll =
+                                                (customData[id]!['enroll'] ??
+                                                        0) >
+                                                    0;
+                                            inputCondition['tutor'] = isEnroll;
+                                            inputCondition['lessonTime'] =
+                                                isEnroll;
+                                            inputCondition['lessonStartDate'] =
+                                                isEnroll;
+                                            inputCondition['lessonEndDate'] =
+                                                isEnroll;
+                                            inputCondition['paymentAmount'] =
+                                                isEnroll;
+
+                                            // 체험신청
+                                            bool isTrial =
+                                                (customData[id]!['trial'] ??
+                                                        0) >
+                                                    0;
+                                            inputCondition['trialTutor'] =
+                                                isTrial;
+                                            inputCondition['trialDate'] =
+                                                isTrial;
+                                            inputCondition['trialTime'] =
+                                                isTrial;
+
+                                            return SizedBox(
+                                              // duration:
+                                              //     const Duration(milliseconds: 500),
+                                              width: 200,
+                                              child: SingleChildScrollView(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(20),
+                                                  child: Column(
+                                                    children: [
+                                                      Text(
+                                                        customData[id]![
+                                                            'functionTabMessage'],
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    // 수강신청
-                                                    if ((customData[id]![
-                                                                'enroll'] ??
-                                                            0) >
-                                                        0)
-                                                      ElevatedButton(
-                                                        onPressed: (() {
-                                                          Clipboard.setData(
-                                                            ClipboardData(
-                                                                text: """
+                                                      // 수강신청
+                                                      if ((customData[id]![
+                                                                  'enroll'] ??
+                                                              0) >
+                                                          0)
+                                                        ElevatedButton(
+                                                          onPressed: (() {
+                                                            Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text: """
 *TRIAL CLASS DETAILS*
 "*Student's Name: ${doc['name']}
 *Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
@@ -589,25 +616,26 @@ class _AdminStudentsScreen1ListviewState
 *Program: ${doc['program'] ?? '-'} (${doc['topic'] ?? '-'})
 *Student's Level: ${doc['studentLevel'] ?? '-'}
 """),
-                                                          );
-                                                          setState(() {
-                                                            customData[id]![
-                                                                    'functionTabMessage'] =
-                                                                'Text copied to Clipboard';
-                                                          });
-                                                        }),
-                                                        child: Text('신청 정보 복사'),
-                                                      ),
-                                                    // 체험신청
-                                                    if ((customData[id]![
-                                                                'trial'] ??
-                                                            0) >
-                                                        0)
-                                                      ElevatedButton(
-                                                        onPressed: (() {
-                                                          Clipboard.setData(
-                                                            ClipboardData(
-                                                                text: """
+                                                            );
+                                                            setState(() {
+                                                              customData[id]![
+                                                                      'functionTabMessage'] =
+                                                                  'Text copied to Clipboard';
+                                                            });
+                                                          }),
+                                                          child:
+                                                              Text('신청 정보 복사'),
+                                                        ),
+                                                      // 체험신청
+                                                      if ((customData[id]![
+                                                                  'trial'] ??
+                                                              0) >
+                                                          0)
+                                                        ElevatedButton(
+                                                          onPressed: (() {
+                                                            Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text: """
 *TRIAL CLASS DETAILS*
 *Student's Name: ${doc['name']}
 *Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
@@ -616,76 +644,116 @@ class _AdminStudentsScreen1ListviewState
 *Time (KST): ${doc['trialTime'] ?? '-'} 
 *GOAL: ${doc['studyPurpose'] ?? '-'}
 """),
-                                                          );
-                                                          setState(() {
-                                                            customData[id]![
-                                                                    'functionTabMessage'] =
-                                                                'Text copied to Clipboard';
-                                                          });
-                                                        }),
-                                                        child: Text('신청 정보 복사'),
-                                                      ),
-                                                    // 적립금
-                                                    TextFormField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        label: Text('적립금'),
-                                                      ),
-                                                      controller: controllers[
-                                                          '${id}_points'],
-                                                      // initialValue:
-                                                      //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                                                      onEditingComplete: () {
-                                                        var inputText = controllers[
-                                                                '${id}_points']!
-                                                            .text;
-                                                        dynamic updateText;
-                                                        if (listNames.contains(
-                                                            'points')) {
-                                                          updateText = inputText
-                                                              .split(',');
-                                                          if (updateText[0]
-                                                              .isEmpty) {
-                                                            updateText.length =
-                                                                0;
-                                                          }
-                                                        } else if (intNames
-                                                            .contains(
-                                                                'points')) {
-                                                          updateText =
-                                                              int.tryParse(
-                                                                      inputText) ??
-                                                                  0;
-                                                        } else {
-                                                          updateText =
-                                                              inputText;
-                                                        }
-                                                        d[id]!['points'] =
-                                                            updateText;
-                                                        inputText
-                                                            .split(',')
-                                                            .length = 0;
-                                                        updateStudentToFirestoreAsAdmin(
-                                                                Student(
-                                                                    data:
-                                                                        d[id]!))
-                                                            .then((context) {
-                                                          Future.delayed(
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      200), () {
+                                                            );
                                                             setState(() {
-                                                              getData();
+                                                              customData[id]![
+                                                                      'functionTabMessage'] =
+                                                                  'Text copied to Clipboard';
                                                             });
-                                                          });
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
+                                                          }),
+                                                          child:
+                                                              Text('신청 정보 복사'),
+                                                        ),
+                                                      ...[
+                                                        for (var ic
+                                                            in inputCondition
+                                                                .entries)
+                                                          if (ic.value)
+                                                            Builder(builder:
+                                                                (context) {
+                                                              var e = MapEntry(
+                                                                  ic.key,
+                                                                  doc[ic.key]);
+                                                              var initialText = e
+                                                                          .value
+                                                                          .runtimeType ==
+                                                                      List
+                                                                  ? '${e.value.join(',')}'
+                                                                  : '${e.value ?? (intNames.contains(e.key) ? 0 : '')}';
+                                                              controllers[
+                                                                      '${id}_${e.key}'] =
+                                                                  TextEditingController(
+                                                                      text:
+                                                                          initialText);
+                                                              return Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                            5),
+                                                                child:
+                                                                    TextFormField(
+                                                                  decoration:
+                                                                      InputDecoration(
+                                                                    label: Text(
+                                                                        e.key),
+                                                                  ),
+                                                                  controller:
+                                                                      controllers[
+                                                                          '${id}_${e.key}'],
+                                                                  // initialValue:
+                                                                  //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                                                  onEditingComplete:
+                                                                      () {
+                                                                    var inputText =
+                                                                        controllers['${id}_${e.key}']!
+                                                                            .text;
+                                                                    dynamic
+                                                                        updateText;
+                                                                    if (listNames
+                                                                        .contains(e
+                                                                            .key)) {
+                                                                      updateText =
+                                                                          inputText
+                                                                              .split(',');
+                                                                      if (updateText[
+                                                                              0]
+                                                                          .isEmpty) {
+                                                                        updateText
+                                                                            .length = 0;
+                                                                      }
+                                                                    } else if (intNames
+                                                                        .contains(
+                                                                            e.key)) {
+                                                                      updateText =
+                                                                          int.tryParse(inputText) ??
+                                                                              0;
+                                                                    } else {
+                                                                      updateText =
+                                                                          inputText;
+                                                                    }
+                                                                    d[id]![e.key] =
+                                                                        updateText;
+                                                                    inputText
+                                                                        .split(
+                                                                            ',')
+                                                                        .length = 0;
+                                                                    updateStudentToFirestoreAsAdmin(Student(
+                                                                            data: d[
+                                                                                id]!))
+                                                                        .then(
+                                                                            (context) {
+                                                                      Future.delayed(
+                                                                          const Duration(
+                                                                              milliseconds: 200),
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          getData();
+                                                                        });
+                                                                      });
+                                                                    });
+                                                                  },
+                                                                ),
+                                                              );
+                                                            })
+                                                      ],
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
+                                            );
+                                          }),
                                       ],
                                     ),
                                   ),

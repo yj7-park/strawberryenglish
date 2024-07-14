@@ -27,6 +27,8 @@ class TrialScreen1Input extends StatefulWidget {
 }
 
 class TrialScreen1InputState extends State<TrialScreen1Input> {
+  final scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -125,16 +127,127 @@ class TrialScreen1InputState extends State<TrialScreen1Input> {
                     ['https://skype.daesung.com/download/downloadMain.asp']);
               },
             ),
-            InkWell(
-              child: const Text(
-                '▶ Skype 이름 확인',
-                style: TextStyle(decoration: TextDecoration.underline),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                    constraints: const BoxConstraints(
+                      maxWidth: double.infinity,
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        color: Colors.white,
+                        width: double.infinity,
+                        child: Scrollbar(
+                          controller: scrollController,
+                          interactive: true,
+                          thumbVisibility: true,
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            scrollDirection: Axis.vertical,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    """
+딸기영어는 Skype 메신저로 수업이 진행되며,
+회원님의 정확한 Skype ID가 확인되어야 수업을 진행할 수 있습니다.
+   
+Skype 계정 ID는 아래와 같이 확인할 수 있습니다.""",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 30),
+                                  Builder(
+                                    builder: (context) {
+                                      var children = [
+                                        Container(
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.amber,
+                                              width: 5,
+                                            ),
+                                          ),
+                                          child: Image.asset(
+                                            'assets/images/skypeid_help_1.png',
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                        Container(
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.amber,
+                                              width: 5,
+                                            ),
+                                          ),
+                                          child: Image.asset(
+                                            'assets/images/skypeid_help_2.png',
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                        Container(
+                                          width: 300,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.amber,
+                                              width: 5,
+                                            ),
+                                          ),
+                                          child: Image.asset(
+                                            'assets/images/skypeid_help_3.png',
+                                          ),
+                                        ),
+                                      ];
+                                      if (screenWidth < 1000) {
+                                        return Column(
+                                          children: children,
+                                        );
+                                      } else {
+                                        return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: children,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  '▶ Skype 이름확인',
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
               ),
-              onTap: () {
-                js.context.callMethod('open',
-                    ['https://www.skybel.co.kr/sub/sugang_skype_id.php']);
-              },
             ),
+            // InkWell(
+            //   child: const Text(
+            //     '▶ Skype 이름 확인',
+            //     style: TextStyle(decoration: TextDecoration.underline),
+            //   ),
+            //   onTap: () {
+            //     js.context.callMethod('open',
+            //         ['https://www.skybel.co.kr/sub/sugang_skype_id.php']);
+            //   },
+            // ),
             const SizedBox(height: 60),
             const Text(
               '선택 정보',
