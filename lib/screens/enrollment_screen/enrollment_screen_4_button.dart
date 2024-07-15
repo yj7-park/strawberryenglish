@@ -343,7 +343,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['cashReceiptNumber'] = cashReceiptNumber;
         updatedStudent.data['points'] = (updatedStudent.data['points'] ?? 0) -
             (int.tryParse(pointsController.text) ?? 0);
-        // skypeId는 수업별 / 학생 별 관리 (최근 수업 기준으로 학생 데이터에 저장)
+        // skypeId는 수업별 / 학생별 둘다 관리 (최근 수업 기준으로 학생 데이터에 저장)
         updatedStudent.data['skypeId'] = skypeId;
 
         // Lecture 정보
