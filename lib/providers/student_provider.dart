@@ -96,7 +96,19 @@ class StudentProvider extends ChangeNotifier {
       var values =
           await FirebaseFirestore.instance.collection('users').doc(email).get();
       // print(response.values);
-      return Student(data: values.data()!);
+      Map<String, Lecture>? lectures = {};
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(email)
+          .collection('lectures')
+          .get()
+          .then((value) {
+        for (var i in value.docs) {
+          lectures[i.id] = Lecture(data: i.data());
+        }
+      });
+      // return Student.transform(data: values.data()!, lectureName: 'lecture2');
+      return Student(data: values.data()!, lectures: lectures);
     } catch (e) {
       if (kDebugMode) {
         print('Firestore에서 Student 가져오는 중 오류 발생: $e');
@@ -193,6 +205,15 @@ class StudentProvider extends ChangeNotifier {
           // .doc(currentUser!.email)
           .doc(updatedStudent.data['email'])
           .set(updatedStudent.data);
+      for (var e in (updatedStudent.lectures ?? {}).entries) {
+        FirebaseFirestore.instance
+            .collection('users')
+            // .doc(currentUser!.email)
+            .doc(updatedStudent.data['email'])
+            .collection('lectures')
+            .doc(e.key)
+            .set(e.value.data);
+      }
       notifyListeners();
       // }
     } catch (e) {
