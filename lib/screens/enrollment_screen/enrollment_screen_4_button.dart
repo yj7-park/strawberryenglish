@@ -17,8 +17,8 @@ class EnrollmentScreen4Button extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController birthDateController;
   final TextEditingController phoneNumberController;
-  final TextEditingController lessonDayController;
-  final TextEditingController lessonTimeController;
+  final TextEditingController requestDayController;
+  final TextEditingController requestTimeController;
   final TextEditingController countryController;
   final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
@@ -31,8 +31,8 @@ class EnrollmentScreen4Button extends StatefulWidget {
     required this.nameController,
     required this.birthDateController,
     required this.phoneNumberController,
-    required this.lessonDayController,
-    required this.lessonTimeController,
+    required this.requestDayController,
+    required this.requestTimeController,
     required this.countryController,
     required this.skypeIdController,
     required this.studyPurposeController,
@@ -111,8 +111,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     final name = widget.nameController.text.trim();
     final birthDate = widget.birthDateController.text.trim();
     final phoneNumber = widget.phoneNumberController.text.trim();
-    final lessonDay = widget.lessonDayController.text.trim();
-    final lessonTime = widget.lessonTimeController.text.trim();
+    final requestDay = widget.requestDayController.text.trim();
+    final requestTime = widget.requestTimeController.text.trim();
     final country = widget.countryController.text.trim();
     final skypeId = widget.skypeIdController.text.trim();
     final studyPurpose = widget.studyPurposeController.text.trim();
@@ -125,8 +125,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     if (name.isEmpty ||
         birthDate.isEmpty ||
         phoneNumber.isEmpty ||
-        lessonDay.isEmpty ||
-        lessonTime.isEmpty ||
+        requestDay.isEmpty ||
+        requestTime.isEmpty ||
         country.isEmpty ||
         skypeId.isEmpty ||
         lessonStartDate.isEmpty) {
@@ -356,11 +356,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                 .length +
             1;
         Lecture updatedLecture = Lecture(data: {});
-        updatedLecture.data['lessonDay'] = lessonDay;
-        updatedLecture.data['lessonTime'] = lessonTime;
+        updatedLecture.data['requestDay'] = requestDay;
+        updatedLecture.data['requestTime'] = requestTime;
         updatedLecture.data['skypeId'] = skypeId;
         updatedLecture.data['lessonStartDate'] = lessonStartDate;
-        updatedLecture.data['lessonTime'] = '$lessonDay-$lessonTime';
+        // updatedLecture.data['lessonTime'] = '$requestDay-$requestTime';
         updatedLecture.data['lessonPeriod'] =
             EnrollmentScreen.selectedMins.first;
         updatedLecture.data['program'] = EnrollmentScreen1Input.topic.keys
