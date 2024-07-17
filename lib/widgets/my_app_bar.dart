@@ -31,7 +31,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
     bool isAdmin = FirebaseAuth.instance.currentUser != null &&
         FirebaseAuth.instance.currentUser!.email == 'admin@admin.com';
     // TODO: for test
-    // isAdmin = true;
+    isAdmin = true;
     return Stack(
       children: [
         SizedBox(

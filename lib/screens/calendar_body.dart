@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:googleapis/androidpublisher/v3.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/models/student.dart';
@@ -65,53 +66,64 @@ class CalendarBodyState extends State<CalendarBody>
             : 20,
         vertical: widget.updated == null ? 50.0 : 20,
       ),
-      child: DefaultTabController(
-        length: lectures.length,
-        child: SizedBox(
-          // TODO: 적절한 높이 값 지정 필요
-          height: 1000,
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              // 장기 홀드 날짜 지정 중에는 탭을 바꿀 수 없도록 (오작동 방지)
-              title: IgnorePointer(
-                ignoring: selectedHoldStartDate.isNotEmpty,
-                child: TabBar(
-                  isScrollable: true,
-                  controller: tabController,
-                  tabs: lectures.keys.map((k) => Tab(text: k)).toList(),
+      child: lectures.isNotEmpty
+          ? DefaultTabController(
+              length: lectures.length,
+              child: SizedBox(
+                // TODO: 적절한 높이 값 지정 필요
+                height: 1000,
+                child: Scaffold(
+                  appBar: AppBar(
+                    automaticallyImplyLeading: false,
+                    // 장기 홀드 날짜 지정 중에는 탭을 바꿀 수 없도록 (오작동 방지)
+                    title: IgnorePointer(
+                      ignoring: selectedHoldStartDate.isNotEmpty,
+                      child: TabBar(
+                        isScrollable: true,
+                        controller: tabController,
+                        tabs: lectures.keys.map((k) => Tab(text: k)).toList(),
+                      ),
+                    ),
+                  ),
+                  body: TabBarView(
+                    controller: tabController,
+                    children: lectures.values
+                        .map(
+                          (lecture) => SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                // 수업 중인 상태
+                                if ((lecture.data['tutor'] ?? '')
+                                    .isNotEmpty) ...[
+                                  const Divider(),
+                                  // 여기에 사용자 정보를 보여주는 위젯 추가
+                                  _buildStudentDetails(
+                                      lecture, screenHeight > 1000, isMobile),
+                                  const Divider(),
+                                  _buildCalendar(lecture),
+                                ]
+                                // 수강 신청 중인 상태
+                                else if ((lecture.data['lessonEndDate'] ?? '')
+                                    .isNotEmpty) ...[
+                                  const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
+                                  const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
+                                  const Text(
+                                      '신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
+                                ],
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
-            ),
-            body: TabBarView(
-              controller: tabController,
-              children: lectures.values
-                  .map(
-                    (lecture) => SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          // 수업 중인 상태
-                          if ((lecture.data['tutor'] ?? '').isNotEmpty) ...[
-                            const Divider(),
-                            // 여기에 사용자 정보를 보여주는 위젯 추가
-                            _buildStudentDetails(
-                                lecture, screenHeight > 1000, isMobile),
-                            const Divider(),
-                            _buildCalendar(lecture),
-                          ]
-                          // 수강 신청 중인 상태
-                          else if ((lecture.data['lessonEndDate'] ?? '')
-                              .isNotEmpty) ...[
-                            const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
-                            const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
-                            const Text(
-                                '신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
-                          ]
-                          // 체험 중인 상태
-                          else if ((lecture.data['trialTutor'] ?? '')
-                              .isNotEmpty) ...[
-                            Text(
-                              """
+            )
+          :
+          // 체험 중인 상태
+          (widget.user.data['trialDate'] ?? '').isNotEmpty
+              ? Text(
+                  """
 *체험 수업 확정
 
 ${widget.user.data['name']} 님의 체험 수업이 확정되었습니다 :)
@@ -129,32 +141,26 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
 
 감사합니다.
 Enjoy your English with 🍓""",
-                              textAlign: TextAlign.center,
-                            ),
-                          ]
-                          // 체험 신청 중인 상태
-                          else if ((lecture.data['trialDay'] ?? '')
-                              .isNotEmpty) ...[
-                            const Text('체험 수업 신청이 완료되어, 일정을 확인 중입니다.'),
-                            const Text('체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
-                            const Text(
-                                '신청 정보 수정이 필요하시면 [체험하기] 버튼을 눌러 수정하실 수 있습니다.'),
-                          ]
-                          // 회원 가입만 된 상태
-                          else ...[
-                            const Text('딸기영어에 오신 것을 환영합니다.'),
-                            const Text('[체험하기] 버튼을 눌러 체험 수업을 신청하시거나,'),
-                            const Text('[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.'),
-                          ],
-                        ],
-                      ),
+                  textAlign: TextAlign.center,
+                )
+              :
+              // 체험 신청 중인 상태
+              (widget.user.data['trialDay'] ?? '').isNotEmpty
+                  ? const Text(
+                      """
+체험 수업 신청이 완료되어, 일정을 확인 중입니다.
+체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+신청 정보 수정이 필요하시면 [체험하기] 버튼을 눌러 수정하실 수 있습니다.""",
+                      textAlign: TextAlign.center,
+                    )
+                  // 회원 가입만 된 상태
+                  : const Text(
+                      """
+딸기영어에 오신 것을 환영합니다.
+[체험하기] 버튼을 눌러 체험 수업을 신청하시거나,
+[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.""",
+                      textAlign: TextAlign.center,
                     ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -272,6 +278,7 @@ Enjoy your English with 🍓""",
                     lecture.data['holdCountLeft'] - 1;
                 selectedHoldStartDate = '';
                 _bottomSheetController?.close();
+                isBottomSheetOpened = false;
                 _updateLastLessonDate(lecture);
                 Provider.of<StudentProvider>(context, listen: false)
                     .updateStudentToFirestoreWithMap(widget.user)
@@ -605,11 +612,12 @@ Enjoy your English with 🍓""",
   }
 
   int _getWeekdayFromString(String weekday) {
-    return '월화수목금토일'.indexOf(weekday) + 1;
+    return '일월화수목금토일'.indexOf(weekday) + 1;
   }
 
   String _getWeekdayFromNumber(int weekday) {
-    return '월화수목금토일'[weekday];
+    weekday %= 7;
+    return '일월화수목금토일'[weekday];
   }
 
   // Widget _buildCustomAppointment(BuildContext context,
@@ -755,6 +763,7 @@ Enjoy your English with 🍓""",
         );
       } else {
         _bottomSheetController?.close();
+        isBottomSheetOpened = false;
       }
     }
   }
@@ -925,10 +934,12 @@ Enjoy your English with 🍓""",
                 selectedHoldStartDate = formattedDate;
                 // lecture.data['holdRequestDates'].add(formattedDate);
                 _bottomSheetController?.close(); // Close the bottom sheet
+                // isBottomSheetOpened = false;
                 _bottomSheetController = showBottomSheet(
                   context: context,
                   backgroundColor: Colors.grey[200],
                   builder: (BuildContext context) {
+                    // isBottomSheetOpened = true;
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -954,6 +965,7 @@ Enjoy your English with 🍓""",
                           onTap: () {
                             selectedHoldStartDate = '';
                             _bottomSheetController?.close();
+                            isBottomSheetOpened = false;
                           },
                         ),
                       ],
@@ -1034,6 +1046,7 @@ Enjoy your English with 🍓""",
                 if (lecture.data['tutorCancelDates'].remove(formattedDate)) {}
               }
               _bottomSheetController?.close();
+              isBottomSheetOpened = false;
               _updateLastLessonDate(lecture);
               Provider.of<StudentProvider>(context, listen: false)
                   .updateStudentToFirestoreWithMap(widget.user)

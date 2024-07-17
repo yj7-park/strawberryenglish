@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
+import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/calendar_body.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
@@ -40,8 +42,10 @@ class AdminStudentsScreen1Listview extends StatefulWidget {
 
 class _AdminStudentsScreen1ListviewState
     extends State<AdminStudentsScreen1Listview> {
-  Map<String, Map<String, dynamic>> userData = {};
-  Map<String, Map<String, dynamic>> searchedData = {};
+  // Map<String, Map<String, dynamic>> userData = {};
+  Map<String, Student> userData = {};
+  // Map<String, Map<String, dynamic>> searchedData = {};
+  Map<String, Student> searchedData = {};
   TextEditingController controller = TextEditingController();
   Map<String, TextEditingController> controllers = {};
 
@@ -59,27 +63,32 @@ class _AdminStudentsScreen1ListviewState
     await collection
         .get()
         .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
-      setState(() {
-        userData = {
-          for (var doc in snapshot.docs) doc.id: doc.data(),
-        };
-        // 초기화
-        filters = {};
-        listNames = {};
-        intNames = {};
-        // searchedData = data;
-        for (var e in userData.entries) {
-          var v = e.value;
-          var k = e.key;
-          var flag = '';
-          // customData 초기화
-          customData[k] = {};
-          customData[k]!['isFunctionTabOpened'] = true;
-          customData[k]!['functionTabMessage'] = '';
-          customData[k]!['isDBEditTabOpened'] = false;
-          customData[k]!['status'] = '';
+      for (var doc in snapshot.docs) {
+        userData[doc.id] = await getStudentFromFirestore(doc.id);
+      }
+      // userData = {
+      //   for (var doc in snapshot.docs) doc.id: doc.data(),
+      // };
+      // 초기화
+      filters = {};
+      listNames = {};
+      intNames = {};
+      // searchedData = data;
+      for (var e in userData.entries) {
+        var lectures = e.value;
+        var k = e.key;
+        var flag = '';
+        // customData 초기화
+        customData[k] = {};
+        customData[k]!['isFunctionTabOpened'] = true;
+        customData[k]!['functionTabMessage'] = '';
+        customData[k]!['isDBEditTabOpened'] = false;
+        customData[k]!['status'] = '';
+
+        for (var lecture in (lectures.lectures ?? {}).values) {
           // 수업 취소 요청
           flag = 'cancel';
+          var v = lecture.data;
           for (var e2 in v.entries) {
             if (e2.value.runtimeType == List) listNames.add(e2.key);
             if (e2.value.runtimeType == int) intNames.add(e2.key);
@@ -179,51 +188,52 @@ class _AdminStudentsScreen1ListviewState
             }
           }
 
-          if ((v['tutor'] ?? '').isNotEmpty) {
-            if (v.containsKey('lessonEndDate') &&
-                DateTime.parse(v['lessonEndDate']).isAfter(DateTime.now())) {
-              bool inHold = false;
-              for (String range in v['holdDates']) {
-                List<String> dateParts =
-                    range.split('~').map((e) => e.trim()).toList();
-                if (dateParts.length == 2) {
-                  DateTime startDate = DateTime.parse(dateParts[0]);
-                  DateTime endDate = DateTime.parse(dateParts[1])
-                      .add(const Duration(days: 1))
-                      .subtract(const Duration(microseconds: 1));
+          // if ((v['tutor'] ?? '').isNotEmpty) {
+          //   if (v.containsKey('lessonEndDate') &&
+          //       DateTime.parse(v['lessonEndDate']).isAfter(DateTime.now())) {
+          //     bool inHold = false;
+          //     for (String range in v['holdDates']) {
+          //       List<String> dateParts =
+          //           range.split('~').map((e) => e.trim()).toList();
+          //       if (dateParts.length == 2) {
+          //         DateTime startDate = DateTime.parse(dateParts[0]);
+          //         DateTime endDate = DateTime.parse(dateParts[1])
+          //             .add(const Duration(days: 1))
+          //             .subtract(const Duration(microseconds: 1));
 
-                  var now = DateTime.now();
-                  if (startDate.isBefore(endDate) &&
-                      (startDate.isBefore(now) && endDate.isAfter(now))) {
-                    inHold = true;
-                    break;
-                  }
-                }
-              }
-              if (inHold) {
-                customData[k]!['status'] = '🟡 장기홀드';
-              } else {
-                customData[k]!['status'] = '🟢 정상수강';
-              }
-            } else {
-              customData[k]!['status'] = '🔴 수업종료';
-            }
-          } else if (v.containsKey('lessonEndDate')) {
-            customData[k]!['status'] = '🟠 수강대기';
-          } else if ((v['trialTutor'] ?? '').isNotEmpty) {
-            var trialDate = DateTime.tryParse(v['trialDate']);
-            if (trialDate != null && trialDate.isBefore(DateTime.now())) {
-              customData[k]!['status'] = '🔴 체험종료';
-            } else {
-              customData[k]!['status'] = '🟢 무료체험';
-            }
-          } else if ((v['trialDay'] ?? '').isNotEmpty) {
-            customData[k]!['status'] = '🟠 체험대기';
-          } else {
-            customData[k]!['status'] = '⚫ 유령회원';
-          }
+          //         var now = DateTime.now();
+          //         if (startDate.isBefore(endDate) &&
+          //             (startDate.isBefore(now) && endDate.isAfter(now))) {
+          //           inHold = true;
+          //           break;
+          //         }
+          //       }
+          //     }
+          //     if (inHold) {
+          //       customData[k]!['status'] = '🟡 장기홀드';
+          //     } else {
+          //       customData[k]!['status'] = '🟢 정상수강';
+          //     }
+          //   } else {
+          //     customData[k]!['status'] = '🔴 수업종료';
+          //   }
+          // } else if (v.containsKey('lessonEndDate')) {
+          //   customData[k]!['status'] = '🟠 수강대기';
+          // } else if ((v['trialTutor'] ?? '').isNotEmpty) {
+          //   var trialDate = DateTime.tryParse(v['trialDate']);
+          //   if (trialDate != null && trialDate.isBefore(DateTime.now())) {
+          //     customData[k]!['status'] = '🔴 체험종료';
+          //   } else {
+          //     customData[k]!['status'] = '🟢 무료체험';
+          //   }
+          // } else if ((v['trialDay'] ?? '').isNotEmpty) {
+          //   customData[k]!['status'] = '🟠 체험대기';
+          // } else {
+          //   customData[k]!['status'] = '⚫ 유령회원';
+          // }
+          setState(() {});
         }
-      });
+      }
     });
   }
 
@@ -344,8 +354,9 @@ class _AdminStudentsScreen1ListviewState
                       // 이메일 주소
                       var id = d.keys.elementAt(index);
                       // 데이터 정렬
-                      var doc = Map.fromEntries(d[id]!.entries.toList()
-                        ..sort((e1, e2) => e1.key.compareTo(e2.key)));
+                      var doc = d[id]!.data;
+                      // Map.fromEntries(d[id]!.entries.toList()
+                      //   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
                       // 날짜 표시 (수업 날짜)
                       // var date = doc.containsKey('lessonEndDate')
                       //     ? '${doc['lessonStartDate']} ~ ${doc['lessonEndDate']}'
@@ -495,7 +506,7 @@ class _AdminStudentsScreen1ListviewState
                           ),
                           children: [
                             Container(
-                              height: 820,
+                              height: 900,
                               color: Colors.grey[100],
                               child: Row(
                                 mainAxisAlignment:
@@ -506,7 +517,7 @@ class _AdminStudentsScreen1ListviewState
                                   Container(
                                     // duration: const Duration(milliseconds: 200),
                                     // width: 300,
-                                    height: 800,
+                                    // height: 800,
                                     color: Colors.grey[100],
                                     child: Row(
                                       crossAxisAlignment:
@@ -722,15 +733,15 @@ class _AdminStudentsScreen1ListviewState
                                                                       updateText =
                                                                           inputText;
                                                                     }
-                                                                    d[id]![e.key] =
+                                                                    d[id]!.data[
+                                                                            e.key] =
                                                                         updateText;
                                                                     inputText
                                                                         .split(
                                                                             ',')
                                                                         .length = 0;
-                                                                    updateStudentToFirestoreAsAdmin(Student(
-                                                                            data: d[
-                                                                                id]!))
+                                                                    updateStudentToFirestoreAsAdmin(d[
+                                                                            id]!)
                                                                         .then(
                                                                             (context) {
                                                                       Future.delayed(
@@ -768,7 +779,7 @@ class _AdminStudentsScreen1ListviewState
                                         ),
                                       ),
                                       child: CalendarBody(
-                                          user: Student(data: doc),
+                                          user: d[id]!,
                                           isAdmin: true,
                                           updated: (_) {
                                             Future.delayed(
@@ -870,15 +881,13 @@ class _AdminStudentsScreen1ListviewState
                                                               updateText =
                                                                   inputText;
                                                             }
-                                                            d[id]![e.key] =
+                                                            d[id]!.data[e.key] =
                                                                 updateText;
                                                             inputText
                                                                 .split(',')
                                                                 .length = 0;
                                                             updateStudentToFirestoreAsAdmin(
-                                                                    Student(
-                                                                        data: d[
-                                                                            id]!))
+                                                                    d[id]!)
                                                                 .then(
                                                                     (context) {
                                                               Future.delayed(
@@ -948,17 +957,25 @@ class _AdminStudentsScreen1ListviewState
 
   filterData(_) {
     searchedData.clear();
-    Map<String, Map<String, dynamic>> temp = Map.from(userData);
+    Map<String, Student> temp = Map.from(userData);
     if (controller.text.isNotEmpty) {
       var removes = <String>{};
       temp.forEach((k, v) {
+        bool hasValue = false;
+        for (var v2 in v.lectures!.values) {
+          if ((v2.data['tutor'] ?? '')
+              .toLowerCase()
+              .contains(controller.text.toLowerCase())) hasValue = true;
+        }
         if (!(k.contains(controller.text) ||
-            v['name'].contains(controller.text) ||
-            (((v['tutor'] ?? '').toLowerCase())
+            v.data['name'].contains(controller.text) ||
+            (((v.data['trialTutor'] ?? '').toLowerCase())
                 .contains(controller.text.toLowerCase())) ||
-            (((v['trialTutor'] ?? '').toLowerCase())
-                .contains(controller.text.toLowerCase())))) removes.add(k);
+            hasValue == true)) {
+          removes.add(k);
+        }
       });
+
       for (var e in removes) {
         temp.remove(e);
       }
@@ -989,11 +1006,24 @@ class _AdminStudentsScreen1ListviewState
 
   Future<void> updateStudentToFirestoreAsAdmin(Student updatedStudent) async {
     try {
+      // currentUser = FirebaseAuth.instance.currentUser;
+      // if (currentUser != null) {
       // Google Sheets에서 기존 사용자 데이터 가져오기
       FirebaseFirestore.instance
           .collection('users')
+          // .doc(currentUser!.email)
           .doc(updatedStudent.data['email'])
           .set(updatedStudent.data);
+      for (var e in (updatedStudent.lectures ?? {}).entries) {
+        FirebaseFirestore.instance
+            .collection('users')
+            // .doc(currentUser!.email)
+            .doc(updatedStudent.data['email'])
+            .collection('lectures')
+            .doc(e.key)
+            .set(e.value.data);
+      }
+      // }
     } catch (e) {
       if (kDebugMode) {
         print('Student 데이터 업데이트 중 오류 발생: $e');
@@ -1006,5 +1036,31 @@ class _AdminStudentsScreen1ListviewState
         .difference(DateTime.tryParse(usersBirthDate) ?? DateTime.now())
         .abs();
     return "${parse.inDays ~/ 360}";
+  }
+
+  Future<Student> getStudentFromFirestore(String email) async {
+    try {
+      var values =
+          await FirebaseFirestore.instance.collection('users').doc(email).get();
+      // print(response.values);
+      Map<String, Lecture>? lectures = {};
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(email)
+          .collection('lectures')
+          .get()
+          .then((value) {
+        for (var i in value.docs) {
+          lectures[i.id] = Lecture(data: i.data());
+        }
+      });
+      // return Student.transform(data: values.data()!, lectureName: 'lecture2');
+      return Student(data: values.data()!, lectures: lectures);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Firestore에서 Student 가져오는 중 오류 발생: $e');
+      }
+    }
+    throw Exception('Student를 찾을 수 없습니다.');
   }
 }
