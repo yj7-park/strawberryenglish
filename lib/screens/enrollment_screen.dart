@@ -19,8 +19,8 @@ class EnrollmentScreen extends StatefulWidget {
   final TextEditingController birthDateController = TextEditingController();
 
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController lessonDayController = TextEditingController();
-  final TextEditingController lessonTimeController = TextEditingController();
+  final TextEditingController requestDayController = TextEditingController();
+  final TextEditingController requestTimeController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
   final TextEditingController skypeIdController = TextEditingController();
   final TextEditingController studyPurposeController = TextEditingController();
@@ -86,10 +86,10 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       snapshot.data!.data['referralSource'] ?? '';
                   widget.lessonStartDateController.text =
                       snapshot.data!.data['lessonStartDate'] ?? '';
-                  widget.lessonDayController.text =
-                      snapshot.data!.data['lessonDay'] ?? '';
-                  widget.lessonTimeController.text =
-                      snapshot.data!.data['lessonTime'] ?? '';
+                  widget.requestDayController.text =
+                      snapshot.data!.data['requestDay'] ?? '';
+                  widget.requestTimeController.text =
+                      snapshot.data!.data['requestTime'] ?? '';
                   widget.cashReceiptNumberController.text =
                       snapshot.data!.data['cashReceiptNumber'] ?? '';
                   return ListView(
@@ -114,8 +114,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       EnrollmentScreen1Input(
                         lessonStartDateController:
                             widget.lessonStartDateController,
-                        lessonDayController: widget.lessonDayController,
-                        lessonTimeController: widget.lessonTimeController,
+                        requestDayController: widget.requestDayController,
+                        requestTimeController: widget.requestTimeController,
                       ),
                       EnrollmentScreen2PaymentInput(
                         cashReceiptNumberController:
@@ -125,8 +125,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         nameController: widget.nameController,
                         birthDateController: widget.birthDateController,
                         phoneNumberController: widget.phoneNumberController,
-                        lessonDayController: widget.lessonDayController,
-                        lessonTimeController: widget.lessonTimeController,
+                        requestDayController: widget.requestDayController,
+                        requestTimeController: widget.requestTimeController,
                         countryController: widget.countryController,
                         skypeIdController: widget.skypeIdController,
                         studyPurposeController: widget.studyPurposeController,

@@ -69,14 +69,14 @@ class EnrollmentScreen1Input extends StatefulWidget {
   );
 
   final TextEditingController lessonStartDateController;
-  final TextEditingController lessonDayController;
-  final TextEditingController lessonTimeController;
+  final TextEditingController requestDayController;
+  final TextEditingController requestTimeController;
 
   const EnrollmentScreen1Input({
     super.key,
     required this.lessonStartDateController,
-    required this.lessonDayController,
-    required this.lessonTimeController,
+    required this.requestDayController,
+    required this.requestTimeController,
   });
 
   @override
@@ -187,15 +187,17 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
             ),
             const SizedBox(height: 30),
             TextFormField(
-              controller: widget.lessonDayController,
+              controller: widget.requestDayController,
               decoration: InputDecoration(
                 labelText: '*희망 수업 요일',
                 hintText: 'ex) 월, 수, 금',
                 border: const OutlineInputBorder(),
-                enabledBorder: myOutlineInputBorder(widget.lessonDayController),
-                focusedBorder: myOutlineInputBorder(widget.lessonDayController),
+                enabledBorder:
+                    myOutlineInputBorder(widget.requestDayController),
+                focusedBorder:
+                    myOutlineInputBorder(widget.requestDayController),
                 labelStyle: TextStyle(
-                  color: widget.lessonDayController.text.isEmpty
+                  color: widget.requestDayController.text.isEmpty
                       ? Colors.redAccent
                       : Colors.black,
                 ),
@@ -208,17 +210,17 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
             const Text('* 평일 수업만 가능합니다.'),
             const SizedBox(height: 30),
             TextFormField(
-              controller: widget.lessonTimeController,
+              controller: widget.requestTimeController,
               decoration: InputDecoration(
                 labelText: '*희망 수업 시간',
                 hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
                 border: const OutlineInputBorder(),
                 enabledBorder:
-                    myOutlineInputBorder(widget.lessonTimeController),
+                    myOutlineInputBorder(widget.requestTimeController),
                 focusedBorder:
-                    myOutlineInputBorder(widget.lessonTimeController),
+                    myOutlineInputBorder(widget.requestTimeController),
                 labelStyle: TextStyle(
-                  color: widget.lessonTimeController.text.isEmpty
+                  color: widget.requestTimeController.text.isEmpty
                       ? Colors.redAccent
                       : Colors.black,
                 ),
