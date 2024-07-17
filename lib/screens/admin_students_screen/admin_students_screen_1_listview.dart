@@ -515,11 +515,12 @@ class _AdminStudentsScreen1ListviewState
                                           MainAxisAlignment.center,
                                       children: [
                                         InkWell(
-                                          child: Container(
+                                          child: SizedBox(
                                             width: 20,
                                             height: double.infinity,
                                             child: Padding(
-                                              padding: EdgeInsets.only(top: 10),
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
                                               child: RotatedBox(
                                                 quarterTurns: 1,
                                                 child: Text(
@@ -592,7 +593,7 @@ class _AdminStudentsScreen1ListviewState
                                                       Text(
                                                         customData[id]![
                                                             'functionTabMessage'],
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                           color: Colors.red,
                                                         ),
                                                       ),
@@ -623,8 +624,8 @@ class _AdminStudentsScreen1ListviewState
                                                                   'Text copied to Clipboard';
                                                             });
                                                           }),
-                                                          child:
-                                                              Text('신청 정보 복사'),
+                                                          child: const Text(
+                                                              '신청 정보 복사'),
                                                         ),
                                                       // 체험신청
                                                       if ((customData[id]![
@@ -651,8 +652,8 @@ class _AdminStudentsScreen1ListviewState
                                                                   'Text copied to Clipboard';
                                                             });
                                                           }),
-                                                          child:
-                                                              Text('신청 정보 복사'),
+                                                          child: const Text(
+                                                              '신청 정보 복사'),
                                                         ),
                                                       ...[
                                                         for (var ic
@@ -901,11 +902,12 @@ class _AdminStudentsScreen1ListviewState
                                             ),
                                           ),
                                         InkWell(
-                                          child: Container(
+                                          child: SizedBox(
                                             width: 20,
                                             height: double.infinity,
                                             child: Padding(
-                                              padding: EdgeInsets.only(top: 10),
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
                                               child: RotatedBox(
                                                 quarterTurns: 1,
                                                 child: Text(

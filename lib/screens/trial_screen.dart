@@ -98,7 +98,7 @@ class _TrialScreenState extends State<TrialScreen> {
                       const MyHeader('체험하기'),
                       // 커버 페이지
                       if (isFinished) ...[
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Text(
                           """
 무료 체험은 계정당 1회만 신청 가능합니다.
@@ -176,7 +176,7 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

@@ -80,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

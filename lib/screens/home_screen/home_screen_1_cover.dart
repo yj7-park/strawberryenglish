@@ -1,5 +1,6 @@
 // import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:strawberryenglish/themes/my_theme.dart';
 
 class HomeScreen1Cover extends StatefulWidget {
   const HomeScreen1Cover({
@@ -46,7 +47,7 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
           fit: BoxFit.cover,
           // fit: BoxFit.fitWidth,
           width: double.infinity,
-          height: (screenWidth * 0.5).clamp(0, screenHeight * 0.8), // 적당한 높이 조절
+          height: (screenWidth * 0.5).clamp(0, screenHeight * 0.6), // 적당한 높이 조절
           colorBlendMode: BlendMode.darken,
           color: Colors.black38,
         ),
@@ -65,32 +66,61 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
         // ),
         // 텍스트
         Positioned.fill(
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Better Life for Tutors and Students',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: (screenWidth * 0.05).clamp(14, 48),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                '좋은 수업은 좋은 튜터로부터',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: (screenWidth * 0.03).clamp(14, 24),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "딸기영어가 자신있는 이유 '3분'이면 확인 가능합니다.",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: (screenWidth * 0.03).clamp(14, 24),
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Better Life for Tutors and Students',
+                    style: TextStyle(
+                      color: Colors.white,
+                      // color: customTheme.colorScheme.secondary,
+                      fontSize: (screenWidth * 0.04).clamp(14, 60),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  // Text(
+                  //   '좋은 수업은 좋은 튜터로부터',
+                  //   style: TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: (screenWidth * 0.03).clamp(14, 24),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 8),
+                  Text(
+                    "딸기영어가 자신있는 이유",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: (screenWidth * 0.025).clamp(14, 30),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "'3분'",
+                        style: TextStyle(
+                          color: customTheme.colorScheme.secondary,
+                          fontSize: (screenWidth * 0.025).clamp(14, 30) + 3,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        " 이면 확인 가능합니다.",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: (screenWidth * 0.025).clamp(14, 30),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

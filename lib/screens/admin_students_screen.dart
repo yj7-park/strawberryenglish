@@ -49,7 +49,7 @@ class AdminStudentsScreen extends StatelessWidget {
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

@@ -49,7 +49,7 @@ class LecturesScreen extends StatelessWidget {
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

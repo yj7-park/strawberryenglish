@@ -1,12 +1,9 @@
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
-import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
-import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
-import 'package:strawberryenglish/themes/my_theme.dart';
 
 class EnrollmentScreen2PaymentInput extends StatefulWidget {
   final TextEditingController cashReceiptNumberController;

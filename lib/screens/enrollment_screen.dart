@@ -168,7 +168,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

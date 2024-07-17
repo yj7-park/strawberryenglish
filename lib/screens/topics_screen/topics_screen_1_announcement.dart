@@ -3,8 +3,6 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class TopicsScreen1Announcement extends StatelessWidget {
-  final String videoId = 'f8aIT__EL70'; // TODO: youtube 영상 ID 추가
-
   const TopicsScreen1Announcement({
     super.key,
   });

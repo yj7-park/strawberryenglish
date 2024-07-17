@@ -49,7 +49,7 @@ class AnnouncementScreen extends StatelessWidget {
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class IntroductionScreen1Text extends StatelessWidget {
-  final String videoId = 'f8aIT__EL70'; // TODO: youtube 영상 ID 추가
-
   const IntroductionScreen1Text({super.key});
 
   @override

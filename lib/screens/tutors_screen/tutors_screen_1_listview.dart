@@ -63,12 +63,13 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
             var id = data.keys.elementAt(index);
             var doc = data[id]!;
 
-            var name = doc['name'];
-            var score = doc['score'];
-            var license = doc['license'];
-            var body = doc['body'].join('\n\n');
-            var calendar = doc['calendar'];
-            var youtube = doc['youtube'];
+            var name = doc['name'] ?? '';
+            // var score = doc['score'] ?? '';
+            var url = doc['url'] ?? '';
+            var license = doc['license'] ?? '';
+            var body = (doc['body'] ?? []).join('\n\n');
+            // var calendar = doc['calendar'];
+            var youtube = doc['youtube'] ?? '';
 
             return Card(
               margin: EdgeInsets.zero,
@@ -89,37 +90,57 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                 // tileColor: Colors.white,
                 title: Builder(
                   builder: (context) {
-                    var image = Image.asset(
-                      'assets/images/tutors/$name.png',
+                    var image = Container(
                       width: isMobile ? 150 : 200,
-                    );
-                    var score_name = [
-                      Text(
-                        "★ $score",
-                        style: TextStyle(
-                          color: customTheme.colorScheme.secondary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      height: isMobile ? 150 : 200,
+                      padding: const EdgeInsets.all(2), // Border width
+                      decoration: const BoxDecoration(
+                          color: Colors.amber, shape: BoxShape.circle),
+                      child: ClipOval(
+                        child: SizedBox.fromSize(
+                          // size: Size.fromRadius(48), // Image radius
+                          child: url.isNotEmpty
+                              ? Image.network(url, fit: BoxFit.cover)
+                              : const Spacer(),
                         ),
                       ),
+                    );
+                    // var image = Image.asset(
+                    //   'assets/images/tutors/$name.png',
+                    //   width: isMobile ? 150 : 200,
+                    // );
+                    var scoreName = [
+                      // Text(
+                      //   "★ $score",
+                      //   style: TextStyle(
+                      //     color: customTheme.colorScheme.secondary,
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                       Text(
                         name,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ];
-                    var license_body = [
+                    var licenseBody = [
                       Text(
                         license,
                         style: const TextStyle(
-                          color: Colors.grey,
+                          fontSize: 16,
+                          color: Colors.black26,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         body,
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: widget.controllers[index] ? 100 : 3,
                       ),
@@ -134,8 +155,8 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ...score_name,
-                                    ...license_body,
+                                    ...scoreName,
+                                    ...licenseBody,
                                   ],
                                 ),
                               ),
@@ -151,11 +172,11 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [...score_name],
+                                    children: [...scoreName],
                                   ),
                                 ],
                               ),
-                              ...license_body,
+                              ...licenseBody,
                             ],
                           );
                   },
@@ -224,21 +245,21 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
     );
   }
 
-  CalendarDataSource _getCalendarDataSource(calendar) {
-    List<Appointment> appointments = [];
+  // CalendarDataSource _getCalendarDataSource(calendar) {
+  //   List<Appointment> appointments = [];
 
-    for (Timestamp time in calendar) {
-      var date = time.toDate();
-      appointments.add(
-        Appointment(
-          startTime: date,
-          endTime: date.add(const Duration(minutes: 29)),
-          color: Colors.grey,
-        ),
-      );
-    }
-    return MyDataSource(appointments);
-  }
+  //   for (Timestamp time in calendar) {
+  //     var date = time.toDate();
+  //     appointments.add(
+  //       Appointment(
+  //         startTime: date,
+  //         endTime: date.add(const Duration(minutes: 29)),
+  //         color: Colors.grey,
+  //       ),
+  //     );
+  //   }
+  //   return MyDataSource(appointments);
+  // }
 }
 
 class MyDataSource extends CalendarDataSource {

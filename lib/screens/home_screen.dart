@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        drawer: MyDrawer(),
+        drawer: const MyDrawer(),
       ),
     );
   }

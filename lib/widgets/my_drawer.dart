@@ -156,26 +156,26 @@ class _MyDrawerState extends State<MyDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      MyDrawerTile(context, '딸기영어', '/introduction',
+                      myDrawerTile(context, '딸기영어', '/introduction',
                           highlight: true),
-                      MyDrawerTile(context, '뭐가달라?', '/introduction'),
-                      MyDrawerTile(context, '공지사항', '/announcement'),
+                      myDrawerTile(context, '뭐가달라?', '/introduction'),
+                      myDrawerTile(context, '공지사항', '/announcement'),
                       const SizedBox(height: 20),
-                      MyDrawerTile(context, '수업안내', '/lectures',
+                      myDrawerTile(context, '수업안내', '/lectures',
                           highlight: true),
-                      MyDrawerTile(context, '수강안내', '/lectures'),
-                      MyDrawerTile(context, '수업토픽', '/topics'),
-                      MyDrawerTile(context, '튜터소개', '/tutors'),
-                      MyDrawerTile(context, '수강료', '/tuitionfee'),
-                      MyDrawerTile(context, 'FAQ', '/faq'),
+                      myDrawerTile(context, '수강안내', '/lectures'),
+                      myDrawerTile(context, '수업토픽', '/topics'),
+                      myDrawerTile(context, '튜터소개', '/tutors'),
+                      myDrawerTile(context, '수강료', '/tuitionfee'),
+                      myDrawerTile(context, 'FAQ', '/faq'),
                       const SizedBox(height: 20),
-                      MyDrawerTile(context, '딸기후기', '/feedbacks',
+                      myDrawerTile(context, '딸기후기', '/feedbacks',
                           highlight: true),
                       if (isAdmin) ...[
                         const SizedBox(height: 20),
-                        MyDrawerTile(context, '🛠관리자메뉴', '/admin_students',
+                        myDrawerTile(context, '🛠관리자메뉴', '/admin_students',
                             highlight: true),
-                        MyDrawerTile(context, '🛠학생정보', '/admin_students'),
+                        myDrawerTile(context, '🛠학생정보', '/admin_students'),
                       ],
                       const SizedBox(height: 75),
                     ],
@@ -261,7 +261,7 @@ class _MyDrawerState extends State<MyDrawer> {
   }
 }
 
-Widget MyDrawerTile(context, text, url, {highlight = false}) {
+Widget myDrawerTile(context, text, url, {highlight = false}) {
   return ListTile(
     dense: true,
     title: Text(
