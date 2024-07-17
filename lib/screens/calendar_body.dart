@@ -18,11 +18,8 @@ class CalendarBody extends StatefulWidget {
   CalendarBodyState createState() => CalendarBodyState();
 }
 
-class CalendarBodyState extends State<CalendarBody>
-    with SingleTickerProviderStateMixin {
+class CalendarBodyState extends State<CalendarBody> {
   late CalendarController calendarController;
-  late TabController tabController;
-
   String selectedHoldStartDate = '';
   DateTime selectedDate = DateTime.now();
   bool isBottomSheetOpened = false;
@@ -30,26 +27,8 @@ class CalendarBodyState extends State<CalendarBody>
   @override
   void initState() {
     super.initState();
-
-    var lectures = widget.user.lectures ?? {};
-
     calendarController = CalendarController();
     calendarController.selectedDate = DateTime.now();
-
-    tabController = TabController(
-      length: lectures.length,
-      vsync: this,
-      // initialIndex: 0,
-
-      /// 탭 변경 애니메이션 시간
-      animationDuration: const Duration(milliseconds: 800),
-    );
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
   }
 
   @override
@@ -57,7 +36,6 @@ class CalendarBodyState extends State<CalendarBody>
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     bool isMobile = screenWidth < 1000 || widget.updated != null;
-    var lectures = widget.user.lectures ?? {};
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: widget.updated == null
@@ -65,53 +43,27 @@ class CalendarBodyState extends State<CalendarBody>
             : 20,
         vertical: widget.updated == null ? 50.0 : 20,
       ),
-      child: DefaultTabController(
-        length: lectures.length,
-        child: SizedBox(
-          // TODO: 적절한 높이 값 지정 필요
-          height: 1000,
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              // 장기 홀드 날짜 지정 중에는 탭을 바꿀 수 없도록 (오작동 방지)
-              title: IgnorePointer(
-                ignoring: selectedHoldStartDate.isNotEmpty,
-                child: TabBar(
-                  isScrollable: true,
-                  controller: tabController,
-                  tabs: lectures.keys.map((k) => Tab(text: k)).toList(),
-                ),
-              ),
-            ),
-            body: TabBarView(
-              controller: tabController,
-              children: lectures.values
-                  .map(
-                    (lecture) => SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          // 수업 중인 상태
-                          if ((lecture.data['tutor'] ?? '').isNotEmpty) ...[
-                            const Divider(),
-                            // 여기에 사용자 정보를 보여주는 위젯 추가
-                            _buildStudentDetails(
-                                lecture, screenHeight > 1000, isMobile),
-                            const Divider(),
-                            _buildCalendar(lecture),
-                          ]
-                          // 수강 신청 중인 상태
-                          else if ((lecture.data['lessonEndDate'] ?? '')
-                              .isNotEmpty) ...[
-                            const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
-                            const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
-                            const Text(
-                                '신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
-                          ]
-                          // 체험 중인 상태
-                          else if ((lecture.data['trialTutor'] ?? '')
-                              .isNotEmpty) ...[
-                            Text(
-                              """
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // 수업 중인 상태
+            if (widget.user.data.containsKey('tutor')) ...[
+              const Divider(),
+              // 여기에 사용자 정보를 보여주는 위젯 추가
+              _buildStudentDetails(screenHeight > 1000, isMobile),
+              const Divider(),
+              _buildCalendar(),
+            ]
+            // 수강 신청 중인 상태
+            else if (widget.user.data.containsKey('lessonEndDate')) ...[
+              const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
+              const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
+              const Text('신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
+            ]
+            // 체험 중인 상태
+            else if ((widget.user.data['trialTutor'] ?? '').isNotEmpty) ...[
+              Text(
+                """
 *체험 수업 확정
 
 ${widget.user.data['name']} 님의 체험 수업이 확정되었습니다 :)
@@ -129,36 +81,28 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
 
 감사합니다.
 Enjoy your English with 🍓""",
-                              textAlign: TextAlign.center,
-                            ),
-                          ]
-                          // 체험 신청 중인 상태
-                          else if ((lecture.data['trialDay'] ?? '')
-                              .isNotEmpty) ...[
-                            const Text('체험 수업 신청이 완료되어, 일정을 확인 중입니다.'),
-                            const Text('체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
-                            const Text(
-                                '신청 정보 수정이 필요하시면 [체험하기] 버튼을 눌러 수정하실 수 있습니다.'),
-                          ]
-                          // 회원 가입만 된 상태
-                          else ...[
-                            const Text('딸기영어에 오신 것을 환영합니다.'),
-                            const Text('[체험하기] 버튼을 눌러 체험 수업을 신청하시거나,'),
-                            const Text('[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.'),
-                          ],
-                        ],
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
+                textAlign: TextAlign.center,
+              ),
+            ]
+            // 체험 신청 중인 상태
+            else if (widget.user.data.containsKey('trialDay')) ...[
+              const Text('체험 수업 신청이 완료되어, 일정을 확인 중입니다.'),
+              const Text('체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
+              const Text('신청 정보 수정이 필요하시면 [체험하기] 버튼을 눌러 수정하실 수 있습니다.'),
+            ]
+            // 회원 가입만 된 상태
+            else ...[
+              const Text('딸기영어에 오신 것을 환영합니다.'),
+              const Text('[체험하기] 버튼을 눌러 체험 수업을 신청하시거나,'),
+              const Text('[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.'),
+            ],
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildStudentDetails(Lecture lecture, bool isExpanded, bool isMobile) {
+  Widget _buildStudentDetails(bool isExpanded, bool isMobile) {
     return ExpansionTile(
         // backgroundColor: Color.fromARGB(255, 246, 246, 246),
         // collapsedBackgroundColor: Color.fromARGB(255, 246, 246, 246),
@@ -191,7 +135,7 @@ Enjoy your English with 🍓""",
         //       child: Column(
         //         crossAxisAlignment: CrossAxisAlignment.start,
         //         children: [
-        //           _buildInfoRow('수업 시간', lecture.data['lessonTime']),
+        //           _buildInfoRow('수업 시간', widget.user.data['lessonTime']),
         //         ],
         //       ),
         //     ),
@@ -199,7 +143,7 @@ Enjoy your English with 🍓""",
         //       child: Column(
         //         crossAxisAlignment: CrossAxisAlignment.start,
         //         children: [
-        //           // _buildInfoRow('수업 요일', lecture.data['lessonDay']),
+        //           // _buildInfoRow('수업 요일', widget.user.data['lessonDay']),
         //           _buildInfoRow('적립금',
         //               '${NumberFormat("###,###").format(widget.user.data['points'] ?? 0)} 원'),
         //         ],
@@ -213,13 +157,13 @@ Enjoy your English with 🍓""",
             child:
                 // const SizedBox(height: 10),
                 // _buildEarningInfo(student),
-                _buildLessonInfo(lecture, isMobile),
+                _buildLessonInfo(isMobile),
             // _buildActionButtons(widget.user),
           ),
         ]);
   }
 
-  Widget _buildCalendar(Lecture lecture) {
+  Widget _buildCalendar() {
     return SizedBox(
       height: 430,
       child: Localizations.override(
@@ -232,7 +176,7 @@ Enjoy your English with 🍓""",
           //   borderRadius: BorderRadius.circular(10), // 모서리 반경
           // ),
           showNavigationArrow: true,
-          dataSource: _getCalendarDataSource(lecture),
+          dataSource: _getCalendarDataSource(),
           controller: calendarController,
           showDatePickerButton: true,
           headerDateFormat: 'yyyy년 M월', // 원하는 형식으로 지정
@@ -255,34 +199,32 @@ Enjoy your English with 🍓""",
             ),
           ),
           // monthCellBuilder: _buildMonthCell,
-          onTap: ((details) {
-            if (selectedHoldStartDate.isEmpty) {
-              _buildOnTapWidget(lecture, details);
-            } else {
-              // 장기 홀드 끝날짜 선택
-              DateTime startDate =
-                  DateTime.parse(selectedHoldStartDate.replaceAll('. ', '-'));
-              if (details.date!.isAfter(startDate) ||
-                  details.date!.isAtSameMomentAs(startDate)) {
-                String formattedDate =
-                    DateFormat('yyyy-MM-dd').format(details.date!);
-                lecture.data['holdRequestDates']
-                    .add('$selectedHoldStartDate~$formattedDate');
-                lecture.data['holdCountLeft'] =
-                    lecture.data['holdCountLeft'] - 1;
-                selectedHoldStartDate = '';
-                _bottomSheetController?.close();
-                _updateLastLessonDate(lecture);
-                Provider.of<StudentProvider>(context, listen: false)
-                    .updateStudentToFirestoreWithMap(widget.user)
-                    .then((context) {
-                  setState(() {
-                    if (widget.updated != null) widget.updated!('');
-                  });
-                });
-              }
-            }
-          }),
+          onTap: selectedHoldStartDate.isEmpty
+              ? _buildOnTapWidget
+              : // 장기 홀드 끝날짜 선택
+              (details) {
+                  DateTime startDate = DateTime.parse(
+                      selectedHoldStartDate.replaceAll('. ', '-'));
+                  if (details.date!.isAfter(startDate) ||
+                      details.date!.isAtSameMomentAs(startDate)) {
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(details.date!);
+                    widget.user.data['holdRequestDates']
+                        .add('$selectedHoldStartDate~$formattedDate');
+                    widget.user.data['holdCountLeft'] =
+                        widget.user.data['holdCountLeft'] - 1;
+                    selectedHoldStartDate = '';
+                    _bottomSheetController?.close();
+                    _updateLastLessonDate();
+                    Provider.of<StudentProvider>(context, listen: false)
+                        .updateStudentToFirestoreWithMap(widget.user)
+                        .then((context) {
+                      setState(() {
+                        if (widget.updated != null) widget.updated!('');
+                      });
+                    });
+                  }
+                },
         ),
       ),
     );
@@ -297,7 +239,7 @@ Enjoy your English with 🍓""",
 //   );
 // }
 
-  Widget _buildLessonInfo(Lecture lecture, bool isMobile) {
+  Widget _buildLessonInfo(bool isMobile) {
     return Column(
       children: [
         Row(
@@ -305,11 +247,11 @@ Enjoy your English with 🍓""",
               isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
             _buildInfoRow('이름', '${widget.user.data['name']}', isMobile),
-            _buildInfoRow('튜터', lecture.data['tutor'] ?? '', isMobile),
-            // _buildInfoRow('토픽', lecture.data['topic'] ?? ''),
+            _buildInfoRow('튜터', widget.user.data['tutor'] ?? '', isMobile),
+            // _buildInfoRow('토픽', widget.user.data['topic'] ?? ''),
             _buildInfoRow(
                 '토픽',
-                '${lecture.data['program'] ?? ''}\n${lecture.data['topic'] ?? ''}',
+                '${widget.user.data['program'] ?? ''}\n(${widget.user.data['topic'] ?? ''})',
                 isMobile),
           ],
         ),
@@ -318,14 +260,13 @@ Enjoy your English with 🍓""",
           crossAxisAlignment:
               isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
-            _buildInfoRow('수업 시간', lecture.data['lessonTime'] ?? '', isMobile),
+            _buildInfoRow('수업 시간', widget.user.data['lessonTime'], isMobile),
             _buildInfoRow(
-                '수업 시작일', lecture.data['lessonStartDate'] ?? '', isMobile),
+                '수업 시작일', widget.user.data['lessonStartDate'], isMobile),
             _buildInfoRow(
                 '수업 종료일',
-                lecture.data['modifiedLessonEndDate'] ??
-                    lecture.data['lessonEndDate'] ??
-                    '',
+                widget.user.data['modifiedLessonEndDate'] ??
+                    widget.user.data['lessonEndDate'],
                 isMobile),
           ],
         ),
@@ -334,15 +275,15 @@ Enjoy your English with 🍓""",
           crossAxisAlignment:
               isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
-            _buildInfoRow(
-                '수업 취소', '${lecture.data['cancelCountLeft'] ?? 0}회', isMobile
+            _buildInfoRow('수업 취소',
+                '${widget.user.data['cancelCountLeft'] ?? 0}회', isMobile
                 // '수업 취소 (잔여/전체)',
-                // '${lecture.data['cancelCountLeft']}회 / ${lecture.data['cancelCountTotal']}회',
+                // '${widget.user.data['cancelCountLeft']}회 / ${widget.user.data['cancelCountTotal']}회',
                 ),
             _buildInfoRow(
-                '장기 홀드', '${lecture.data['holdCountLeft'] ?? 0}회', isMobile
+                '장기 홀드', '${widget.user.data['holdCountLeft'] ?? 0}회', isMobile
                 // '장기 홀드 (잔여/전체)',
-                // '${lecture.data['holdCountLeft']}회 / ${lecture.data['holdCountTotal']}회',
+                // '${widget.user.data['holdCountLeft']}회 / ${widget.user.data['holdCountTotal']}회',
                 ),
             _buildInfoRow(
                 '적립금',
@@ -395,11 +336,11 @@ Enjoy your English with 🍓""",
     );
   }
 
-  CalendarDataSource _getCalendarDataSource(Lecture lecture) {
+  CalendarDataSource _getCalendarDataSource() {
     List<Appointment> appointments = [];
 
     // modifiedLessonEndDate 계산
-    _updateLastLessonDate(lecture);
+    _updateLastLessonDate();
 
     DateTime lessonStartDate;
     DateTime lastLessonDate;
@@ -410,10 +351,10 @@ Enjoy your English with 🍓""",
     List<dynamic> holdDates = [];
     List<dynamic> holdRequestDates = [];
     try {
-      lessonStartDate =
-          DateTime.parse(lecture.data['lessonStartDate'].replaceAll('. ', '-'));
+      lessonStartDate = DateTime.parse(
+          widget.user.data['lessonStartDate'].replaceAll('. ', '-'));
       lastLessonDate = DateTime.parse(
-          lecture.data['modifiedLessonEndDate'].replaceAll('. ', '-'));
+          widget.user.data['modifiedLessonEndDate'].replaceAll('. ', '-'));
     } catch (e) {
       if (kDebugMode) {
         print('lessonStartDate / modifiedLessonEndDate parsing failed. $e');
@@ -422,11 +363,11 @@ Enjoy your English with 🍓""",
     }
 
     // lessonTime 파싱
-    lessonDates = _getLessonDatesFromLessonTime(lecture.data['lessonTime']);
+    lessonDates = _getLessonDatesFromLessonTime(widget.user.data['lessonTime']);
 
-    if (lecture.data.containsKey('cancelDates')) {
+    if (widget.user.data.containsKey('cancelDates')) {
       try {
-        cancelDates = lecture.data['cancelDates']
+        cancelDates = widget.user.data['cancelDates']
             .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
             .toList();
       } catch (e) {
@@ -435,9 +376,9 @@ Enjoy your English with 🍓""",
         }
       }
     }
-    if (lecture.data.containsKey('tutorCancelDates')) {
+    if (widget.user.data.containsKey('tutorCancelDates')) {
       try {
-        tutorCancelDates = lecture.data['tutorCancelDates']
+        tutorCancelDates = widget.user.data['tutorCancelDates']
             .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
             .toList();
       } catch (e) {
@@ -446,9 +387,9 @@ Enjoy your English with 🍓""",
         }
       }
     }
-    if (lecture.data.containsKey('cancelRequestDates')) {
+    if (widget.user.data.containsKey('cancelRequestDates')) {
       try {
-        cancelRequestDates = lecture.data['cancelRequestDates']
+        cancelRequestDates = widget.user.data['cancelRequestDates']
             .map((element) => DateTime.parse(element.replaceAll('. ', '-')))
             .toList();
       } catch (e) {
@@ -457,11 +398,11 @@ Enjoy your English with 🍓""",
         }
       }
     }
-    if (lecture.data.containsKey('holdDates')) {
+    if (widget.user.data.containsKey('holdDates')) {
       try {
         List<DateTime> parsedHoldDates = [];
 
-        for (String range in lecture.data['holdDates']) {
+        for (String range in widget.user.data['holdDates']) {
           List<String> dateParts =
               range.split('~').map((e) => e.trim()).toList();
           if (dateParts.length == 2) {
@@ -488,9 +429,9 @@ Enjoy your English with 🍓""",
         }
       }
     }
-    if (lecture.data.containsKey('holdRequestDates')) {
+    if (widget.user.data.containsKey('holdRequestDates')) {
       try {
-        for (String range in lecture.data['holdRequestDates']) {
+        for (String range in widget.user.data['holdRequestDates']) {
           List<String> dateParts =
               range.split('~').map((e) => e.trim()).toList();
           if (dateParts.length == 2) {
@@ -540,14 +481,14 @@ Enjoy your English with 🍓""",
           appointmentColor = Colors.red.shade900;
           subject = '[수업 취소] 튜터 취소';
         } else if (cancelRequestDates.contains(currentLessonDate)) {
-          appointmentColor = Colors.red.shade200;
-          subject = '[수업 취소 요청 중]';
-        } else if (holdDates.contains(currentLessonDate)) {
           appointmentColor = Colors.orange;
+          subject = '[수업 취소중]';
+        } else if (holdDates.contains(currentLessonDate)) {
+          appointmentColor = Colors.grey;
           subject = '[장기 홀드]';
         } else if (holdRequestDates.contains(currentLessonDate)) {
-          appointmentColor = Colors.orange.shade200;
-          subject = '[장기 홀드 요청 중]';
+          appointmentColor = Colors.orange;
+          subject = '[장기 홀드중]';
         } else {
           appointmentColor = Colors.blue;
           subject =
@@ -725,7 +666,7 @@ Enjoy your English with 🍓""",
 
   PersistentBottomSheetController? _bottomSheetController;
 
-  void _buildOnTapWidget(Lecture lecture, CalendarTapDetails details) {
+  void _buildOnTapWidget(CalendarTapDetails details) {
     if (selectedDate == details.date! && isBottomSheetOpened) {
       _bottomSheetController?.close();
       isBottomSheetOpened = false;
@@ -749,7 +690,7 @@ Enjoy your English with 🍓""",
             isBottomSheetOpened = true;
             return Column(
               mainAxisSize: MainAxisSize.min,
-              children: _buildLessonCancelMenu(lecture, details),
+              children: _buildLessonCancelMenu(details),
             );
           },
         );
@@ -759,7 +700,7 @@ Enjoy your English with 🍓""",
     }
   }
 
-  dynamic _buildLessonCancelMenu(Lecture lecture, CalendarTapDetails details) {
+  dynamic _buildLessonCancelMenu(CalendarTapDetails details) {
     String message = '';
     List<(String, String, IconData, MaterialAccentColor, bool)> buttonText = [];
 
@@ -774,7 +715,7 @@ Enjoy your English with 🍓""",
           message = '해당 일자의 수업은 학생의 요청에 의해 취소 처리되었습니다.\n재개를 원하시면 관리자에게 문의하세요.';
           if (widget.isAdmin == true) {
             buttonText.add((
-              '🛡수업 취소 신청 해제 (학생 취소)',
+              '🛡수업 재개 (학생 취소)',
               '',
               Icons.play_circle_outlined,
               Colors.indigoAccent,
@@ -785,17 +726,17 @@ Enjoy your English with 🍓""",
           message = '해당 일자의 수업은 튜터에 의해 취소 처리되었습니다.\n자세한 내용은 관리자에게 문의하세요.';
           if (widget.isAdmin == true) {
             buttonText.add((
-              '🛡수업 취소 신청 해제 (튜터 취소)',
+              '🛡수업 재개 (튜터 취소)',
               '',
               Icons.play_circle_outlined,
               Colors.indigoAccent,
               true,
             ));
           }
-        } else if (appointment.subject.contains('[수업 취소 요청 중]')) {
+        } else if (appointment.subject.contains('[수업 취소중]')) {
           message = '해당 일자의 수업은 취소 요청 상태입니다.';
           buttonText.add((
-            '수업 취소 신청 해제',
+            '수업 재개',
             '',
             Icons.play_circle_outlined,
             Colors.indigoAccent,
@@ -821,10 +762,10 @@ Enjoy your English with 🍓""",
               true,
             ));
           }
-        } else if (appointment.subject.contains('[장기 홀드 요청 중]')) {
+        } else if (appointment.subject.contains('[장기 홀드중]')) {
           message = '해당 일자의 수업은 장기 홀드 요청 상태입니다.';
           buttonText.add((
-            '장기 홀드 신청 해제',
+            '장기 홀드 해제',
             '',
             Icons.sync_outlined,
             Colors.lightBlueAccent,
@@ -851,17 +792,17 @@ Enjoy your English with 🍓""",
             message = '정상 수업 예정입니다.';
             buttonText.add((
               '수업 취소',
-              '잔여 횟수 : ${lecture.data['cancelCountLeft'] ?? 0}/${lecture.data['cancelCountTotal'] ?? 0}',
+              '잔여 횟수 : ${widget.user.data['cancelCountLeft'] ?? 0}/${widget.user.data['cancelCountTotal'] ?? 0}',
               Icons.play_disabled_outlined,
               Colors.redAccent,
-              (lecture.data['cancelCountLeft'] ?? 0) > 0,
+              (widget.user.data['cancelCountLeft'] ?? 0) > 0,
             ));
             buttonText.add((
               '장기 홀드',
-              '잔여 횟수 : ${lecture.data['holdCountLeft'] ?? 0}/${lecture.data['holdCountTotal'] ?? 0}',
+              '잔여 횟수 : ${widget.user.data['holdCountLeft'] ?? 0}/${widget.user.data['holdCountTotal'] ?? 0}',
               Icons.sync_disabled_outlined,
               Colors.orangeAccent,
-              (lecture.data['holdCountLeft'] ?? 0) > 0,
+              (widget.user.data['holdCountLeft'] ?? 0) > 0,
             ));
             if (widget.isAdmin == true) {
               buttonText.add((
@@ -909,21 +850,22 @@ Enjoy your English with 🍓""",
               String formattedDate =
                   DateFormat('yyyy-MM-dd').format(details.date!);
               if (items.$1 == '수업 취소') {
-                if (!lecture.data['cancelRequestDates']
+                if (!widget.user.data['cancelRequestDates']
                     .contains(formattedDate)) {
-                  lecture.data['cancelRequestDates'].add(formattedDate);
-                  lecture.data['cancelCountLeft'] =
-                      lecture.data['cancelCountLeft'] - 1;
+                  widget.user.data['cancelRequestDates'].add(formattedDate);
+                  widget.user.data['cancelCountLeft'] =
+                      widget.user.data['cancelCountLeft'] - 1;
                 }
-              } else if (items.$1 == '수업 취소 신청 해제') {
-                if (lecture.data['cancelRequestDates'].remove(formattedDate)) {
-                  lecture.data['cancelCountLeft'] =
-                      lecture.data['cancelCountLeft'] + 1;
+              } else if (items.$1 == '수업 재개') {
+                if (widget.user.data['cancelRequestDates']
+                    .remove(formattedDate)) {
+                  widget.user.data['cancelCountLeft'] =
+                      widget.user.data['cancelCountLeft'] + 1;
                 }
               } else if (items.$1 == '장기 홀드') {
-                // lecture.data['holdCountLeft'] = lecture.data['holdCountLeft'] - 1;
+                // widget.user.data['holdCountLeft'] = widget.user.data['holdCountLeft'] - 1;
                 selectedHoldStartDate = formattedDate;
-                // lecture.data['holdRequestDates'].add(formattedDate);
+                // widget.user.data['holdRequestDates'].add(formattedDate);
                 _bottomSheetController?.close(); // Close the bottom sheet
                 _bottomSheetController = showBottomSheet(
                   context: context,
@@ -964,8 +906,8 @@ Enjoy your English with 🍓""",
                   selectedHoldStartDate = formattedDate;
                 });
                 return;
-              } else if (items.$1 == '장기 홀드 신청 해제') {
-                for (String range in lecture.data['holdRequestDates']) {
+              } else if (items.$1 == '장기 홀드 해제') {
+                for (String range in widget.user.data['holdRequestDates']) {
                   List<String> dateParts =
                       range.split('~').map((e) => e.trim()).toList();
                   if (dateParts.length == 2) {
@@ -976,23 +918,23 @@ Enjoy your English with 🍓""",
                         details.date!.isAtSameMomentAs(endDate) |
                         (details.date!.isBefore(endDate) &&
                             details.date!.isAfter(startDate))) {
-                      lecture.data['holdRequestDates'].remove(range);
-                      lecture.data['holdCountLeft'] =
-                          lecture.data['holdCountLeft'] + 1;
+                      widget.user.data['holdRequestDates'].remove(range);
+                      widget.user.data['holdCountLeft'] =
+                          widget.user.data['holdCountLeft'] + 1;
                       break;
                     }
                   }
                 }
               } else if (items.$1 == '🛡수업 취소 확정') {
-                lecture.data['cancelRequestDates'].remove(formattedDate);
-                lecture.data['cancelDates'].add(formattedDate);
-              } else if (items.$1 == '🛡수업 취소 신청 해제 (학생 취소)') {
-                if (lecture.data['cancelDates'].remove(formattedDate)) {
-                  lecture.data['cancelCountLeft'] =
-                      lecture.data['cancelCountLeft'] + 1;
+                widget.user.data['cancelRequestDates'].remove(formattedDate);
+                widget.user.data['cancelDates'].add(formattedDate);
+              } else if (items.$1 == '🛡수업 재개 (학생 취소)') {
+                if (widget.user.data['cancelDates'].remove(formattedDate)) {
+                  widget.user.data['cancelCountLeft'] =
+                      widget.user.data['cancelCountLeft'] + 1;
                 }
               } else if (items.$1 == '🛡장기 홀드 확정') {
-                for (String range in lecture.data['holdRequestDates']) {
+                for (String range in widget.user.data['holdRequestDates']) {
                   List<String> dateParts =
                       range.split('~').map((e) => e.trim()).toList();
                   if (dateParts.length == 2) {
@@ -1003,14 +945,14 @@ Enjoy your English with 🍓""",
                         details.date!.isAtSameMomentAs(endDate) |
                         (details.date!.isBefore(endDate) &&
                             details.date!.isAfter(startDate))) {
-                      lecture.data['holdRequestDates'].remove(range);
-                      lecture.data['holdDates'].add(range);
+                      widget.user.data['holdRequestDates'].remove(range);
+                      widget.user.data['holdDates'].add(range);
                       break;
                     }
                   }
                 }
               } else if (items.$1 == '🛡장기 홀드 취소') {
-                for (String range in lecture.data['holdDates']) {
+                for (String range in widget.user.data['holdDates']) {
                   List<String> dateParts =
                       range.split('~').map((e) => e.trim()).toList();
                   if (dateParts.length == 2) {
@@ -1021,20 +963,21 @@ Enjoy your English with 🍓""",
                         details.date!.isAtSameMomentAs(endDate) |
                         (details.date!.isBefore(endDate) &&
                             details.date!.isAfter(startDate))) {
-                      lecture.data['holdDates'].remove(range);
-                      lecture.data['holdCountLeft'] =
-                          lecture.data['holdCountLeft'] + 1;
+                      widget.user.data['holdDates'].remove(range);
+                      widget.user.data['holdCountLeft'] =
+                          widget.user.data['holdCountLeft'] + 1;
                       break;
                     }
                   }
                 }
               } else if (items.$1 == '🛡튜터 취소') {
-                lecture.data['tutorCancelDates'].add(formattedDate);
-              } else if (items.$1 == '🛡수업 취소 신청 해제 (튜터 취소)') {
-                if (lecture.data['tutorCancelDates'].remove(formattedDate)) {}
+                widget.user.data['tutorCancelDates'].add(formattedDate);
+              } else if (items.$1 == '🛡수업 재개 (튜터 취소)') {
+                if (widget.user.data['tutorCancelDates']
+                    .remove(formattedDate)) {}
               }
               _bottomSheetController?.close();
-              _updateLastLessonDate(lecture);
+              _updateLastLessonDate();
               Provider.of<StudentProvider>(context, listen: false)
                   .updateStudentToFirestoreWithMap(widget.user)
                   .then((context) {
@@ -1049,32 +992,32 @@ Enjoy your English with 🍓""",
     ];
   }
 
-  void _updateLastLessonDate(Lecture lecture) {
+  void _updateLastLessonDate() {
     // 마지막 수업일 계산
 
     // 취소일 count
     // Student 취소일
-    // int cancelCount = lecture.data['cancelDates'].length;
-    num cancelCount = (lecture.data['cancelCountTotal'] ?? 0) -
-        (lecture.data['cancelCountLeft'] ?? 0);
+    // int cancelCount = widget.user.data['cancelDates'].length;
+    num cancelCount = (widget.user.data['cancelCountTotal'] ?? 0) -
+        (widget.user.data['cancelCountLeft'] ?? 0);
 
     // Tutor 취소일
-    cancelCount += (lecture.data['tutorCancelDates'] ?? []).length;
+    cancelCount += (widget.user.data['tutorCancelDates'] ?? []).length;
 
     List<int> lessonDays =
-        _getLessonDatesFromLessonTime(lecture.data['lessonTime'] ?? '')
+        _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
             .keys
             .toList();
     if (lessonDays.isEmpty) return;
 
     // holdDays 계산
-    if (lecture.data.containsKey('holdDates')) {
+    if (widget.user.data.containsKey('holdDates')) {
       List<int> lessonDays =
-          _getLessonDatesFromLessonTime(lecture.data['lessonTime'])
+          _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
               .keys
               .toList();
 
-      for (String dateRange in lecture.data['holdDates']) {
+      for (String dateRange in widget.user.data['holdDates']) {
         List<String> dateRangeParts = dateRange.split("~");
         if (dateRangeParts.length == 2) {
           DateTime startDate =
@@ -1099,13 +1042,13 @@ Enjoy your English with 🍓""",
       }
     }
     // holdRequestDays 계산
-    if (lecture.data.containsKey('holdRequestDates')) {
+    if (widget.user.data.containsKey('holdRequestDates')) {
       List<int> lessonDays =
-          _getLessonDatesFromLessonTime(lecture.data['lessonTime'])
+          _getLessonDatesFromLessonTime(widget.user.data['lessonTime'])
               .keys
               .toList();
 
-      for (String dateRange in lecture.data['holdRequestDates']) {
+      for (String dateRange in widget.user.data['holdRequestDates']) {
         List<String> dateRangeParts = dateRange.split("~");
         if (dateRangeParts.length == 2) {
           DateTime startDate =
@@ -1131,7 +1074,7 @@ Enjoy your English with 🍓""",
     }
 
     var lastLessonDate =
-        DateTime.parse(lecture.data['lessonEndDate'].replaceAll('. ', '-'));
+        DateTime.parse(widget.user.data['lessonEndDate'].replaceAll('. ', '-'));
     while (!lessonDays.contains(lastLessonDate.weekday)) {
       lastLessonDate = lastLessonDate.subtract(const Duration(days: 1));
     }
@@ -1144,7 +1087,7 @@ Enjoy your English with 🍓""",
     }
 
     String formattedDate = DateFormat('yyyy-MM-dd').format(lastLessonDate);
-    lecture.data['modifiedLessonEndDate'] = formattedDate;
+    widget.user.data['modifiedLessonEndDate'] = formattedDate;
   }
 }
 

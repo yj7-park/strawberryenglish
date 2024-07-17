@@ -332,7 +332,6 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
       if (confirm == true) {
         // 성공 시 동작
-        // Student 정보
         Student? updatedStudent = studentProvider.student;
         updatedStudent!.data['name'] = name;
         updatedStudent.data['birthDate'] = birthDate;
@@ -340,6 +339,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['requestDay'] = requestDay;
         updatedStudent.data['requestTime'] = requestTime;
         updatedStudent.data['country'] = country;
+        updatedStudent.data['skypeId'] = skypeId;
         updatedStudent.data['studyPurpose'] = studyPurpose;
         updatedStudent.data['referralSource'] = referralSource;
         updatedStudent.data['lessonStartDate'] = lessonStartDate;
@@ -347,57 +347,34 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['lessonPeriod'] =
             EnrollmentScreen.selectedMins.first;
         updatedStudent.data['cashReceiptNumber'] = cashReceiptNumber;
-        updatedStudent.data['points'] = (updatedStudent.data['points'] ?? 0) -
-            (int.tryParse(pointsController.text) ?? 0);
-        // skypeId는 수업별 / 학생별 둘다 관리 (최근 수업 기준으로 학생 데이터에 저장)
-        updatedStudent.data['skypeId'] = skypeId;
-
-        // Lecture 정보
-        var lectureIndex = (updatedStudent.lectures ?? {})
-                .keys
-                .toList()
-                .map((e) => int.tryParse(
-                    e.replaceAll('lecture', '').replaceAll('수업', '')))
-                .toList()
-                .length +
-            1;
-        Lecture updatedLecture = Lecture(data: {});
-        updatedLecture.data['requestDay'] = requestDay;
-        updatedLecture.data['requestTime'] = requestTime;
-        updatedLecture.data['skypeId'] = skypeId;
-        updatedLecture.data['lessonStartDate'] = lessonStartDate;
-        // updatedLecture.data['requestTime'] = '$requestDay-$requestTime';
-        updatedLecture.data['lessonPeriod'] =
-            EnrollmentScreen.selectedMins.first;
-        updatedLecture.data['program'] = EnrollmentScreen1Input.topic.keys
+        updatedStudent.data['program'] = EnrollmentScreen1Input.topic.keys
             .elementAt(EnrollmentScreen.selectedTopic);
-        updatedLecture.data['topic'] = EnrollmentScreen1Input.topic.values
+        updatedStudent.data['topic'] = EnrollmentScreen1Input.topic.values
                 .elementAt(EnrollmentScreen.selectedTopic)[
             EnrollmentScreen.selectedTopicDetail];
+        updatedStudent.data['points'] = (updatedStudent.data['points'] ?? 0) -
+            (int.tryParse(pointsController.text) ?? 0);
 
         // 수업 종료 일자 계산
-        updatedLecture.data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(
+        updatedStudent.data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(
             DateTime.parse(lessonStartDate).add(
                 Duration(days: 7 * 4 * EnrollmentScreen.selectedMonths.first)));
 
         // 수업 취소 횟수 계산
-        updatedLecture.data['cancelCountTotal'] =
-            updatedLecture.data['cancelCountLeft'] = EnrollmentScreen1Input
+        updatedStudent.data['cancelCountTotal'] =
+            updatedStudent.data['cancelCountLeft'] = EnrollmentScreen1Input
                     .cancelCount[EnrollmentScreen.selectedMonths.first]![
                 EnrollmentScreen.selectedDays.first];
-        updatedLecture.data['cancelDates'] = [];
-        updatedLecture.data['cancelRequestDates'] = [];
+        updatedStudent.data['cancelDates'] = [];
+        updatedStudent.data['cancelRequestDates'] = [];
 
         // 장기 홀드 횟수 계산
-        updatedLecture.data['holdCountTotal'] =
-            updatedLecture.data['holdCountLeft'] = EnrollmentScreen1Input
+        updatedStudent.data['holdCountTotal'] =
+            updatedStudent.data['holdCountLeft'] = EnrollmentScreen1Input
                     .holdCount[EnrollmentScreen.selectedMonths.first]![
                 EnrollmentScreen.selectedDays.first];
-        updatedLecture.data['holdDates'] = [];
-        updatedLecture.data['holdRequestDates'] = [];
-
-        updatedStudent.lectures!['수업$lectureIndex'] = updatedLecture;
-
+        updatedStudent.data['holdDates'] = [];
+        updatedStudent.data['holdRequestDates'] = [];
         // EnrollmentScreen.selectedDays.first;
         studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
 
