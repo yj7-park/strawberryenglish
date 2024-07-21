@@ -31,7 +31,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
     bool isAdmin = FirebaseAuth.instance.currentUser != null &&
         FirebaseAuth.instance.currentUser!.email == 'admin@admin.com';
     // TODO: for test
-    // isAdmin = true;
+    isAdmin = true;
     return Stack(
       children: [
         SizedBox(
@@ -254,6 +254,8 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                         context, '🛡관리자메뉴', '/admin_students'),
                                     myMenuItemButton(
                                         context, '🛡학생정보', '/admin_students'),
+                                    myMenuItemButton(
+                                        context, '🛡후기관리', '/admin_feedbacks'),
                                   ],
                                 ),
                               ),

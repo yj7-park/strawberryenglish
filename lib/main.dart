@@ -102,6 +102,7 @@ class MyApp extends StatelessWidget {
           // '/tutor_calendar': (context) => const TutorCalendarScreen(),
           // '/admin': (context) => const AdminScreen(),
           '/admin_students': (context) => const AdminStudentsScreen(),
+          '/admin_feedbacks': (context) => const AdminStudentsScreen(),
           // Add more routes if needed
         },
       ),

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class FeedbackScreen1Listview extends StatefulWidget {
@@ -22,7 +21,8 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
         .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
       setState(() {
         data = {
-          for (var doc in snapshot.docs) doc.id: doc.data(),
+          for (var doc in snapshot.docs)
+            if (doc.data()['show'] ?? false) doc.id: doc.data(),
         };
       });
     });
@@ -54,96 +54,107 @@ class _FeedbackScreen1ListviewState extends State<FeedbackScreen1Listview> {
           horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
           vertical: 50.0,
         ),
-        child: ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (_, __) =>
-              Container(height: 1.5, color: Colors.grey[300]),
-          itemCount: data.length,
-          itemBuilder: (context, index) {
-            var id = data.keys.elementAt(index);
-            var doc = data[id];
-            return Card(
-              margin: EdgeInsets.zero,
-              elevation: 0.0,
-              child: ExpansionTile(
-                tilePadding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                  horizontal: 10,
-                ),
-                // tileColor: Colors.white,
-                leading: Text('${itemCount - index}'),
-                title: Builder(
-                  builder: (context) {
-                    var children = [
-                      Text(
-                        "Diago. D.",
-                        style: TextStyle(
-                          color: customTheme.colorScheme.secondary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 50),
-                      Text(
-                        "$id 학생 후기",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ];
-                    return isMobile
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: children,
-                          )
-                        : Row(children: children);
-                  },
-                ),
-                trailing: Builder(
-                  builder: (context) {
-                    var children = [
-                      Text(
-                        id,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(width: 50),
-                      Text(
-                        DateFormat('yyyy-MM-dd').format(doc!['date'].toDate()),
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ];
-                    return isMobile
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: children,
-                          )
-                        : Row(
-                            mainAxisSize: MainAxisSize.min, children: children);
-                  },
-                ),
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    color: Colors.grey[100],
-                    child: Text(
-                      doc!['body'].join('\n\n'),
-                      textAlign: TextAlign.left,
+        child: Column(
+          children: [
+            const Divider(height: 0),
+            ListView.separated(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              separatorBuilder: (_, __) =>
+                  Container(height: 1.5, color: Colors.grey[300]),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                var id = data.keys.elementAt(index);
+                var doc = data[id];
+                return Card(
+                  margin: EdgeInsets.zero,
+                  elevation: 0.0,
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 10,
                     ),
+                    // tileColor: Colors.white,
+                    leading: Text('${itemCount - index}'),
+                    title: Builder(
+                      builder: (context) {
+                        var children = [
+                          SizedBox(
+                            width: 100,
+                            child: Text(
+                              doc!['tutor'],
+                              style: TextStyle(
+                                color: customTheme.colorScheme.secondary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Text(
+                            doc['title'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ];
+                        return isMobile
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: children,
+                              )
+                            : Row(children: children);
+                      },
+                    ),
+                    trailing: Builder(
+                      builder: (context) {
+                        var children = [
+                          Text(
+                            doc!['name'][0] + 'O' * (doc['name'].length - 1),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(width: 50),
+                          Text(
+                            doc['date'],
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ];
+                        return isMobile
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: children,
+                              )
+                            : Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: children);
+                      },
+                    ),
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        width: double.infinity,
+                        color: Colors.grey[100],
+                        child: Text(
+                          doc!['body'].join('\n'),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
+                );
+              },
+            ),
+            const Divider(height: 0),
+          ],
         ),
       ),
     );

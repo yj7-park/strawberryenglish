@@ -25,8 +25,9 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
         .get()
         .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
       setState(() {
+        var shuffled = snapshot.docs..shuffle();
         data = {
-          for (var doc in snapshot.docs) doc.id: doc.data(),
+          for (var doc in shuffled) doc.id: doc.data(),
         };
         for (var _ in data.keys) {
           widget.controllers.add(false);
@@ -90,18 +91,21 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                 // tileColor: Colors.white,
                 title: Builder(
                   builder: (context) {
-                    var image = Container(
-                      width: isMobile ? 150 : 200,
-                      height: isMobile ? 150 : 200,
-                      padding: const EdgeInsets.all(2), // Border width
-                      decoration: const BoxDecoration(
-                          color: Colors.amber, shape: BoxShape.circle),
-                      child: ClipOval(
-                        child: SizedBox.fromSize(
-                          // size: Size.fromRadius(48), // Image radius
-                          child: url.isNotEmpty
-                              ? Image.network(url, fit: BoxFit.cover)
-                              : const Spacer(),
+                    var image = Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Container(
+                        width: isMobile ? 150 : 200,
+                        height: isMobile ? 150 : 200,
+                        padding: const EdgeInsets.all(2), // Border width
+                        decoration: const BoxDecoration(
+                            color: Colors.amber, shape: BoxShape.circle),
+                        child: ClipOval(
+                          child: SizedBox.fromSize(
+                            // size: Size.fromRadius(48), // Image radius
+                            child: url.isNotEmpty
+                                ? Image.network(url, fit: BoxFit.cover)
+                                : const SizedBox(),
+                          ),
                         ),
                       ),
                     );
@@ -109,7 +113,7 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                     //   'assets/images/tutors/$name.png',
                     //   width: isMobile ? 150 : 200,
                     // );
-                    var scoreName = [
+                    var nameLicense = [
                       // Text(
                       //   "★ $score",
                       //   style: TextStyle(
@@ -121,30 +125,28 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                       Text(
                         name,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ];
-                    var licenseBody = [
                       Text(
                         license,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: isMobile ? 13 : 16,
                           color: Colors.black26,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        body,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: widget.controllers[index] ? 100 : 3,
-                      ),
+                      // const SizedBox(height: 16),
                     ];
+                    var bodyText = Text(
+                      body,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: widget.controllers[index] ? 100 : 3,
+                    );
                     return !isMobile
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,28 +157,34 @@ class _TutorsScreen1ListviewState extends State<TutorsScreen1Listview> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ...scoreName,
-                                    ...licenseBody,
+                                    ...nameLicense,
+                                    const SizedBox(height: 16),
+                                    bodyText,
                                   ],
                                 ),
                               ),
                             ],
                           )
                         : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   image,
                                   const SizedBox(width: 16),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [...scoreName],
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ...nameLicense,
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
-                              ...licenseBody,
+                              bodyText,
                             ],
                           );
                   },

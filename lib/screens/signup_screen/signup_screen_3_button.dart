@@ -151,7 +151,17 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
 
       bool? confirm = await ConfirmDialog.show(
         context: context,
-        title: "회원가입이 완료되었습니다.",
+        title: "회원가입 완료",
+        body: [
+          Text(
+            "회원가입이 완료되었습니다.",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              // color: customTheme.colorScheme.primary,
+            ),
+          ),
+        ],
         trueButton: "확인",
       );
 

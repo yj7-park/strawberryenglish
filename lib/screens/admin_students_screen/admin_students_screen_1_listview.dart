@@ -178,49 +178,33 @@ class _AdminStudentsScreen1ListviewState
               }
             }
           }
-
-          if ((v['tutor'] ?? '').isNotEmpty) {
-            if (v.containsKey('lessonEndDate') &&
-                DateTime.parse(v['lessonEndDate']).isAfter(DateTime.now())) {
-              bool inHold = false;
-              for (String range in v['holdDates']) {
-                List<String> dateParts =
-                    range.split('~').map((e) => e.trim()).toList();
-                if (dateParts.length == 2) {
-                  DateTime startDate = DateTime.parse(dateParts[0]);
-                  DateTime endDate = DateTime.parse(dateParts[1])
-                      .add(const Duration(days: 1))
-                      .subtract(const Duration(microseconds: 1));
-
-                  var now = DateTime.now();
-                  if (startDate.isBefore(endDate) &&
-                      (startDate.isBefore(now) && endDate.isAfter(now))) {
-                    inHold = true;
-                    break;
-                  }
-                }
-              }
-              if (inHold) {
-                customData[k]!['status'] = '🟡 장기홀드';
-              } else {
-                customData[k]!['status'] = '🟢 정상수강';
-              }
-            } else {
-              customData[k]!['status'] = '🔴 수업종료';
-            }
-          } else if (v.containsKey('lessonEndDate')) {
-            customData[k]!['status'] = '🟠 수강대기';
-          } else if ((v['trialTutor'] ?? '').isNotEmpty) {
-            var trialDate = DateTime.tryParse(v['trialDate']);
-            if (trialDate != null && trialDate.isBefore(DateTime.now())) {
-              customData[k]!['status'] = '🔴 체험종료';
-            } else {
+          switch (Student(data: v).getStudentState()) {
+            case StudentState.registeredOnly:
+              customData[k]!['status'] = '⚫ 유령회원';
+              break;
+            case StudentState.trialRequested:
+              customData[k]!['status'] = '🟠 체험대기';
+              break;
+            case StudentState.trialConfirmed:
               customData[k]!['status'] = '🟢 무료체험';
-            }
-          } else if ((v['trialDay'] ?? '').isNotEmpty) {
-            customData[k]!['status'] = '🟠 체험대기';
-          } else {
-            customData[k]!['status'] = '⚫ 유령회원';
+              break;
+            case StudentState.trialFinished:
+              customData[k]!['status'] = '🔴 체험종료';
+              break;
+            case StudentState.lectureRequested:
+              customData[k]!['status'] = '🟠 수강대기';
+              break;
+            case StudentState.lectureOnGoing:
+              customData[k]!['status'] = '🟢 정상수강';
+              break;
+            case StudentState.lectureOnHold:
+              customData[k]!['status'] = '🟡 장기홀드';
+              break;
+            case StudentState.lectureFinished:
+              customData[k]!['status'] = '🔴 수업종료';
+              break;
+            default:
+              customData[k]!['status'] = '⚫ 정보오류';
           }
         }
       });

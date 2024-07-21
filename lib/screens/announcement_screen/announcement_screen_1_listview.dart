@@ -47,9 +47,10 @@ class _AnnouncementScreen1ListviewState
           horizontal: ((screenWidth - 1000) / 2).clamp(20, double.nan),
           vertical: 50.0,
         ),
-        child: SizedBox(
-          height: 500,
-          child: ListView.separated(
+        child: Column(
+          children: [
+            const Divider(height: 0),
+            ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               separatorBuilder: (_, __) =>
@@ -100,14 +101,17 @@ class _AnnouncementScreen1ListviewState
                         width: double.infinity,
                         color: Colors.grey[100],
                         child: Text(
-                          doc['body'].join('\n\n'),
+                          doc['body'].join('\n'),
                           textAlign: TextAlign.left,
                         ),
                       ),
                     ],
                   ),
                 );
-              }),
+              },
+            ),
+            const Divider(height: 0),
+          ],
         ),
       ),
     );
