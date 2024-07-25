@@ -78,6 +78,7 @@ class _AdminStudentsScreen1ListviewState
           customData[k]!['functionTabMessage'] = '';
           customData[k]!['isDBEditTabOpened'] = false;
           customData[k]!['status'] = '';
+
           // 수업 취소 요청
           flag = 'cancel';
           for (var e2 in v.entries) {
@@ -110,7 +111,8 @@ class _AdminStudentsScreen1ListviewState
           // 수강신청
           flag = 'enroll';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (v.containsKey('lessonEndDate') && ((v['tutor'] ?? '').isEmpty)) {
+          if (Student(data: v).getStudentState() ==
+              StudentState.lectureRequested) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
             if (!customData[k]!.containsKey(flag)) {
@@ -122,7 +124,8 @@ class _AdminStudentsScreen1ListviewState
           // 체험신청
           flag = 'trial';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (v.containsKey('trialDay') && (v['trialTutor'] ?? '').isEmpty) {
+          if (Student(data: v).getStudentState() ==
+              StudentState.trialRequested) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
             if (!customData[k]!.containsKey(flag)) {
@@ -178,9 +181,10 @@ class _AdminStudentsScreen1ListviewState
               }
             }
           }
+
           switch (Student(data: v).getStudentState()) {
             case StudentState.registeredOnly:
-              customData[k]!['status'] = '⚫ 유령회원';
+              customData[k]!['status'] = '⚪ 유령회원';
               break;
             case StudentState.trialRequested:
               customData[k]!['status'] = '🟠 체험대기';
@@ -198,13 +202,13 @@ class _AdminStudentsScreen1ListviewState
               customData[k]!['status'] = '🟢 정상수강';
               break;
             case StudentState.lectureOnHold:
-              customData[k]!['status'] = '🟡 장기홀드';
+              customData[k]!['status'] = '⚫ 장기홀드';
               break;
             case StudentState.lectureFinished:
               customData[k]!['status'] = '🔴 수업종료';
               break;
             default:
-              customData[k]!['status'] = '⚫ 정보오류';
+              customData[k]!['status'] = '❌ 정보오류';
           }
         }
       });
@@ -588,14 +592,14 @@ class _AdminStudentsScreen1ListviewState
                                                       if ((customData[id]![
                                                                   'enroll'] ??
                                                               0) >
-                                                          0)
+                                                          0) ...[
                                                         ElevatedButton(
                                                           onPressed: (() {
                                                             Clipboard.setData(
                                                               ClipboardData(
                                                                   text: """
-*TRIAL CLASS DETAILS*
-"*Student's Name: ${doc['name']}
+*Regular Class*
+*Student's Name: ${doc['name']}
 *Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
 *Skype ID: ${doc['skypeId'] ?? '-'}
 *Times (KST): ${doc['lessonTime'] ?? '-'}
@@ -612,13 +616,16 @@ class _AdminStudentsScreen1ListviewState
                                                             });
                                                           }),
                                                           child: const Text(
-                                                              '신청 정보 복사'),
+                                                              '수강 정보 복사'),
                                                         ),
+                                                        const SizedBox(
+                                                            height: 5)
+                                                      ],
                                                       // 체험신청
                                                       if ((customData[id]![
                                                                   'trial'] ??
                                                               0) >
-                                                          0)
+                                                          0) ...[
                                                         ElevatedButton(
                                                           onPressed: (() {
                                                             Clipboard.setData(
@@ -640,90 +647,153 @@ class _AdminStudentsScreen1ListviewState
                                                             });
                                                           }),
                                                           child: const Text(
-                                                              '신청 정보 복사'),
+                                                              '체험 정보 복사'),
                                                         ),
+                                                        const SizedBox(
+                                                            height: 5)
+                                                      ],
                                                       ...[
                                                         for (var ic
                                                             in inputCondition
                                                                 .entries)
                                                           if (ic.value)
-                                                            Builder(builder:
-                                                                (context) {
+                                                            Builder(
+                                                              builder:
+                                                                  (context) {
+                                                                var e = MapEntry(
+                                                                    ic.key,
+                                                                    doc[ic
+                                                                        .key]);
+                                                                var initialText = e
+                                                                            .value
+                                                                            .runtimeType ==
+                                                                        List
+                                                                    ? '${e.value.join(',')}'
+                                                                    : '${e.value ?? (intNames.contains(e.key) ? 0 : '')}';
+                                                                controllers[
+                                                                        '${id}_${e.key}'] =
+                                                                    TextEditingController(
+                                                                        text:
+                                                                            initialText);
+                                                                return Padding(
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          5),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      label: Text(
+                                                                          e.key),
+                                                                    ),
+                                                                    controller:
+                                                                        controllers[
+                                                                            '${id}_${e.key}'],
+                                                                    // initialValue:
+                                                                    //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
+                                                                    // onEditingComplete:
+                                                                    //     () {
+                                                                    //   var inputText =
+                                                                    //       controllers['${id}_${e.key}']!
+                                                                    //           .text;
+                                                                    //   dynamic
+                                                                    //       updateText;
+                                                                    //   if (listNames
+                                                                    //       .contains(e
+                                                                    //           .key)) {
+                                                                    //     updateText =
+                                                                    //         inputText
+                                                                    //             .split(',');
+                                                                    //     if (updateText[
+                                                                    //             0]
+                                                                    //         .isEmpty) {
+                                                                    //       updateText
+                                                                    //           .length = 0;
+                                                                    //     }
+                                                                    //   } else if (intNames
+                                                                    //       .contains(
+                                                                    //           e.key)) {
+                                                                    //     updateText =
+                                                                    //         int.tryParse(inputText) ??
+                                                                    //             0;
+                                                                    //   } else {
+                                                                    //     updateText =
+                                                                    //         inputText;
+                                                                    //   }
+                                                                    //   d[id]![e.key] =
+                                                                    //       updateText;
+                                                                    //   inputText
+                                                                    //       .split(
+                                                                    //           ',')
+                                                                    //       .length = 0;
+                                                                    //   updateStudentToFirestoreAsAdmin(
+                                                                    //       Student(
+                                                                    //           data:
+                                                                    //               d[id]!),
+                                                                    //               );
+                                                                    // },
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            for (var ic
+                                                                in inputCondition
+                                                                    .entries) {
                                                               var e = MapEntry(
                                                                   ic.key,
                                                                   doc[ic.key]);
-                                                              var initialText = e
-                                                                          .value
-                                                                          .runtimeType ==
-                                                                      List
-                                                                  ? '${e.value.join(',')}'
-                                                                  : '${e.value ?? (intNames.contains(e.key) ? 0 : '')}';
-                                                              controllers[
-                                                                      '${id}_${e.key}'] =
-                                                                  TextEditingController(
-                                                                      text:
-                                                                          initialText);
-                                                              return Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .symmetric(
-                                                                        vertical:
-                                                                            5),
-                                                                child:
-                                                                    TextFormField(
-                                                                  decoration:
-                                                                      InputDecoration(
-                                                                    label: Text(
-                                                                        e.key),
-                                                                  ),
-                                                                  controller:
-                                                                      controllers[
-                                                                          '${id}_${e.key}'],
-                                                                  // initialValue:
-                                                                  //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                                                                  onEditingComplete:
-                                                                      () {
-                                                                    var inputText =
-                                                                        controllers['${id}_${e.key}']!
-                                                                            .text;
-                                                                    dynamic
-                                                                        updateText;
-                                                                    if (listNames
-                                                                        .contains(e
-                                                                            .key)) {
-                                                                      updateText =
-                                                                          inputText
-                                                                              .split(',');
-                                                                      if (updateText[
-                                                                              0]
-                                                                          .isEmpty) {
-                                                                        updateText
-                                                                            .length = 0;
-                                                                      }
-                                                                    } else if (intNames
-                                                                        .contains(
-                                                                            e.key)) {
-                                                                      updateText =
-                                                                          int.tryParse(inputText) ??
-                                                                              0;
-                                                                    } else {
-                                                                      updateText =
-                                                                          inputText;
-                                                                    }
-                                                                    d[id]![e.key] =
-                                                                        updateText;
-                                                                    inputText
-                                                                        .split(
-                                                                            ',')
+                                                              if (ic.value) {
+                                                                var inputText =
+                                                                    controllers[
+                                                                            '${id}_${e.key}']!
+                                                                        .text;
+                                                                dynamic
+                                                                    updateText;
+                                                                if (listNames
+                                                                    .contains(e
+                                                                        .key)) {
+                                                                  updateText =
+                                                                      inputText
+                                                                          .split(
+                                                                              ',');
+                                                                  if (updateText[
+                                                                          0]
+                                                                      .isEmpty) {
+                                                                    updateText
                                                                         .length = 0;
-                                                                    updateStudentToFirestoreAsAdmin(
-                                                                        Student(
-                                                                            data:
-                                                                                d[id]!));
-                                                                  },
-                                                                ),
-                                                              );
-                                                            })
+                                                                  }
+                                                                } else if (intNames
+                                                                    .contains(e
+                                                                        .key)) {
+                                                                  updateText =
+                                                                      int.tryParse(
+                                                                              inputText) ??
+                                                                          0;
+                                                                } else {
+                                                                  updateText =
+                                                                      inputText;
+                                                                }
+                                                                d[id]![e.key] =
+                                                                    updateText;
+                                                                inputText
+                                                                    .split(',')
+                                                                    .length = 0;
+                                                              }
+                                                            }
+
+                                                            updateStudentToFirestoreAsAdmin(
+                                                              Student(
+                                                                  data: d[id]!),
+                                                            );
+                                                          },
+                                                          child: const Text(
+                                                              '업데이트'),
+                                                        ),
                                                       ],
                                                     ],
                                                   ),

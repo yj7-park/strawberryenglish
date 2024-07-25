@@ -74,7 +74,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         Text(
                           isLoggedIn
                               ? isAdmin
-                                  ? '🛠관리자모드🛠'
+                                  ? '🛡관리자모드🛡'
                                   : '${FirebaseAuth.instance.currentUser!.email} 님'
                               : '',
                         ),
@@ -175,9 +175,10 @@ class _MyDrawerState extends State<MyDrawer> {
                             highlight: true),
                         if (isAdmin) ...[
                           const SizedBox(height: 20),
-                          myDrawerTile(context, '🛠관리자메뉴', '/admin_students',
+                          myDrawerTile(context, '🛡관리자메뉴', '/admin_students',
                               highlight: true),
-                          myDrawerTile(context, '🛠학생정보', '/admin_students'),
+                          myDrawerTile(context, '🛡학생정보', '/admin_students'),
+                          myDrawerTile(context, '🛡후기관리', '/admin_feedbacks'),
                         ],
                         const SizedBox(height: 75),
                       ],

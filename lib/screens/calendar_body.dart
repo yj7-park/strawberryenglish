@@ -23,27 +23,40 @@ class CalendarBody extends StatefulWidget {
 
 class CalendarBodyState extends State<CalendarBody> {
   late CalendarController calendarController;
+  late TextEditingController feedbackTitleController;
+  late TextEditingController feedbackBodyController;
+
   String selectedHoldStartDate = '';
   DateTime selectedDate = DateTime.now();
   bool isBottomSheetOpened = false;
   bool feedbackNeeded = false;
   late CalendarDataSource calendarDataSource;
+  bool needCalendar = false;
 
   @override
   void initState() {
     super.initState();
-    calendarController = CalendarController();
-    calendarController.selectedDate = DateTime.now();
-    calendarDataSource = _getCalendarDataSource();
   }
 
   @override
   Widget build(BuildContext context) {
+    needCalendar =
+        (widget.user.getStudentState() == StudentState.lectureOnGoing) ||
+            (widget.user.getStudentState() == StudentState.lectureOnHold) ||
+            (widget.user.getStudentState() == StudentState.lectureFinished);
+    if (needCalendar) {
+      calendarController = CalendarController();
+      calendarController.selectedDate = DateTime.now();
+
+      feedbackTitleController = TextEditingController();
+      feedbackBodyController = TextEditingController();
+
+      calendarDataSource = _getCalendarDataSource();
+    }
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     bool isMobile = screenWidth < 1000 || widget.updated != null;
-    TextEditingController feedbackTitleController = TextEditingController();
-    TextEditingController feedbackBodyController = TextEditingController();
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: widget.updated == null
@@ -72,7 +85,7 @@ ${widget.user.data['name']} 님의 체험 수업이 확정되었습니다 :)
 
 날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${_getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
 
-시간: ${DateFormat('hh시 mm분').format(DateTime.parse(widget.user.data['trialDate']))} (한국시간)
+시간: ${DateFormat('H시 mm분').format(DateTime.parse('${widget.user.data['trialDate']} ${widget.user.data['trialTime']}'))} (한국시간)
 
 Tutor: ${widget.user.data['trialTutor'] ?? ''}
  
@@ -97,7 +110,7 @@ ${widget.user.data['name']} 님의 체험 수업이 종료되었습니다 :)
 
 날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${_getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
 
-시간: ${DateFormat('hh시 mm분').format(DateTime.parse(widget.user.data['trialDate']))} (한국시간)
+시간: ${DateFormat('H시 mm분').format(DateTime.parse('${widget.user.data['trialDate']} ${widget.user.data['trialTime']}'))} (한국시간)
 
 Tutor: ${widget.user.data['trialTutor'] ?? ''}
  
@@ -115,11 +128,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
               const Text('신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
             ]
             // {수업 중 / 장기 홀드 중 / 수업 완료} 인 상태
-            else if (widget.user.getStudentState() ==
-                    StudentState.lectureOnGoing ||
-                widget.user.getStudentState() == StudentState.lectureOnHold ||
-                widget.user.getStudentState() ==
-                    StudentState.lectureFinished) ...[
+            else if (needCalendar) ...[
               // 후기 작성 요청
               // if (feedbackNeeded)
               ExpansionTile(
@@ -145,7 +154,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                   const Text(
                     """딸기영어에 대한 후기를 남겨주세요.
 정성스러운 후기를 남겨주신 분들께는 수강신청 시 현금처럼 사용하실 수 있는
-3000원의 적립금을 드립니다!!""",
+1000원의 적립금을 드립니다!!""",
                   ),
                   const SizedBox(height: 10),
                   TextFormField(

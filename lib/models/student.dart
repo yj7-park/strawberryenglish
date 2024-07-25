@@ -38,9 +38,11 @@ class Student {
     } else if (data.containsKey('lessonEndDate') &&
         (data['tutor'] ?? '').isEmpty) {
       return StudentState.lectureRequested;
-    } else if ((data['trialTutor'] ?? '').isNotEmpty) {
-      var trialDate = DateTime.tryParse(data['trialDate']);
-      if (trialDate != null && trialDate.isBefore(DateTime.now())) {
+    } else if ((data['trialTutor'] ?? '').isNotEmpty &&
+        (DateTime.tryParse('${data['trialDate']} ${data['trialTime']}') !=
+            null)) {
+      var trialDate = DateTime.parse(data['trialDate']);
+      if (trialDate.isBefore(DateTime.now())) {
         return StudentState.trialFinished;
       } else {
         return StudentState.trialConfirmed;

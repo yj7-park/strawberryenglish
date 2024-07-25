@@ -87,7 +87,10 @@ class LoginScreenState extends State<LoginScreen> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       ),
                       onSubmitted: (String _) async {
+                        isClicked = true;
+                        setState(() {});
                         await handleLogin();
+                        isClicked = false;
                       },
                     ),
                   ),
@@ -99,12 +102,10 @@ class LoginScreenState extends State<LoginScreen> {
                         minimumSize:
                             const Size(double.infinity, 50), // 버튼 사이즈 조정
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         isClicked = true;
                         setState(() {});
-                        () async {
-                          await handleLogin();
-                        };
+                        await handleLogin();
                         isClicked = false;
                       },
                       child: isClicked
@@ -165,8 +166,8 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> handleLogin() async {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
+    var username = _usernameController.text;
+    var password = _passwordController.text;
 
     setState(() {
       _errorMessage = '';

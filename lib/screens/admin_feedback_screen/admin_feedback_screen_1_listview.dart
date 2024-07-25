@@ -310,8 +310,7 @@ class _AdminFeedbackScreen1ListviewState
                             builder: (context) {
                               var children = [
                                 Text(
-                                  doc['name'][0] +
-                                      'O' * (doc['name'].length - 1),
+                                  doc['name'],
                                   style: const TextStyle(
                                     fontSize: 13,
                                     color: Colors.grey,
