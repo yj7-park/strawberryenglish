@@ -83,14 +83,6 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // Text(
-                  //   '좋은 수업은 좋은 튜터로부터',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: (screenWidth * 0.03).clamp(14, 24),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 8),
                   Text(
                     "딸기영어가 자신있는 이유",
                     style: TextStyle(

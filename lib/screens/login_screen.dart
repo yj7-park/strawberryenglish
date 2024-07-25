@@ -116,28 +116,39 @@ class LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : const Text(
-                              'Login',
+                              '로그인',
                             ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      try {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(
-                          email: _usernameController.text,
-                        );
-                        setState(() {
-                          _errorMessage =
-                              'Password reset email sent. Please check your email.';
-                        });
-                      } catch (e) {
-                        setState(() {
-                          _errorMessage =
-                              'Error sending password reset email. Please check ID field.';
-                        });
-                      }
-                    },
-                    child: const Text('Forgot your password? Reset it here.'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          try {
+                            await FirebaseAuth.instance.sendPasswordResetEmail(
+                              email: _usernameController.text,
+                            );
+                            setState(() {
+                              _errorMessage =
+                                  '계정의 이메일 주소로 비밀번호 재설정 이메일이 전송되었습니다.';
+                            });
+                          } catch (e) {
+                            setState(() {
+                              _errorMessage =
+                                  '비밀번호 재설정 이메일 전송에 실패하였습니다. 이메일 주소를 다시 확인해주세요.';
+                            });
+                          }
+                        },
+                        child: const Text('비밀번호 재설정'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: const Text('회원가입'),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Text(

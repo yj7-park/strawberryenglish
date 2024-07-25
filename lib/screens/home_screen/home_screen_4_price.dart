@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
@@ -9,6 +10,8 @@ class HomeScreen4Price extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    print(screenWidth);
+
     dynamic widgets = _buildLayout(context, screenWidth);
     return Theme(
       data: customTheme,
@@ -16,19 +19,14 @@ class HomeScreen4Price extends StatelessWidget {
         color: Colors.grey.withOpacity(0.1),
         child: Column(
           children: [
-            screenWidth >= 1600
-                ? Row(
-                    children: widgets,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const SizedBox(height: 50),
-                      ...List.from(widgets.reversed),
-                      const SizedBox(height: 50),
-                    ],
-                  ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const SizedBox(height: 50),
+                ...List.from(widgets.reversed),
+                const SizedBox(height: 50),
+              ],
+            ),
           ],
         ),
       ),
@@ -39,14 +37,31 @@ class HomeScreen4Price extends StatelessWidget {
     return [
       Padding(
         padding: const EdgeInsets.all(50),
-        child: Image.asset(
-          'assets/images/price2.png',
-          width: screenWidth >= 1600 ? screenWidth / 3 : screenWidth,
-          // height: 30,
-        ),
+        child: Builder(builder: (context) {
+          var children = [
+            Image.asset(
+              'assets/images/price1.png',
+              width: 700,
+            ),
+            SizedBox(width: 50, height: 50),
+            Image.asset(
+              'assets/images/price2.png',
+              width: 700,
+            ),
+          ];
+          return screenWidth < 1600
+              ? Column(children: children)
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children,
+                );
+        }),
       ),
       Padding(
-        padding: const EdgeInsets.all(50),
+        padding: EdgeInsets.symmetric(
+          horizontal: ((screenWidth - 800) / 2).clamp(50, double.nan),
+          vertical: 50.0,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +116,10 @@ class HomeScreen4Price extends StatelessWidget {
             Center(
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/feedbacks');
+                  Navigator.pushNamed(context, '/trial');
+                  if (FirebaseAuth.instance.currentUser == null) {
+                    Navigator.popAndPushNamed(context, '/login');
+                  }
                 },
                 child: Stack(
                   children: [

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:strawberryenglish/screens/admin_feedback_screen.dart';
 import 'package:strawberryenglish/screens/admin_students_screen.dart';
 import 'package:strawberryenglish/screens/announcement_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
@@ -102,7 +103,7 @@ class MyApp extends StatelessWidget {
           // '/tutor_calendar': (context) => const TutorCalendarScreen(),
           // '/admin': (context) => const AdminScreen(),
           '/admin_students': (context) => const AdminStudentsScreen(),
-          '/admin_feedbacks': (context) => const AdminStudentsScreen(),
+          '/admin_feedbacks': (context) => const AdminFeedbackScreen(),
           // Add more routes if needed
         },
       ),

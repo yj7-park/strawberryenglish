@@ -22,7 +22,8 @@ class _HomeScreen2FeedbackState extends State<HomeScreen2Feedback> {
         .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
       setState(() {
         data = {
-          for (var doc in snapshot.docs) doc.id: doc.data(),
+          for (var doc in snapshot.docs)
+            if (doc.data()['show'] ?? false) doc.id: doc.data(),
         };
       });
     });
@@ -83,7 +84,7 @@ class _HomeScreen2FeedbackState extends State<HomeScreen2Feedback> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "$id 학생 후기",
+                              doc!['title'],
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -92,7 +93,7 @@ class _HomeScreen2FeedbackState extends State<HomeScreen2Feedback> {
                             const SizedBox(height: 8),
                             Expanded(
                               child: Text(
-                                doc!['body'].join('\n\n'),
+                                doc['body'].join('\n'),
                                 style: const TextStyle(fontSize: 14),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,

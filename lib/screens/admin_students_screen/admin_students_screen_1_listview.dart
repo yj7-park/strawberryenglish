@@ -214,6 +214,7 @@ class _AdminStudentsScreen1ListviewState
   @override
   void initState() {
     super.initState();
+    // TODO: for test
     // isValidAccess = (FirebaseAuth.instance.currentUser != null &&
     //     FirebaseAuth.instance.currentUser!.email == 'admin@admin.com');
     isValidAccess = true;
@@ -317,6 +318,8 @@ class _AdminStudentsScreen1ListviewState
                       ),
                     ),
                   ),
+                  const SizedBox(height: 5),
+                  const Divider(height: 0),
                   ListView.separated(
                     shrinkWrap: true,
                     separatorBuilder: (_, __) =>
@@ -713,21 +716,10 @@ class _AdminStudentsScreen1ListviewState
                                                                         .split(
                                                                             ',')
                                                                         .length = 0;
-                                                                    updateStudentToFirestoreAsAdmin(Student(
-                                                                            data: d[
-                                                                                id]!))
-                                                                        .then(
-                                                                            (context) {
-                                                                      Future.delayed(
-                                                                          const Duration(
-                                                                              milliseconds: 200),
-                                                                          () {
-                                                                        setState(
-                                                                            () {
-                                                                          getData();
-                                                                        });
-                                                                      });
-                                                                    });
+                                                                    updateStudentToFirestoreAsAdmin(
+                                                                        Student(
+                                                                            data:
+                                                                                d[id]!));
                                                                   },
                                                                 ),
                                                               );
@@ -861,21 +853,9 @@ class _AdminStudentsScreen1ListviewState
                                                                 .split(',')
                                                                 .length = 0;
                                                             updateStudentToFirestoreAsAdmin(
-                                                                    Student(
-                                                                        data: d[
-                                                                            id]!))
-                                                                .then(
-                                                                    (context) {
-                                                              Future.delayed(
-                                                                  const Duration(
-                                                                      milliseconds:
-                                                                          200),
-                                                                  () {
-                                                                setState(() {
-                                                                  getData();
-                                                                });
-                                                              });
-                                                            });
+                                                                Student(
+                                                                    data: d[
+                                                                        id]!));
                                                           },
                                                         ),
                                                       );
@@ -926,6 +906,7 @@ class _AdminStudentsScreen1ListviewState
                       );
                     },
                   ),
+                  const Divider(height: 0),
                 ],
         ),
       ),
@@ -979,7 +960,12 @@ class _AdminStudentsScreen1ListviewState
       FirebaseFirestore.instance
           .collection('users')
           .doc(updatedStudent.data['email'])
-          .set(updatedStudent.data);
+          .set(updatedStudent.data)
+          .then((context) {
+        setState(() {
+          getData();
+        });
+      });
     } catch (e) {
       if (kDebugMode) {
         print('Student 데이터 업데이트 중 오류 발생: $e');

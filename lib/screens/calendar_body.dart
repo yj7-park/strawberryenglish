@@ -210,7 +210,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                           FirebaseFirestore.instance
                               .collection('feedback')
                               // .doc(currentUser!.email)
-                              .doc('${widget.user.data['name']}($dateText)')
+                              .doc('$dateText(${widget.user.data['name']})')
                               .set({
                             'title': feedbackTitleController.text,
                             'body': feedbackBodyController.text.split('\n'),
@@ -263,10 +263,11 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                   ),
                 ],
               ),
-              const Divider(),
+              const Divider(height: 0),
               // 여기에 사용자 정보를 보여주는 위젯 추가
               _buildStudentDetails(screenHeight > 1000, isMobile),
-              const Divider(),
+              const Divider(height: 0),
+              const SizedBox(height: 20),
               _buildCalendar(),
             ]
             // 회원 가입만 된 상태
@@ -332,7 +333,8 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
         // ),
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding:
+                const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
             child:
                 // const SizedBox(height: 10),
                 // _buildEarningInfo(student),
@@ -430,7 +432,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
             // _buildInfoRow('토픽', widget.user.data['topic'] ?? ''),
             _buildInfoRow(
                 '토픽',
-                '${widget.user.data['program'] ?? ''}\n(${widget.user.data['topic'] ?? ''})',
+                '${widget.user.data['program'] ?? ''}\n${widget.user.data['topic'] ?? ''}',
                 isMobile),
           ],
         ),

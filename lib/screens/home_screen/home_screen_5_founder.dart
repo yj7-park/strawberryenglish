@@ -46,9 +46,12 @@ class HomeScreen5Founder extends StatelessWidget {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.all(50),
+        padding: EdgeInsets.symmetric(
+          horizontal: ((screenWidth - 800) / 2).clamp(50, double.nan),
+          vertical: 50.0,
+        ),
         child: SizedBox(
-          width: screenWidth >= 1600 ? screenWidth / 3 : screenWidth,
+          width: (screenWidth - 100).clamp(100, 800),
           child: YoutubePlayer(
             aspectRatio: 16 / 9,
             controller: YoutubePlayerController.fromVideoId(
