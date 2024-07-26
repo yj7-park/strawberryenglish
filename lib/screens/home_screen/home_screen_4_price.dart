@@ -43,7 +43,7 @@ class HomeScreen4Price extends StatelessWidget {
               'assets/images/price1.png',
               width: 700,
             ),
-            SizedBox(width: 50, height: 50),
+            const SizedBox(width: 50, height: 50),
             Image.asset(
               'assets/images/price2.png',
               width: 700,

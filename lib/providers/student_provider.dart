@@ -28,15 +28,29 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
-  Future<Student?> getStudent() async {
-    if (_student != null) return _student;
+  Future<Student?> getStudent([int? index]) async {
+    if (currentUser == null) return null;
+
+    var email = currentUser!.email!;
+    // 계정 별 복수개 수업 DB 기능
+    if (index != null) {
+      email = '$email#$index';
+    }
+    if ((_student != null) && (_student!.data['email'] == email)) {
+      return _student;
+    }
 
     try {
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        // Google Sheets에서 사용자 데이터 가져오기
-        // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
-        return await getStudentFromFirestore(currentUser!.email!);
+        if (currentUser!.email == 'admin@admin.com') {
+          _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+        } else {
+          // Google Sheets에서 사용자 데이터 가져오기
+          // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
+          _student = await getStudentFromFirestore(email);
+        }
+        return _student;
       }
     } catch (e) {
       if (kDebugMode) {
@@ -48,7 +62,8 @@ class StudentProvider extends ChangeNotifier {
 
   Future<String> loginStudent(String username, String password) async {
     try {
-      if (FirebaseAuth.instance.currentUser == null) {
+      if ((FirebaseAuth.instance.currentUser == null) ||
+          (FirebaseAuth.instance.currentUser!.email != username)) {
         UserCredential _ =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: username,
@@ -57,7 +72,7 @@ class StudentProvider extends ChangeNotifier {
       }
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser!.email == 'admin@admin.com') {
-        _student = Student(data: {'admin': true});
+        _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
         notifyListeners();
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
@@ -72,6 +87,14 @@ class StudentProvider extends ChangeNotifier {
       }
       return e.toString();
     }
+  }
+
+  Future<void> logoutStudent() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      await FirebaseAuth.instance.signOut();
+      _student = null;
+    }
+    notifyListeners();
   }
 
   // Future<Student> getStudentFromGoogleSheets(String email) async {

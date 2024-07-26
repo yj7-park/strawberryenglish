@@ -153,7 +153,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
         context: context,
         title: "회원가입 완료",
         body: [
-          Text(
+          const Text(
             "회원가입이 완료되었습니다.",
             style: TextStyle(
               fontSize: 18,

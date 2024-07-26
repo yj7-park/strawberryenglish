@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class TuitionfeeScreen1Table extends StatelessWidget {
@@ -20,7 +19,7 @@ class TuitionfeeScreen1Table extends StatelessWidget {
               'assets/images/price1.png',
               width: 700,
             ),
-            SizedBox(width: 50, height: 50),
+            const SizedBox(width: 50, height: 50),
             Image.asset(
               'assets/images/price2.png',
               width: 700,
