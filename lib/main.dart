@@ -64,47 +64,99 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute: '/',
-        routes: {
-          '/': (context) => const HomeScreen(),
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const HomeScreen());
 
-          // 딸기영어
-          // 1. 회사소개
-          '/introduction': (context) => const IntroductionScreen(),
-          // 2. 공지사항
-          '/announcement': (context) => const AnnouncementScreen(),
+            // 딸기영어
+            // 1. 회사소개
+            case '/introduction':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const IntroductionScreen());
+            // 2. 공지사항
+            case '/announcement':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const AnnouncementScreen());
 
-          // 수업안내
-          // 1. 수강안내
-          '/lectures': (context) => const LecturesScreen(),
-          // 2. 수업토픽
-          '/topics': (context) => const TopicsScreen(),
-          // 3. 튜터소개
-          '/tutors': (context) => const TutorsScreen(),
-          // 4. 수강료
-          '/tuitionfee': (context) => const TuitionfeeScreen(),
-          // 5. FAQ
-          '/faq': (context) => const FaqScreen(),
+            // 수업안내
+            // 1. 수강안내
+            case '/lectures':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const LecturesScreen());
+            // 2. 수업토픽
+            case '/topics':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const TopicsScreen());
+            // 3. 튜터소개
+            case '/tutors':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const TutorsScreen());
+            // 4. 수강료
+            case '/tuitionfee':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const TuitionfeeScreen());
+            // 5. FAQ
+            case '/faq':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const FaqScreen());
 
-          // 딸기후기
-          '/feedbacks': (context) => const FeedbackScreen(),
+            // 딸기후기
+            case '/feedbacks':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const FeedbackScreen());
 
-          // 체험하기
-          '/trial': (context) => TrialScreen(),
-          // 수강신청
-          '/enrollment': (context) => EnrollmentScreen(),
+            // 체험하기
+            case '/trial':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      TrialScreen());
+            // 수강신청
+            case '/enrollment':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      EnrollmentScreen());
 
-          // 로그인
-          '/login': (context) => const LoginScreen(),
-          // 회원가입
-          '/signup': (context) => SignupScreen(),
+            // 로그인
+            case '/login':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const LoginScreen());
+            // 회원가입
+            case '/signup':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      SignupScreen());
 
-          // 마이페이지
-          '/student_calendar': (context) => const StudentCalendarScreen(),
-          // '/tutor_calendar': (context) => const TutorCalendarScreen(),
-          // '/admin': (context) => const AdminScreen(),
-          '/admin_students': (context) => const AdminStudentsScreen(),
-          '/admin_feedbacks': (context) => const AdminFeedbackScreen(),
-          // Add more routes if needed
+            // 마이페이지
+            case '/student_calendar':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const StudentCalendarScreen());
+            // '/tutor_calendar': (context) => const TutorCalendarScreen(),
+            // '/admin': (context) => const AdminScreen(),
+            case '/admin_students':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const AdminStudentsScreen());
+            case '/admin_feedbacks':
+              return PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const AdminFeedbackScreen());
+            // Add more routes if needed
+            default:
+              return null;
+          }
         },
       ),
     );

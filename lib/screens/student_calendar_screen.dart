@@ -35,8 +35,16 @@ class StudentCalendarScreen extends StatelessWidget {
                         !snapshot.hasData) {
                       // 로딩중일 때 표시할 화면
                       return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                          // child: Text('Loading...'),
+                          );
+                      // Container(
+                      // color: Colors.grey,
+                      // width: 500,
+                      // height: 500,
+                      // child: CircularProgressIndicator(
+                      //   color: customTheme.colorScheme.primary,
+                      // ),
+                      // );
                     } else if (snapshot.hasError) {
                       // 에러가 발생했을 때 표시할 화면
                       return Center(
@@ -48,8 +56,8 @@ class StudentCalendarScreen extends StatelessWidget {
                     } else {
                       // 데이터가 없을 때 표시할 화면
                       return const Center(
-                          // child: Text('No data available'),
-                          );
+                        child: Text('No data available'),
+                      );
                     }
                   },
                 ),

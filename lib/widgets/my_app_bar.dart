@@ -27,17 +27,20 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
   @override
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
-    return FutureBuilder<Student?>(
-      future: studentProvider.getStudent(), // 새로운 Future 생성
+    return FutureBuilder<(Student?, List<String>)>(
+      future: studentProvider.getStudentAndList(), // 새로운 Future 생성
       builder: (context, snapshot) {
-        var student = snapshot.data;
+        // if (!snapshot.hasData) return SizedBox();
         double screenWidth = MediaQuery.of(context).size.width;
         double widgetPadding = ((screenWidth - 1000) / 2).clamp(10, double.nan);
         bool isMobile = screenWidth < 1000;
         // TODO: 모바일일 경우에는 화면이 크더라도 isMobile true로 설정 필요
-        bool isLoggedIn = student != null;
+        // bool isLoggedIn = student != null;
+        var student = snapshot.data?.$1;
+        var studentList = snapshot.data?.$2;
+        bool isLoggedIn = student != null && studentList!.isNotEmpty;
         bool isAdmin =
-            student != null && student.data['email'] == 'admin@admin.com';
+            (student != null) && (student.data['email'] == 'admin@admin.com');
         // TODO: for test
         // isAdmin = true;
         return Stack(
@@ -62,15 +65,47 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (isLoggedIn) ...[
-                          // TODO: DropdownMenu
-                          Text(
-                            isAdmin
-                                ? '🛡관리자모드🛡'
-                                : '${student.data['email']} 님',
-                            style: const TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
+                          !isAdmin
+                              ? DropdownMenu(
+                                  onSelected: (value) {
+                                    studentProvider.setStudent(value as String);
+                                  },
+                                  width: 250,
+                                  textStyle: const TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                  initialSelection: student.data['email'],
+                                  // initialSelection:
+                                  //     (studentProvider.studentList ?? []).first,
+                                  requestFocusOnTap: false,
+                                  inputDecorationTheme: InputDecorationTheme(
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    constraints: BoxConstraints.tight(
+                                      const Size.fromHeight(35),
+                                    ),
+                                  ),
+                                  dropdownMenuEntries:
+                                      (studentList ?? []).map((e) {
+                                    return DropdownMenuEntry<String>(
+                                      style: MenuItemButton.styleFrom(
+                                        minimumSize: Size(250, 35),
+                                        // padding: EdgeInsets.symmetric(
+                                        //     horizontal: 10, vertical: 0,),
+                                      ),
+                                      value: e,
+                                      label: e,
+                                    );
+                                  }).toList(),
+                                )
+                              : Text(
+                                  '🛡관리자모드🛡',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
                           const SizedBox(width: 20),
                         ],
                         ElevatedButton(
@@ -85,7 +120,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                           onPressed: () {
                             isLoggedIn
                                 ? Navigator.pushNamed(
-                                    context, '/student_calendar')
+                                    context,
+                                    '/student_calendar',
+                                  )
                                 : Navigator.pushNamed(context, '/signup');
                           },
                           child: Text(

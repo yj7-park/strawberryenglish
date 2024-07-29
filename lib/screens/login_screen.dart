@@ -62,6 +62,7 @@ class LoginScreenState extends State<LoginScreen> {
                   //   ),
                   // ),
                   // const SizedBox(height: 24), // 로고와 입력 필드 사이의 여백 추가
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: constrainedSize,
                     child: TextField(

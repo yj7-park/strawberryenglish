@@ -80,14 +80,15 @@ class _MyDrawerState extends State<MyDrawer> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              isLoggedIn
-                                  ? isAdmin
-                                      ? '🛡관리자모드🛡'
-                                      : '${student.data['email']} 님'
-                                  : '',
-                            ),
-                            const SizedBox(height: 3),
+                            if (isLoggedIn) ...[
+                              // TODO: DropdownMenu
+                              Text(
+                                isAdmin
+                                    ? '🛡관리자모드🛡'
+                                    : '${student.data['email']} 님',
+                              ),
+                              const SizedBox(height: 3),
+                            ],
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

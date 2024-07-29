@@ -6,11 +6,14 @@ import 'package:strawberryenglish/providers/sheet_api_provider.dart';
 
 class StudentProvider extends ChangeNotifier {
   Student? _student;
+  List<String> _studentList = [];
+
   User? currentUser;
   SheetApiProvider sheetApiProvider = SheetApiProvider();
   Map<String, String> errorLogs = <String, String>{};
 
   Student? get student => _student;
+  List<String>? get studentList => _studentList;
 
   StudentProvider() {
     _initStudent();
@@ -19,23 +22,47 @@ class StudentProvider extends ChangeNotifier {
   Future<void> _initStudent() async {
     currentUser = FirebaseAuth.instance.currentUser;
 
-    if (currentUser != null) {
+    if ((currentUser != null) && (currentUser!.email != null)) {
       await sheetApiProvider.init();
       if (currentUser!.email != 'admin@admin.com') {
         _student = await getStudent();
+        _studentList = await getStudentList(currentUser!.email!);
         notifyListeners();
       }
     }
   }
 
-  Future<Student?> getStudent([int? index]) async {
-    if (currentUser == null) return null;
-
-    var email = currentUser!.email!;
-    // 계정 별 복수개 수업 DB 기능
-    if (index != null) {
-      email = '$email#$index';
+  Future<void> setStudent(String email) async {
+    try {
+      if (currentUser!.email == 'admin@admin.com') {
+        _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+      } else {
+        // Google Sheets에서 사용자 데이터 가져오기
+        // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
+        _student = await getStudentFromFirestore(email);
+        _studentList = await getStudentList(currentUser!.email!);
+        notifyListeners();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting Student Data: $e');
+      }
     }
+  }
+
+  Future<(Student?, List<String>)> getStudentAndList() async {
+    return (await getStudent(), await getStudentList(_student!.data['name']));
+  }
+
+  Future<Student?> getStudent([String? email]) async {
+    if (currentUser == null) return null;
+    if (_student != null) return _student;
+
+    email ??= currentUser!.email!;
+    // 계정 별 복수개 수업 DB 기능
+    // if (index != null) {
+    //   email = '$email#$index';
+    // }
     if ((_student != null) && (_student!.data['email'] == email)) {
       return _student;
     }
@@ -60,6 +87,26 @@ class StudentProvider extends ChangeNotifier {
     return null;
   }
 
+  Future<List<String>> getStudentList(String email) async {
+    if (currentUser == null) return [];
+
+    // 계정 별 복수개 수업 DB 기능
+    if (_studentList.isNotEmpty) {
+      return _studentList;
+    }
+
+    try {
+      // Google Sheets에서 사용자 데이터 가져오기
+      _studentList = await getStudentListFromFirestore(email);
+      return _studentList;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting Student Data: $e');
+      }
+    }
+    return [];
+  }
+
   Future<String> loginStudent(String username, String password) async {
     try {
       if ((FirebaseAuth.instance.currentUser == null) ||
@@ -73,13 +120,13 @@ class StudentProvider extends ChangeNotifier {
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser!.email == 'admin@admin.com') {
         _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
-        notifyListeners();
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
         // _student = await getStudentFromGoogleSheets(username);
         _student = await getStudentFromFirestore(username);
-        notifyListeners();
+        _studentList = await getStudentList(currentUser!.email!);
       }
+      notifyListeners();
       return "";
     } catch (e) {
       if (kDebugMode) {
@@ -92,8 +139,8 @@ class StudentProvider extends ChangeNotifier {
   Future<void> logoutStudent() async {
     if (FirebaseAuth.instance.currentUser != null) {
       await FirebaseAuth.instance.signOut();
-      _student = null;
     }
+    _student = null;
     notifyListeners();
   }
 
@@ -123,6 +170,22 @@ class StudentProvider extends ChangeNotifier {
     } catch (e) {
       if (kDebugMode) {
         print('Firestore에서 Student 가져오는 중 오류 발생: $e');
+      }
+    }
+    throw Exception('Student를 찾을 수 없습니다.');
+  }
+
+  Future<List<String>> getStudentListFromFirestore(String email) async {
+    try {
+      var _snapshot =
+          await FirebaseFirestore.instance.collection('users').get();
+      List<String> _result = _snapshot.docs.map((e) => e.id).toList();
+
+      // print(response.values);
+      return _result.where((e) => e.contains(email)).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Firestore에서 StudentList 가져오는 중 오류 발생: $e');
       }
     }
     throw Exception('Student를 찾을 수 없습니다.');

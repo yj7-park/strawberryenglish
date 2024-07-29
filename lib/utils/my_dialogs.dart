@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class LogoutDialog {
@@ -8,25 +9,27 @@ class LogoutDialog {
       builder: (BuildContext context) {
         return Theme(
           data: customTheme, // customTheme을 적용
-          child: AlertDialog(
-            title: const Text('로그아웃 하시겠습니까?'),
-            titleTextStyle:
-                const TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500),
-            backgroundColor: Colors.white,
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text('취소'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('확인'),
-              ),
-            ],
+          child: PointerInterceptor(
+            child: AlertDialog(
+              title: const Text('로그아웃 하시겠습니까?'),
+              titleTextStyle:
+                  const TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500),
+              backgroundColor: Colors.white,
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: const Text('취소'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: const Text('확인'),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -60,39 +63,41 @@ class ConfirmDialog {
       builder: (BuildContext context) {
         return Theme(
           data: customTheme, // customTheme을 적용
-          child: AlertDialog(
-            title: Text(
-              title,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: customTheme.colorScheme.primary,
+          child: PointerInterceptor(
+            child: AlertDialog(
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: customTheme.colorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            content: content,
-            backgroundColor: Colors.white,
-            titleTextStyle:
-                const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
-            actions: <Widget>[
-              if (falseButton != "")
+              content: content,
+              backgroundColor: Colors.white,
+              titleTextStyle:
+                  const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+              actions: <Widget>[
+                if (falseButton != "")
+                  TextButton(
+                    onPressed: () {
+                      routeToOnLeft.isEmpty
+                          ? Navigator.of(context).pop(false)
+                          : Navigator.pushNamed(context, routeToOnLeft);
+                    },
+                    child: Text(falseButton),
+                  ),
                 TextButton(
                   onPressed: () {
-                    routeToOnLeft.isEmpty
-                        ? Navigator.of(context).pop(false)
-                        : Navigator.pushNamed(context, routeToOnLeft);
+                    routeToOnRight.isEmpty
+                        ? Navigator.of(context).pop(true)
+                        : Navigator.pushNamed(context, routeToOnRight);
                   },
-                  child: Text(falseButton),
+                  child: Text(trueButton),
                 ),
-              TextButton(
-                onPressed: () {
-                  routeToOnRight.isEmpty
-                      ? Navigator.of(context).pop(true)
-                      : Navigator.pushNamed(context, routeToOnRight);
-                },
-                child: Text(trueButton),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

@@ -10,7 +10,6 @@ class HomeScreen4Price extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    print(screenWidth);
 
     dynamic widgets = _buildLayout(context, screenWidth);
     return Theme(
