@@ -30,17 +30,15 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
     return FutureBuilder<(Student?, List<String>)>(
       future: studentProvider.getStudentAndList(), // 새로운 Future 생성
       builder: (context, snapshot) {
-        // if (!snapshot.hasData) return SizedBox();
         double screenWidth = MediaQuery.of(context).size.width;
         double widgetPadding = ((screenWidth - 1000) / 2).clamp(10, double.nan);
         bool isMobile = screenWidth < 1000;
         // TODO: 모바일일 경우에는 화면이 크더라도 isMobile true로 설정 필요
-        // bool isLoggedIn = student != null;
         var student = snapshot.data?.$1;
         var studentList = snapshot.data?.$2;
-        bool isLoggedIn = student != null && studentList!.isNotEmpty;
+        bool isLoggedIn = student != null;
         bool isAdmin =
-            (student != null) && (student.data['email'] == 'admin@admin.com');
+            isLoggedIn && (student.data['email'] == 'admin@admin.com');
         // TODO: for test
         // isAdmin = true;
         return Stack(
@@ -75,23 +73,20 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                     fontSize: 12,
                                   ),
                                   initialSelection: student.data['email'],
-                                  // initialSelection:
-                                  //     (studentProvider.studentList ?? []).first,
                                   requestFocusOnTap: false,
                                   inputDecorationTheme: InputDecorationTheme(
                                     isDense: true,
                                     border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 10),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     constraints: BoxConstraints.tight(
                                       const Size.fromHeight(35),
                                     ),
                                   ),
-                                  dropdownMenuEntries:
-                                      (studentList ?? []).map((e) {
+                                  dropdownMenuEntries: studentList!.map((e) {
                                     return DropdownMenuEntry<String>(
                                       style: MenuItemButton.styleFrom(
-                                        minimumSize: Size(250, 35),
+                                        minimumSize: const Size(250, 35),
                                         // padding: EdgeInsets.symmetric(
                                         //     horizontal: 10, vertical: 0,),
                                       ),
@@ -100,9 +95,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                     );
                                   }).toList(),
                                 )
-                              : Text(
+                              : const Text(
                                   '🛡관리자모드🛡',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
                                   ),
                                 ),

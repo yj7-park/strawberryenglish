@@ -66,7 +66,7 @@ class HomeScreen3Tutor extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '딸기영어가 자신있는 이유',
+              '왜, 딸기영어여야만 하는가?',
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
@@ -76,7 +76,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '1. 타사 대비 1.5배 높은 임금과 수업 여건 보장으로 튜터 만족감 업',
+              '1. 착한 가격 — 유명 업체 대비 4만원 이상 저렴한 수업료',
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -85,7 +85,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "2. 높은 경쟁 속에서 까다로운 3차 면접을 통해 최고의 튜터 채용",
+              "2. 검증된 튜터 — 3차 스크리닝에 걸쳐 선별한 상위 5% 튜터 팀 구성",
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -94,7 +94,7 @@ class HomeScreen3Tutor extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "3. 과도한 페널티를 없애고 튜터들의 자발적인 책임감 요구로 능동적 지도 환경",
+              "3. 데일리 피드백 — 수업 종료 5분 전, 당일 수업에 대한 즉각적인 피드백 제공",
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),

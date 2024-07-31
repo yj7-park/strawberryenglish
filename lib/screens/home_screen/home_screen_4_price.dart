@@ -66,16 +66,7 @@ class HomeScreen4Price extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '가격이 비쌀 수 밖에 없었던 이유는',
-              style: TextStyle(
-                // color: Colors.white,
-                fontSize: (screenWidth * 0.04).clamp(14, 32),
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.start,
-            ),
-            Text(
-              '과도한 고정비와 마케팅비였습니다.',
+              '광고비에 투자할 비용, 튜터에게 쏟습니다.',
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.04).clamp(14, 32),
@@ -94,7 +85,7 @@ class HomeScreen4Price extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "2. 불필요한 마케팅비용을 극단적으로 줄이고 본질에 집중한 바이럴",
+              "2. 연말 유급 휴가 지급",
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -103,7 +94,7 @@ class HomeScreen4Price extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "3. 박리다매를 지향하는 창업자의 마인드",
+              "3. 타 업체 대비 1.5배 이상의 임금과 인센티브 제공",
               style: TextStyle(
                 // color: Colors.white,
                 fontSize: (screenWidth * 0.025).clamp(14, 24),
@@ -112,40 +103,40 @@ class HomeScreen4Price extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             // [체험하기]로 이동 버튼
-            Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/trial');
-                  if (FirebaseAuth.instance.currentUser == null) {
-                    Navigator.popAndPushNamed(context, '/login');
-                  }
-                },
-                child: Stack(
-                  children: [
-                    Column(
-                      children: [
-                        const SizedBox(height: 18),
-                        Container(
-                          height: 7,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: customTheme.colorScheme.secondary
-                                .withOpacity(0.7),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      ' ✔ 체험하기 바로가기',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // Center(
+            //   child: InkWell(
+            //     onTap: () {
+            //       Navigator.pushNamed(context, '/trial');
+            //       if (FirebaseAuth.instance.currentUser == null) {
+            //         Navigator.popAndPushNamed(context, '/login');
+            //       }
+            //     },
+            //     child: Stack(
+            //       children: [
+            //         Column(
+            //           children: [
+            //             const SizedBox(height: 18),
+            //             Container(
+            //               height: 7,
+            //               width: 200,
+            //               decoration: BoxDecoration(
+            //                 color: customTheme.colorScheme.secondary
+            //                     .withOpacity(0.7),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //         const Text(
+            //           ' ✔ 체험하기 바로가기',
+            //           style: TextStyle(
+            //             fontSize: 20,
+            //             fontWeight: FontWeight.w500,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

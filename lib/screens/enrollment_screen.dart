@@ -99,46 +99,107 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       // 제목
                       const MyHeader('수강신청'),
                       // 커버 페이지
-                      SignupScreen2Input(
-                        nameController: widget.nameController,
-                        birthDateController: widget.birthDateController,
-                      ),
-                      TrialScreen1Input(
-                        phoneNumberController: widget.phoneNumberController,
-                        countryController: widget.countryController,
-                        skypeIdController: widget.skypeIdController,
-                        studyPurposeController: widget.studyPurposeController,
-                        referralSourceController:
-                            widget.referralSourceController,
-                      ),
-                      EnrollmentScreen1Input(
-                        lessonStartDateController:
-                            widget.lessonStartDateController,
-                        requestDayController: widget.requestDayController,
-                        requestTimeController: widget.requestTimeController,
-                      ),
-                      EnrollmentScreen2PaymentInput(
-                        cashReceiptNumberController:
-                            widget.cashReceiptNumberController,
-                      ),
-                      EnrollmentScreen4Button(
-                        nameController: widget.nameController,
-                        birthDateController: widget.birthDateController,
-                        phoneNumberController: widget.phoneNumberController,
-                        requestDayController: widget.requestDayController,
-                        requestTimeController: widget.requestTimeController,
-                        countryController: widget.countryController,
-                        skypeIdController: widget.skypeIdController,
-                        studyPurposeController: widget.studyPurposeController,
-                        referralSourceController:
-                            widget.referralSourceController,
-                        lessonStartDateController:
-                            widget.lessonStartDateController,
-                        cashReceiptNumberController:
-                            widget.cashReceiptNumberController,
-                      ),
-                      // 회사정보
-                      // const CompanyInfo(),
+                      if (snapshot.data!.getStudentLectureState() ==
+                          StudentState.lectureRequested) ...[
+                        const Text(
+                          """
+
+*수강 신청 완료
+
+수강 신청이 완료되어, 일정을 확인 중입니다.
+
+수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+
+신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
+
+""",
+                          textAlign: TextAlign.center,
+                        ),
+                      ] else if ((snapshot.data!.getStudentState() ==
+                                  StudentState.lectureOnGoing) ||
+                              (snapshot.data!.getStudentState() ==
+                                  StudentState.lectureOnHold)
+                          // || (snapshot.data!.getStudentState() == StudentState.lectureFinished)
+                          ) ...[
+                        Text(
+                          """
+
+*수업 확정
+
+${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
+
+자세한 수업 일정은 [마이페이지]에서 확인하실 수 있습니다.
+
+추가로 수업을 신청하고 싶으신 경우 카카오톡 채널로 문의해주시기 바랍니다.
+
+""",
+                          textAlign: TextAlign.center,
+                        ),
+                        Center(
+                          child: SizedBox(
+                            width: 500,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(
+                                    double.infinity, 60), // 버튼 사이즈 조정
+                              ),
+                              onPressed: () {
+                                Navigator.popAndPushNamed(
+                                        context, '/student_calendar')
+                                    .then((_) => setState(() {}));
+                              },
+                              child: const Text(
+                                '마이페이지',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ] else ...[
+                        SignupScreen2Input(
+                          nameController: widget.nameController,
+                          birthDateController: widget.birthDateController,
+                        ),
+                        TrialScreen1Input(
+                          phoneNumberController: widget.phoneNumberController,
+                          countryController: widget.countryController,
+                          skypeIdController: widget.skypeIdController,
+                          studyPurposeController: widget.studyPurposeController,
+                          referralSourceController:
+                              widget.referralSourceController,
+                        ),
+                        EnrollmentScreen1Input(
+                          lessonStartDateController:
+                              widget.lessonStartDateController,
+                          requestDayController: widget.requestDayController,
+                          requestTimeController: widget.requestTimeController,
+                        ),
+                        EnrollmentScreen2PaymentInput(
+                          cashReceiptNumberController:
+                              widget.cashReceiptNumberController,
+                        ),
+                        EnrollmentScreen4Button(
+                          nameController: widget.nameController,
+                          birthDateController: widget.birthDateController,
+                          phoneNumberController: widget.phoneNumberController,
+                          requestDayController: widget.requestDayController,
+                          requestTimeController: widget.requestTimeController,
+                          countryController: widget.countryController,
+                          skypeIdController: widget.skypeIdController,
+                          studyPurposeController: widget.studyPurposeController,
+                          referralSourceController:
+                              widget.referralSourceController,
+                          lessonStartDateController:
+                              widget.lessonStartDateController,
+                          cashReceiptNumberController:
+                              widget.cashReceiptNumberController,
+                        ),
+                        // 회사정보
+                        // const CompanyInfo(),
+                      ],
                     ],
                   );
                 } else {

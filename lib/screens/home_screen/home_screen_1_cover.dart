@@ -84,34 +84,43 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    "딸기영어가 자신있는 이유",
+                    "좋은 수업은",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: (screenWidth * 0.025).clamp(14, 30),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "'3분'",
-                        style: TextStyle(
-                          color: customTheme.colorScheme.secondary,
-                          fontSize: (screenWidth * 0.025).clamp(14, 30) + 3,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        " 이면 확인 가능합니다.",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: (screenWidth * 0.025).clamp(14, 30),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 10),
+                  Text(
+                    "좋은 튜터로부터",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: (screenWidth * 0.025).clamp(14, 30) + 3,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       "'3분'",
+                  //       style: TextStyle(
+                  //         color: customTheme.colorScheme.secondary,
+                  //         fontSize: (screenWidth * 0.025).clamp(14, 30) + 3,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     Text(
+                  //       " 이면 확인 가능합니다.",
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontSize: (screenWidth * 0.025).clamp(14, 30),
+                  //         fontWeight: FontWeight.w500,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ],

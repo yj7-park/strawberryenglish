@@ -356,8 +356,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
             (int.tryParse(pointsController.text) ?? 0);
 
         // 수업 종료 일자 계산
-        updatedStudent.data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(
-            DateTime.parse(lessonStartDate).add(
+        updatedStudent.data['modifiedLessonEndDate'] = updatedStudent
+                .data['lessonEndDate'] =
+            DateFormat('yyyy-MM-dd').format(DateTime.parse(lessonStartDate).add(
                 Duration(days: 7 * 4 * EnrollmentScreen.selectedMonths.first)));
 
         // 수업 취소 횟수 계산
@@ -375,6 +376,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                 EnrollmentScreen.selectedDays.first];
         updatedStudent.data['holdDates'] = [];
         updatedStudent.data['holdRequestDates'] = [];
+
+        // 초기화 필요 항목
+        updatedStudent.data['lessonTime'] = [];
+        updatedStudent.data['tutor'] = '';
+
         // EnrollmentScreen.selectedDays.first;
         studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
 

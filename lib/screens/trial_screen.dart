@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
+import 'package:strawberryenglish/screens/calendar_body.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/trial_screen_2_input.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';
@@ -82,14 +83,6 @@ class _TrialScreenState extends State<TrialScreen> {
                       snapshot.data!.data['trialDay'] ?? '';
                   widget.trialTimeController.text =
                       snapshot.data!.data['trialTime'] ?? '';
-                  // trialDate가 있고, 날짜가 이미 지난 경우
-                  var isFinished = false;
-                  var trialDate = DateTime.tryParse(
-                          snapshot.data!.data['trialDate'] ?? '') ??
-                      DateTime.now();
-                  if (DateTime.now().isAfter(trialDate)) {
-                    isFinished = true;
-                  }
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 93), // Make space for the AppBar
@@ -97,25 +90,96 @@ class _TrialScreenState extends State<TrialScreen> {
                       // 제목
                       const MyHeader('체험하기'),
                       // 커버 페이지
-                      if (isFinished) ...[
-                        const SizedBox(height: 20),
+                      if (snapshot.data!.getStudentTrialState() ==
+                          StudentState.trialRequested) ...[
+                        const Text(
+                          """
+
+*체험 수업 신청 완료
+
+체험 수업 신청이 완료되어, 일정을 확인 중입니다.
+
+체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+
+신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
+
+""",
+                          textAlign: TextAlign.center,
+                        ),
+                      ]
+                      // 체험 확정 상태
+                      else if (snapshot.data!.getStudentTrialState() ==
+                          StudentState.trialConfirmed) ...[
                         Text(
                           """
-무료 체험은 계정당 1회만 신청 가능합니다.
-추가 문의사항은 카카오톡 채널을 이용해주시기 바랍니다.
-[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.
 
-*진행이 완료된 무료 체험
+*체험 수업 확정
 
-날짜: ${DateFormat('yyyy년 MM월 dd일').format(trialDate)}
+${snapshot.data!.data['name']} 님의 체험 수업이 확정되었습니다 :)
 
-시간: ${DateFormat('hh시 mm분').format(trialDate)} (한국시간)
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(snapshot.data!.data['trialDate']))} ${getWeekdayFromNumber(DateTime.parse(snapshot.data!.data['trialDate']).weekday)}요일
+
+시간: ${DateFormat('H시 mm분').format(DateTime.parse('${snapshot.data!.data['trialDate']} ${snapshot.data!.data['trialTime']}'))} (한국시간)
 
 Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
  
+체험 수업은 20분간 레벨 테스트 목적으로 진행되며 정규 수업과 수업 방식이 다르다는 점 안내드립니다 :)
+
+튜터 분이 스카이프를 통해 친구 요청 메시지를 전달 드릴 예정입니다.
+원활한 체험 수업 진행을 위해 수업 시작 30분 전까지 친구 수락이 되어야 체험 수업이 확정된다는 점 꼭 확인해 주세요.
+
+감사합니다.
+Enjoy your English with 🍓
+
 """,
                           textAlign: TextAlign.center,
-                        )
+                        ),
+                      ]
+                      // 체험 완료 상태
+                      else if (snapshot.data!.getStudentTrialState() ==
+                          StudentState.trialFinished) ...[
+                        Text(
+                          """
+
+*체험 수업 종료
+
+${snapshot.data!.data['name']} 님의 체험 수업이 종료되었습니다 :)
+
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(snapshot.data!.data['trialDate']))} ${getWeekdayFromNumber(DateTime.parse(snapshot.data!.data['trialDate']).weekday)}요일
+
+시간: ${DateFormat('H시 mm분').format(DateTime.parse('${snapshot.data!.data['trialDate']} ${snapshot.data!.data['trialTime']}'))} (한국시간)
+
+Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
+ 
+무료 체험은 계정당 1회만 신청 가능합니다.
+
+추가 문의사항은 카카오톡 채널을 이용해주시기 바랍니다.
+
+""",
+                          textAlign: TextAlign.center,
+                        ),
+                        Center(
+                          child: SizedBox(
+                            width: 500,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(
+                                    double.infinity, 60), // 버튼 사이즈 조정
+                              ),
+                              onPressed: () {
+                                Navigator.popAndPushNamed(context, '/login')
+                                    .then((_) => setState(() {}));
+                              },
+                              child: const Text(
+                                '수강신청',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
                       ] else ...[
                         SignupScreen2Input(
                           nameController: widget.nameController,

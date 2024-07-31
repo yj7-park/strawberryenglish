@@ -51,19 +51,19 @@ class StudentProvider extends ChangeNotifier {
   }
 
   Future<(Student?, List<String>)> getStudentAndList() async {
-    return (await getStudent(), await getStudentList(_student!.data['name']));
+    return (await getStudent(), await getStudentList(_student!.data['email']));
   }
 
   Future<Student?> getStudent([String? email]) async {
     if (currentUser == null) return null;
-    if (_student != null) return _student;
+    // if (_student != null) return _student;
 
     email ??= currentUser!.email!;
     // 계정 별 복수개 수업 DB 기능
     // if (index != null) {
     //   email = '$email#$index';
     // }
-    if ((_student != null) && (_student!.data['email'] == email)) {
+    if ((_student != null) && (_student!.data['email'].contains(email))) {
       return _student;
     }
 
@@ -97,7 +97,11 @@ class StudentProvider extends ChangeNotifier {
 
     try {
       // Google Sheets에서 사용자 데이터 가져오기
-      _studentList = await getStudentListFromFirestore(email);
+      if (currentUser!.email == 'admin@admin.com') {
+        _studentList = [];
+      } else {
+        _studentList = await getStudentListFromFirestore(email);
+      }
       return _studentList;
     } catch (e) {
       if (kDebugMode) {
@@ -141,6 +145,7 @@ class StudentProvider extends ChangeNotifier {
       await FirebaseAuth.instance.signOut();
     }
     _student = null;
+    _studentList = [];
     notifyListeners();
   }
 
@@ -177,12 +182,11 @@ class StudentProvider extends ChangeNotifier {
 
   Future<List<String>> getStudentListFromFirestore(String email) async {
     try {
-      var _snapshot =
-          await FirebaseFirestore.instance.collection('users').get();
-      List<String> _result = _snapshot.docs.map((e) => e.id).toList();
+      var snapshot = await FirebaseFirestore.instance.collection('users').get();
+      List<String> result = snapshot.docs.map((e) => e.id).toList();
 
       // print(response.values);
-      return _result.where((e) => e.contains(email)).toList();
+      return result.where((e) => e.contains(email)).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Firestore에서 StudentList 가져오는 중 오류 발생: $e');

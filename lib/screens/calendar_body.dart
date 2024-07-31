@@ -70,9 +70,19 @@ class CalendarBodyState extends State<CalendarBody> {
             // 체험 신청 중인 상태
             if (widget.user.getStudentState() ==
                 StudentState.trialRequested) ...[
-              const Text('체험 수업 신청이 완료되어, 일정을 확인 중입니다.'),
-              const Text('체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
-              const Text('신청 정보 수정이 필요하시면 [체험하기] 버튼을 눌러 수정하실 수 있습니다.'),
+              const Text(
+                """
+*체험 수업 신청 완료
+
+체험 수업 신청이 완료되어, 일정을 확인 중입니다.
+
+체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+
+신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
+
+""",
+                textAlign: TextAlign.center,
+              ),
             ]
             // 체험 확정 상태
             else if (widget.user.getStudentState() ==
@@ -83,7 +93,7 @@ class CalendarBodyState extends State<CalendarBody> {
 
 ${widget.user.data['name']} 님의 체험 수업이 확정되었습니다 :)
 
-날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${_getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
 
 시간: ${DateFormat('H시 mm분').format(DateTime.parse('${widget.user.data['trialDate']} ${widget.user.data['trialTime']}'))} (한국시간)
 
@@ -95,7 +105,9 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
 원활한 체험 수업 진행을 위해 수업 시작 30분 전까지 친구 수락이 되어야 체험 수업이 확정된다는 점 꼭 확인해 주세요.
 
 감사합니다.
-Enjoy your English with 🍓""",
+Enjoy your English with 🍓
+
+""",
                 textAlign: TextAlign.center,
               ),
             ]
@@ -108,170 +120,205 @@ Enjoy your English with 🍓""",
 
 ${widget.user.data['name']} 님의 체험 수업이 종료되었습니다 :)
 
-날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${_getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
+날짜: ${DateFormat('yyyy년 MM월 dd일').format(DateTime.parse(widget.user.data['trialDate']))} ${getWeekdayFromNumber(DateTime.parse(widget.user.data['trialDate']).weekday)}요일
 
 시간: ${DateFormat('H시 mm분').format(DateTime.parse('${widget.user.data['trialDate']} ${widget.user.data['trialTime']}'))} (한국시간)
 
 Tutor: ${widget.user.data['trialTutor'] ?? ''}
  
 무료 체험은 계정당 1회만 신청 가능합니다.
+
 추가 문의사항은 카카오톡 채널을 이용해주시기 바랍니다.
-[수강신청] 버튼을 눌러 수강 신청을 하실 수 있습니다.""",
+
+""",
                 textAlign: TextAlign.center,
+              ),
+              Center(
+                child: SizedBox(
+                  width: 500,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
+                    ),
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, '/login')
+                          .then((_) => setState(() {}));
+                    },
+                    child: const Text(
+                      '수강신청',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
               ),
             ]
             // 수강 신청 중인 상태
             else if (widget.user.getStudentState() ==
                 StudentState.lectureRequested) ...[
-              const Text('수강 신청이 완료되어, 일정을 확인 중입니다.'),
-              const Text('수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.'),
-              const Text('신청 정보 수정이 필요하시면 [수강신청] 버튼을 눌러 수정하실 수 있습니다.'),
+              const Text(
+                """
+*수강 신청 완료
+
+수강 신청이 완료되어, 일정을 확인 중입니다.
+
+수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+
+신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
+
+""",
+                textAlign: TextAlign.center,
+              ),
             ]
             // {수업 중 / 장기 홀드 중 / 수업 완료} 인 상태
             else if (needCalendar) ...[
               // 후기 작성 요청
-              // if (feedbackNeeded)
-              ExpansionTile(
-                // backgroundColor: Color.fromARGB(255, 246, 246, 246),
-                // collapsedBackgroundColor: Color.fromARGB(255, 246, 246, 246),
-                shape: InputBorder.none,
-                dense: true,
-                tilePadding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 0), // ListTile의 contentPadding 조절
-                title:
-                    // const Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
+              if (feedbackNeeded)
+                ExpansionTile(
+                  // backgroundColor: Color.fromARGB(255, 246, 246, 246),
+                  // collapsedBackgroundColor: Color.fromARGB(255, 246, 246, 246),
+                  shape: InputBorder.none,
+                  dense: true,
+                  tilePadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 0), // ListTile의 contentPadding 조절
+                  title:
+                      // const Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      const Text(
+                    '🎁 [이벤트] 후기 작성하고 적립금 받아가세요!!',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+                  ),
+                  trailing: const SizedBox(),
+                  backgroundColor: Colors.grey.withOpacity(0.1),
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  childrenPadding: const EdgeInsets.all(20),
+                  children: [
                     const Text(
-                  '🎁 [이벤트] 후기 작성하고 적립금 받아가세요!!',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
-                ),
-                trailing: const SizedBox(),
-                backgroundColor: Colors.grey.withOpacity(0.1),
-                expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                childrenPadding: const EdgeInsets.all(20),
-                children: [
-                  const Text(
-                    """딸기영어에 대한 후기를 남겨주세요.
+                      """딸기영어에 대한 후기를 남겨주세요.
 정성스러운 후기를 남겨주신 분들께는 수강신청 시 현금처럼 사용하실 수 있는
 1000원의 적립금을 드립니다!!""",
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
                     ),
-                    controller: feedbackTitleController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '제목',
-                      isDense: true,
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      controller: feedbackTitleController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: '제목',
+                        isDense: true,
+                      ),
+                      keyboardType: TextInputType.text,
+                      maxLines: 1,
+                      textInputAction: TextInputAction.next,
                     ),
-                    keyboardType: TextInputType.text,
-                    maxLines: 1,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    style: const TextStyle(
-                      fontSize: 14,
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      controller: feedbackBodyController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: '내용',
+                        isDense: true,
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 5,
                     ),
-                    controller: feedbackBodyController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '내용',
-                      isDense: true,
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 5,
-                  ),
-                  const SizedBox(height: 5),
-                  ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        bool? confirm = await ConfirmDialog.show(
-                          context: context,
-                          title: "후기 작성",
-                          body: [
-                            Text(
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  // fontWeight: FontWeight.bold,
-                                  color: customTheme.colorScheme.primary,
-                                ),
-                                '작성하신 후기를 제출하시겠습니까?'),
-                          ],
-                          trueButton: "확인",
-                          falseButton: "취소",
-                        );
-
-                        if (confirm == true) {
-                          // 성공 시 동작
-                          // Student DB: lastFeedbackDate 저장
-                          var dateText =
-                              DateFormat('yyyy-MM-dd').format(DateTime.now());
-                          widget.user.data['lastFeedbackDate'] = dateText;
-
-                          Provider.of<StudentProvider>(context, listen: false)
-                              .updateStudentToFirestoreWithMap(widget.user);
-                          // Feedback DB: 후기 데이터 저장
-                          FirebaseFirestore.instance
-                              .collection('feedback')
-                              // .doc(currentUser!.email)
-                              .doc('$dateText(${widget.user.data['name']})')
-                              .set({
-                            'title': feedbackTitleController.text,
-                            'body': feedbackBodyController.text.split('\n'),
-                            'date': dateText,
-                            'tutor': widget.user.data['tutor'],
-                            'name': widget.user.data['name'],
-                            'email': widget.user.data['email'],
-                            'show': false,
-                            'checked': false,
-                          });
-
-                          // 확인 창
-                          await ConfirmDialog.show(
+                    const SizedBox(height: 5),
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          bool? confirm = await ConfirmDialog.show(
                             context: context,
-                            title: "후기 작성 완료",
+                            title: "후기 작성",
                             body: [
                               Text(
-                                "후기 제출이 완료되었습니다.\n"
-                                "소중한 후기를 작성해주셔서 감사합니다.\n\n"
-                                "※ 적립금은 담당자 확인 후 순차적으로 지급될 예정이며,\n"
-                                "홈페이지 [딸기후기] 페이지에 익명으로 게시될 수 있습니다.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  // fontWeight: FontWeight.bold,
-                                  color: customTheme.colorScheme.primary,
-                                ),
-                              ),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    // fontWeight: FontWeight.bold,
+                                    color: customTheme.colorScheme.primary,
+                                  ),
+                                  '작성하신 후기를 제출하시겠습니까?'),
                             ],
                             trueButton: "확인",
+                            falseButton: "취소",
                           );
+
+                          if (confirm == true) {
+                            // 성공 시 동작
+                            // Student DB: lastFeedbackDate 저장
+                            var dateText =
+                                DateFormat('yyyy-MM-dd').format(DateTime.now());
+                            widget.user.data['lastFeedbackDate'] = dateText;
+
+                            Provider.of<StudentProvider>(context, listen: false)
+                                .updateStudentToFirestoreWithMap(widget.user);
+                            // Feedback DB: 후기 데이터 저장
+                            FirebaseFirestore.instance
+                                .collection('feedback')
+                                // .doc(currentUser!.email)
+                                .doc('$dateText(${widget.user.data['name']})')
+                                .set({
+                              'title': feedbackTitleController.text,
+                              'body': feedbackBodyController.text.split('\n'),
+                              'date': dateText,
+                              'tutor': widget.user.data['tutor'],
+                              'name': widget.user.data['name'],
+                              'email': widget.user.data['email'],
+                              'show': false,
+                              'checked': false,
+                            });
+
+                            // 확인 창
+                            await ConfirmDialog.show(
+                              context: context,
+                              title: "후기 작성 완료",
+                              body: [
+                                Text(
+                                  "후기 제출이 완료되었습니다.\n"
+                                  "소중한 후기를 작성해주셔서 감사합니다.\n\n"
+                                  "※ 적립금은 담당자 확인 후 순차적으로 지급될 예정이며,\n"
+                                  "홈페이지 [딸기후기] 페이지에 익명으로 게시될 수 있습니다.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    // fontWeight: FontWeight.bold,
+                                    color: customTheme.colorScheme.primary,
+                                  ),
+                                ),
+                              ],
+                              trueButton: "확인",
+                            );
+                          }
+                        } catch (e) {
+                          // setState(() {
+                          //   errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
+                          // });
                         }
-                      } catch (e) {
-                        // setState(() {
-                        //   errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
-                        // });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(40),
-                      foregroundColor: Colors.white,
-                      backgroundColor: customTheme.colorScheme.secondary,
-                      shadowColor: Colors.white,
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(40),
+                        foregroundColor: Colors.white,
+                        backgroundColor: customTheme.colorScheme.secondary,
+                        shadowColor: Colors.white,
+                      ),
+                      child: const Text(
+                        '작성 완료',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: const Text(
-                      '작성 완료',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
               const Divider(height: 0),
               // 여기에 사용자 정보를 보여주는 위젯 추가
               _buildStudentDetails(screenHeight > 1000, isMobile),
@@ -450,7 +497,8 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
           crossAxisAlignment:
               isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
-            _buildInfoRow('수업 시간', widget.user.data['lessonTime'], isMobile),
+            _buildInfoRow(
+                '수업 시간', widget.user.data['lessonTime'].join('\n'), isMobile),
             _buildInfoRow(
                 '수업 시작일', widget.user.data['lessonStartDate'], isMobile),
             _buildInfoRow(
@@ -727,36 +775,27 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
     return StudentDataSource(appointments);
   }
 
-  Map<int, DateTime> _getLessonDatesFromLessonTime(String lessonTime) {
-    List<String> lessonTimeLines = lessonTime.split('\n');
+  Map<int, DateTime> _getLessonDatesFromLessonTime(List<dynamic> lessonTime) {
     Map<int, DateTime> lessonDates = {};
 
-    for (String line in lessonTimeLines) {
+    for (var line in lessonTime) {
       var parts = line.split('-');
       if (parts.length == 2) {
         String daysStr = parts[0].trim();
         String timeStr = parts[1].trim();
 
-        List<String> daysList = daysStr.split(',');
-        for (String day in daysList) {
-          int targetDay = _getWeekdayFromString(day);
+        daysStr.runes.forEach((int rune) {
+          var day = String.fromCharCode(rune);
+          int targetDay = getWeekdayFromString(day);
           var timeParts = timeStr.split(':');
           int hour = int.tryParse(timeParts[0]) ?? 0;
           int minute = int.tryParse(timeParts[1]) ?? 0;
           lessonDates[targetDay] = DateTime(0, 0, 0, hour, minute);
-        }
+        });
       }
     }
 
     return lessonDates;
-  }
-
-  int _getWeekdayFromString(String weekday) {
-    return '월화수목금토일'.indexOf(weekday) + 1;
-  }
-
-  String _getWeekdayFromNumber(int weekday) {
-    return '월화수목금토일'[weekday];
   }
 
   // Widget _buildCustomAppointment(BuildContext context,
@@ -1294,4 +1333,12 @@ class StudentDataSource extends CalendarDataSource {
   StudentDataSource(List<Appointment> source) {
     appointments = source;
   }
+}
+
+int getWeekdayFromString(String weekday) {
+  return '월화수목금토일'.indexOf(weekday) + 1;
+}
+
+String getWeekdayFromNumber(int weekday) {
+  return '월화수목금토일'[weekday];
 }
