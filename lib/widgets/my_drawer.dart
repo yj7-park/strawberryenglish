@@ -8,6 +8,7 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:strawberryenglish/utils/my_dialogs.dart';
+import 'package:strawberryenglish/widgets/my_app_bar.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -92,72 +93,10 @@ class _MyDrawerState extends State<MyDrawer> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: const StadiumBorder(),
-                                    minimumSize: const Size(80, 30),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    backgroundColor: Colors.white,
-                                    foregroundColor:
-                                        customTheme.colorScheme.secondary,
-                                    shadowColor: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    isLoggedIn
-                                        ? Navigator.pushNamed(
-                                            context, '/student_calendar')
-                                        : Navigator.pushNamed(
-                                            context, '/signup');
-                                  },
-                                  child: Text(
-                                    isLoggedIn ? '마이페이지' : '회원가입',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
+                                signinButton(context, isLoggedIn),
                                 const SizedBox(width: 10),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: const StadiumBorder(),
-                                    minimumSize: const Size(80, 30),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    foregroundColor: Colors.white,
-                                    shadowColor: Colors.white,
-                                    side: const BorderSide(
-                                      color: Colors.white,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  onPressed: isLoggedIn
-                                      ? () async {
-                                          // 로그아웃 전에 확인 메시지 표시
-                                          bool confirmLogout =
-                                              await LogoutDialog.show(context);
-                                          if (confirmLogout) {
-                                            // 사용자가 확인하면 로그아웃 처리
-                                            studentProvider.logoutStudent();
-                                            if (!context.mounted) return;
-                                            Navigator.pushNamed(context, '/');
-                                          }
-                                        }
-                                      : () {
-                                          Navigator.pushNamed(context, '/login')
-                                              .then((_) => setState(() {}));
-                                        },
-                                  child: Text(
-                                    isLoggedIn ? '로그아웃' : '로그인',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
+                                loginButton(
+                                    context, isLoggedIn, studentProvider),
                               ],
                             ),
                           ],
@@ -224,51 +163,9 @@ class _MyDrawerState extends State<MyDrawer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor:
-                                    customTheme.colorScheme.secondary,
-                                backgroundColor: Colors.white,
-                                shadowColor: Colors.white,
-                                side: BorderSide(
-                                  color: customTheme.colorScheme.secondary,
-                                  width: 2,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/trial');
-                                if (!isLoggedIn) {
-                                  Navigator.popAndPushNamed(context, '/login')
-                                      .then((_) => setState(() {}));
-                                }
-                              },
-                              child: const Text(
-                                '체험하기',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            trialButton(context, isLoggedIn),
                             const SizedBox(width: 10),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor:
-                                    customTheme.colorScheme.secondary,
-                                shadowColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/enrollment');
-                                if (!isLoggedIn) {
-                                  Navigator.popAndPushNamed(context, '/login')
-                                      .then((_) => setState(() {}));
-                                }
-                              },
-                              child: const Text(
-                                '수강신청',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            enrollButton(context, isLoggedIn),
                           ],
                         ),
                       ),

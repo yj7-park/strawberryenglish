@@ -497,8 +497,8 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
           crossAxisAlignment:
               isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.center,
           children: [
-            _buildInfoRow(
-                '수업 시간', widget.user.data['lessonTime'].join('\n'), isMobile),
+            _buildInfoRow('수업 시간',
+                (widget.user.data['lessonTime'] ?? []).join('\n'), isMobile),
             _buildInfoRow(
                 '수업 시작일', widget.user.data['lessonStartDate'], isMobile),
             _buildInfoRow(
@@ -601,7 +601,8 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
     }
 
     // lessonTime 파싱
-    lessonDates = _getLessonDatesFromLessonTime(widget.user.data['lessonTime']);
+    lessonDates =
+        _getLessonDatesFromLessonTime(widget.user.data['lessonTime'] ?? []);
 
     if (widget.user.data.containsKey('cancelDates')) {
       try {
@@ -1251,7 +1252,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
     cancelCount += (data['tutorCancelDates'] ?? []).length;
 
     List<int> lessonDays =
-        _getLessonDatesFromLessonTime(data['lessonTime'] ?? '').keys.toList();
+        _getLessonDatesFromLessonTime(data['lessonTime'] ?? []).keys.toList();
     if (lessonDays.isEmpty) return;
 
     // holdDays 계산
@@ -1283,7 +1284,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
     // holdRequestDays 계산
     if (data.containsKey('holdRequestDates')) {
       List<int> lessonDays =
-          _getLessonDatesFromLessonTime(data['lessonTime']).keys.toList();
+          _getLessonDatesFromLessonTime(data['lessonTime'] ?? []).keys.toList();
 
       for (String dateRange in data['holdRequestDates']) {
         List<String> dateRangeParts = dateRange.split("~");

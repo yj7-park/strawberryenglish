@@ -602,7 +602,7 @@ class _AdminStudentsScreen1ListviewState
 *Student's Name: ${doc['name']}
 *Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
 *Skype ID: ${doc['skypeId'] ?? '-'}
-*Times (KST): ${doc['lessonTime'] ?? '-'}
+*Times (KST): ${(doc['lessonTime'] ?? []).join(', ')}
 *GOAL: ${doc['studyPurpose'] ?? 'No comment'}
 *Starting Date: ${DateFormat('d MMM, E').format(DateTime.tryParse(doc['lessonStartDate'] ?? '') ?? DateTime.now())}
 *Program: ${doc['program'] ?? '-'} (${doc['topic'] ?? '-'})

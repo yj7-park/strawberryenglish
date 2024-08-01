@@ -32,8 +32,8 @@ class EnrollmentScreen extends StatefulWidget {
   final TextEditingController cashReceiptNumberController =
       TextEditingController();
   static Set<int> selectedMonths = {3};
-  static Set<int> selectedDays = {3};
-  static Set<int> selectedMins = {55};
+  static Set<int> selectedDays = {2};
+  static Set<int> selectedMins = {30};
   static int selectedTopic = 0;
   static int selectedTopicDetail = 0;
 
@@ -153,7 +153,7 @@ ${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                                    color: Colors.white),
                               ),
                             ),
                           ),
