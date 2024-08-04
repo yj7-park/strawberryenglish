@@ -57,7 +57,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
         child: Column(
           children: [
             Text(
-              errorMessage,
+              errorMessageTranslate(errorMessage),
               style: const TextStyle(color: Colors.red),
             ),
             SizedBox(
@@ -187,4 +187,27 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
       });
     }
   }
+}
+
+String errorMessageTranslate(String e) {
+  if (e.isEmpty) return e;
+  if (RegExp(r'[가-힣]').hasMatch(e)) return e;
+
+  const errorMessageTranslated = {
+    "The email address is already in use by another account.":
+        "이미 사용 중인 이메일 주소입니다.",
+    "The email address is badly formatted.": "이메일 주소의 형식이 올바르지 않습니다.",
+    "The password is invalid or the user does not have a password.":
+        "비밀번호가 잘못 되었습니다.",
+    "The password must be 6 characters long or more.": "비밀번호는 6글자 이상이어야 합니다.",
+    "The user account has been disabled by an administrator.":
+        "이 계정은 관리자에 의해 비활성화 되었습니다.",
+    "There is no user record corresponding to this identifier. The user may have been deleted.":
+        "등록되지 않은 이메일 주소입니다.",
+    "The supplied auth credential is incorrect, malformed or has expired.":
+        "아이디 또는 비밀번호가 잘못 되었습니다.",
+  };
+  const errorMessageTranslatedDefault = "시스템 오류가 발생했습니다. 관리자에게 문의하세요.";
+
+  return errorMessageTranslated[e] ?? errorMessageTranslatedDefault;
 }

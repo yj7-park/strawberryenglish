@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/providers/tutor_provider.dart';
+import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class LoginScreenState extends State<LoginScreen> {
                     child: TextField(
                       controller: _usernameController,
                       decoration: const InputDecoration(
-                        labelText: 'Username',
+                        labelText: '아이디(이메일)',
                         border: OutlineInputBorder(),
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -82,7 +83,7 @@ class LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
-                        labelText: 'Password',
+                        labelText: '비밀번호',
                         border: OutlineInputBorder(),
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -133,12 +134,18 @@ class LoginScreenState extends State<LoginScreen> {
                             );
                             setState(() {
                               _errorMessage =
-                                  '계정의 이메일 주소로 비밀번호 재설정 이메일이 전송되었습니다.';
+                                  '입력된 이메일 주소로 비밀번호 재설정 이메일이 전송되었습니다.';
                             });
                           } catch (e) {
+                            if (kDebugMode) {
+                              print('Error reset password in: $e');
+                            }
                             setState(() {
-                              _errorMessage =
-                                  '비밀번호 재설정 이메일 전송에 실패하였습니다. 이메일 주소를 다시 확인해주세요.';
+                              _errorMessage = e
+                                  .toString()
+                                  .replaceFirst(RegExp(r'\[.*\] '), '');
+                              // _errorMessage =
+                              //     '비밀번호 재설정 이메일 전송에 실패하였습니다. 이메일 주소를 다시 확인해주세요.';
                             });
                           }
                         },
@@ -154,7 +161,7 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    _errorMessage,
+                    errorMessageTranslate(_errorMessage),
                     style: TextStyle(color: customTheme.colorScheme.error),
                   ),
                 ],

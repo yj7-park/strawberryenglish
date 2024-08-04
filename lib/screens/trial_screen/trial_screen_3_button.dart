@@ -1,3 +1,4 @@
+import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:universal_html/js.dart' as js;
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 // ignore_for_file: use_build_context_synchronously
@@ -51,7 +52,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
         child: Column(
           children: [
             Text(
-              errorMessage,
+              errorMessageTranslate(errorMessage),
               style: const TextStyle(color: Colors.red),
             ),
             SizedBox(

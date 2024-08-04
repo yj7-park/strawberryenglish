@@ -32,8 +32,6 @@ class TrialScreen extends StatefulWidget {
   final TextEditingController referralSourceController =
       TextEditingController();
 
-  static String errorMessage = '';
-
   @override
   State<TrialScreen> createState() => _TrialScreenState();
 }

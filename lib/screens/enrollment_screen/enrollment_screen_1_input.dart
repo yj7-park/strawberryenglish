@@ -230,6 +230,8 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
               textInputAction: TextInputAction.next,
             ),
             const Text('* 수업 가능 시간대를 넓게 주시면 수업 확정이 더 빠르게 진행 됩니다.'),
+            const Text(
+                '* 수업시간은 정시 혹은 30분 단위로 적어주세요.\n   ex) 오전 10시~ 오후 12시 30분 or 오전 10시 30분, 오전 11시 00분'),
             const SizedBox(height: 30),
             // 수업 토픽
             const Text('*수업토픽', style: TextStyle(fontSize: 16)),
@@ -465,9 +467,9 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
                               fontWeight: FontWeight.bold,
                               color: customTheme.colorScheme.secondary,
                             ),
-                            '${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원'),
+                            '월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원'),
                         Text(
-                            '(월 ${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first])}원)'),
+                            '(${NumberFormat("###,###").format(EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![EnrollmentScreen.selectedDays.first]![EnrollmentScreen.selectedMins.first]! * EnrollmentScreen.selectedMonths.first)}원)'),
                       ],
                     ),
                   ],
