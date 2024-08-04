@@ -540,36 +540,70 @@ class _AdminStudentsScreen1ListviewState
                                           Builder(builder: (context) {
                                             Map<String, bool> inputCondition =
                                                 {};
+                                            var student = Student(data: doc);
+
                                             // 기본 정보
+                                            inputCondition['기본 정보'] = false;
+
                                             inputCondition['name'] = true;
                                             inputCondition['points'] = true;
+                                            inputCondition['studyPurpose'] =
+                                                true;
+
+                                            // 정상수강 / 장기홀드
+                                            var lectureState = student
+                                                .getStudentLectureState();
+                                            bool isLectureOnGoing =
+                                                lectureState ==
+                                                        StudentState
+                                                            .lectureOnGoing ||
+                                                    lectureState ==
+                                                        StudentState
+                                                            .lectureOnHold;
+                                            if (isLectureOnGoing) {
+                                              inputCondition['수강 정보'] = false;
+
+                                              inputCondition['lessonTime'] =
+                                                  true;
+                                              inputCondition['tutor'] = true;
+                                              inputCondition['program'] = true;
+                                              inputCondition['topic'] = true;
+                                            }
 
                                             // 수강신청
                                             bool isEnroll =
                                                 (customData[id]!['enroll'] ??
                                                         0) >
                                                     0;
-                                            inputCondition['tutor'] = isEnroll;
-                                            inputCondition['lessonTime'] =
-                                                isEnroll;
-                                            inputCondition['lessonStartDate'] =
-                                                isEnroll;
-                                            inputCondition['lessonEndDate'] =
-                                                isEnroll;
-                                            inputCondition['paymentAmount'] =
-                                                isEnroll;
+                                            if (isEnroll) {
+                                              inputCondition['수강신청 정보'] = false;
+
+                                              inputCondition['tutor'] = true;
+                                              inputCondition['lessonTime'] =
+                                                  true;
+                                              inputCondition[
+                                                  'lessonStartDate'] = isEnroll;
+                                              inputCondition['lessonEndDate'] =
+                                                  true;
+                                              inputCondition['paymentAmount'] =
+                                                  true;
+                                            }
 
                                             // 체험신청
                                             bool isTrial =
                                                 (customData[id]!['trial'] ??
                                                         0) >
                                                     0;
-                                            inputCondition['trialTutor'] =
-                                                isTrial;
-                                            inputCondition['trialDate'] =
-                                                isTrial;
-                                            inputCondition['trialTime'] =
-                                                isTrial;
+                                            if (isTrial) {
+                                              inputCondition['체험신청 정보'] = false;
+
+                                              inputCondition['trialTutor'] =
+                                                  true;
+                                              inputCondition['trialDate'] =
+                                                  true;
+                                              inputCondition['trialTime'] =
+                                                  true;
+                                            }
 
                                             return SizedBox(
                                               // duration:
@@ -589,10 +623,7 @@ class _AdminStudentsScreen1ListviewState
                                                         ),
                                                       ),
                                                       // 수강신청
-                                                      if ((customData[id]![
-                                                                  'enroll'] ??
-                                                              0) >
-                                                          0) ...[
+                                                      if (isEnroll) ...[
                                                         ElevatedButton(
                                                           onPressed: (() {
                                                             Clipboard.setData(
@@ -622,10 +653,7 @@ class _AdminStudentsScreen1ListviewState
                                                             height: 5)
                                                       ],
                                                       // 체험신청
-                                                      if ((customData[id]![
-                                                                  'trial'] ??
-                                                              0) >
-                                                          0) ...[
+                                                      if (isTrial) ...[
                                                         ElevatedButton(
                                                           onPressed: (() {
                                                             Clipboard.setData(
@@ -656,7 +684,27 @@ class _AdminStudentsScreen1ListviewState
                                                         for (var ic
                                                             in inputCondition
                                                                 .entries)
-                                                          if (ic.value)
+                                                          if (ic.value ==
+                                                              false) ...[
+                                                            SizedBox(
+                                                                height: 50),
+                                                            Divider(
+                                                              height: 0,
+                                                              thickness: 2,
+                                                            ),
+                                                            Text(ic.key,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 17,
+                                                                )),
+                                                            Divider(
+                                                              height: 0,
+                                                              thickness: 2,
+                                                            ),
+                                                          ] else if (ic.value)
                                                             Builder(
                                                               builder:
                                                                   (context) {
@@ -684,6 +732,12 @@ class _AdminStudentsScreen1ListviewState
                                                                       TextFormField(
                                                                     decoration:
                                                                         InputDecoration(
+                                                                      labelStyle: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color: initialText.isEmpty
+                                                                              ? Colors.red
+                                                                              : Colors.black),
                                                                       label: Text(
                                                                           e.key),
                                                                     ),

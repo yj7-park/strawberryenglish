@@ -58,7 +58,8 @@ class Student {
 
   StudentState getStudentTrialState() {
     if ((data['trialTutor'] ?? '').isNotEmpty &&
-        (DateTime.tryParse('${data['trialDate']} ${data['trialTime']}') !=
+        (DateTime.tryParse(
+                '${data['trialDate'] ?? ''} ${data['trialTime'] ?? ''}') !=
             null)) {
       var trialDate = DateTime.parse(data['trialDate']);
       if (trialDate.isBefore(DateTime.now())) {
@@ -74,8 +75,13 @@ class Student {
   }
 
   StudentState getStudentLectureState() {
+    if (data['name'] == '박용준') {
+      print('now');
+    }
     if ((data['tutor'] ?? '').isNotEmpty) {
-      if ((DateTime.tryParse(data['lessonEndDate']) ?? DateTime.now())
+      if ((DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
+              DateTime.tryParse(data['lessonEndDate'] ?? '') ??
+              DateTime.now())
           .isAfter(DateTime.now())) {
         bool inHold = false;
         for (String range in data['holdDates']) {
