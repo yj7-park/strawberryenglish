@@ -145,6 +145,14 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       return;
     }
 
+    var price =
+        EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![
+                EnrollmentScreen.selectedDays
+                    .first]![EnrollmentScreen.selectedMins.first]! *
+            EnrollmentScreen.selectedMonths.first;
+    var pointDiscount = int.tryParse(pointsController.text) ?? 0;
+    var finalPrice = price - pointDiscount;
+
     try {
       setState(() {});
       bool? confirm = await ConfirmDialog.show(
@@ -301,15 +309,6 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                       const Spacer(),
                       Builder(
                         builder: (context) {
-                          var price = EnrollmentScreen1Input.fee[
-                                          EnrollmentScreen
-                                              .selectedMonths.first]![
-                                      EnrollmentScreen.selectedDays.first]![
-                                  EnrollmentScreen.selectedMins.first]! *
-                              EnrollmentScreen.selectedMonths.first;
-                          var pointDiscount =
-                              int.tryParse(pointsController.text) ?? 0;
-                          var finalPrice = price - pointDiscount;
                           return Text(
                             style: TextStyle(
                               fontSize: 14,
@@ -347,6 +346,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         // updatedStudent.data['requestTime'] = '$requestDay-$requestTime';
         updatedStudent.data['lessonPeriod'] =
             EnrollmentScreen.selectedMins.first;
+        updatedStudent.data['lessonDays'] = EnrollmentScreen.selectedDays.first;
+        updatedStudent.data['lessonMonths'] =
+            EnrollmentScreen.selectedMonths.first;
         updatedStudent.data['cashReceiptNumber'] = cashReceiptNumber;
         updatedStudent.data['program'] = EnrollmentScreen1Input.topic.keys
             .elementAt(EnrollmentScreen.selectedTopic);
@@ -377,6 +379,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                 EnrollmentScreen.selectedDays.first];
         updatedStudent.data['holdDates'] = [];
         updatedStudent.data['holdRequestDates'] = [];
+
+        // 결재 데이터
+        updatedStudent.data['billingAmount'] = price;
+        updatedStudent.data['billingDiscount'] = pointDiscount;
+        updatedStudent.data['billingFinal'] = finalPrice;
 
         // 초기화 필요 항목
         updatedStudent.data['lessonTime'] = [];

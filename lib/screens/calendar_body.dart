@@ -141,8 +141,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                       minimumSize: const Size(double.infinity, 60), // 버튼 사이즈 조정
                     ),
                     onPressed: () {
-                      Navigator.popAndPushNamed(context, '/login')
-                          .then((_) => setState(() {}));
+                      Navigator.pushNamed(context, '/enrollment');
                     },
                     child: const Text(
                       '수강신청',

@@ -549,26 +549,7 @@ class _AdminStudentsScreen1ListviewState
                                             inputCondition['points'] = true;
                                             inputCondition['studyPurpose'] =
                                                 true;
-
-                                            // 정상수강 / 장기홀드
-                                            var lectureState = student
-                                                .getStudentLectureState();
-                                            bool isLectureOnGoing =
-                                                lectureState ==
-                                                        StudentState
-                                                            .lectureOnGoing ||
-                                                    lectureState ==
-                                                        StudentState
-                                                            .lectureOnHold;
-                                            if (isLectureOnGoing) {
-                                              inputCondition['수강 정보'] = false;
-
-                                              inputCondition['lessonTime'] =
-                                                  true;
-                                              inputCondition['tutor'] = true;
-                                              inputCondition['program'] = true;
-                                              inputCondition['topic'] = true;
-                                            }
+                                            inputCondition['level'] = true;
 
                                             // 수강신청
                                             bool isEnroll =
@@ -581,11 +562,30 @@ class _AdminStudentsScreen1ListviewState
                                               inputCondition['tutor'] = true;
                                               inputCondition['lessonTime'] =
                                                   true;
+                                              inputCondition['lessonMonths'] =
+                                                  true;
+                                              inputCondition['lessonDays'] =
+                                                  true;
+                                              inputCondition['lessonPeriod'] =
+                                                  true;
                                               inputCondition[
                                                   'lessonStartDate'] = isEnroll;
                                               inputCondition['lessonEndDate'] =
                                                   true;
-                                              inputCondition['paymentAmount'] =
+
+                                              // 수강신청 - 결제 관련 정보
+                                              inputCondition['결제 관련 정보'] =
+                                                  false;
+
+                                              inputCondition[
+                                                  'cashReceiptNumber'] = true;
+                                              inputCondition['billingAmount'] =
+                                                  true;
+                                              inputCondition[
+                                                  'billingDiscount'] = true;
+                                              inputCondition['billingFinal'] =
+                                                  true;
+                                              inputCondition['paymentAmmount'] =
                                                   true;
                                             }
 
@@ -603,6 +603,32 @@ class _AdminStudentsScreen1ListviewState
                                                   true;
                                               inputCondition['trialTime'] =
                                                   true;
+                                            }
+
+                                            // 정상수강 / 장기홀드
+                                            var lectureState = student
+                                                .getStudentLectureState();
+                                            bool isLectureOnGoing =
+                                                lectureState ==
+                                                        StudentState
+                                                            .lectureOnGoing ||
+                                                    lectureState ==
+                                                        StudentState
+                                                            .lectureOnHold;
+                                            if (isLectureOnGoing) {
+                                              inputCondition['수강 정보'] = false;
+
+                                              inputCondition['tutor'] = true;
+                                              inputCondition['lessonTime'] =
+                                                  true;
+                                              inputCondition['lessonMonths'] =
+                                                  true;
+                                              inputCondition['lessonDays'] =
+                                                  true;
+                                              inputCondition['lessonPeriod'] =
+                                                  true;
+                                              inputCondition['program'] = true;
+                                              inputCondition['topic'] = true;
                                             }
 
                                             return SizedBox(

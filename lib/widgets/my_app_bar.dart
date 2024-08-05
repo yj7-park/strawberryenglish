@@ -238,7 +238,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                       child: Column(
                                         children: [
                                           myMenuItemButton(context, '🛡관리자메뉴',
-                                              '/admin_students'),
+                                              '/admin_dashboard'),
+                                          myMenuItemButton(context, '🛡대시보드',
+                                              '/admin_dashboard'),
                                           myMenuItemButton(context, '🛡학생정보',
                                               '/admin_students'),
                                           myMenuItemButton(context, '🛡후기관리',

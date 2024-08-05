@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/screens/admin_feedback_screen.dart';
+import 'package:strawberryenglish/screens/admin_dashboard_screen.dart';
 import 'package:strawberryenglish/screens/admin_students_screen.dart';
 import 'package:strawberryenglish/screens/announcement_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const HomeScreen());
 
@@ -75,11 +77,13 @@ class MyApp extends StatelessWidget {
             // 1. 회사소개
             case '/introduction':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const IntroductionScreen());
             // 2. 공지사항
             case '/announcement':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const AnnouncementScreen());
 
@@ -87,72 +91,90 @@ class MyApp extends StatelessWidget {
             // 1. 수강안내
             case '/lectures':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const LecturesScreen());
             // 2. 수업토픽
             case '/topics':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const TopicsScreen());
             // 3. 튜터소개
             case '/tutors':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const TutorsScreen());
             // 4. 수강료
             case '/tuitionfee':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const TuitionfeeScreen());
             // 5. FAQ
             case '/faq':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const FaqScreen());
 
             // 딸기후기
             case '/feedbacks':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const FeedbackScreen());
 
             // 체험하기
             case '/trial':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       TrialScreen());
             // 수강신청
             case '/enrollment':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       EnrollmentScreen());
 
             // 로그인
             case '/login':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const LoginScreen());
             // 회원가입
             case '/signup':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       SignupScreen());
 
             // 마이페이지
             case '/student_calendar':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const StudentCalendarScreen());
             // '/tutor_calendar': (context) => const TutorCalendarScreen(),
             // '/admin': (context) => const AdminScreen(),
             case '/admin_students':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const AdminStudentsScreen());
             case '/admin_feedbacks':
               return PageRouteBuilder(
+                  settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const AdminFeedbackScreen());
+            case '/admin_dashboard':
+              return PageRouteBuilder(
+                  settings: settings,
+                  pageBuilder: (context, animation1, animation2) =>
+                      const AdminDashboardScreen());
             // Add more routes if needed
             default:
               return null;

@@ -147,6 +147,9 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
         'email': email,
         'birthDate': birthDate,
         'adAgreed': SignupScreen.check3,
+
+        // TODO: 초기화 위치 확정 필요
+        'level': '',
       });
 
       bool? confirm = await ConfirmDialog.show(
