@@ -32,10 +32,42 @@ class CalendarBodyState extends State<CalendarBody> {
   bool feedbackNeeded = false;
   late CalendarDataSource calendarDataSource;
   bool needCalendar = false;
+  Map<String, String> holidayData = {};
+  Map<String, String> breakdayData = {};
+
+  Future<dynamic> getHolidayData() async {
+    final collection = FirebaseFirestore.instance.collection("holiday");
+
+    await collection
+        .get()
+        .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
+      setState(() {
+        holidayData = {
+          for (var doc in snapshot.docs) doc.id: doc.data()['name'] ?? '',
+        };
+      });
+    });
+  }
+
+  Future<dynamic> getBreakdayData() async {
+    final collection = FirebaseFirestore.instance.collection("breakday");
+
+    await collection
+        .get()
+        .then<void>((QuerySnapshot<Map<String, dynamic>> snapshot) async {
+      setState(() {
+        breakdayData = {
+          for (var doc in snapshot.docs) doc.id: doc.data()['name'] ?? '',
+        };
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    getHolidayData();
+    getBreakdayData();
   }
 
   @override
@@ -722,7 +754,15 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
           lessonTime.minute,
         );
 
-        if (cancelDates.contains(currentLessonDate)) {
+        var mmdd = DateFormat('MM-dd').format(currentLessonDate);
+        var yymmdd = DateFormat('yyyy-MM-dd').format(currentLessonDate);
+        if (holidayData.keys.contains(mmdd)) {
+          appointmentColor = Colors.red;
+          subject = '[휴일] ${holidayData[mmdd]}';
+        } else if (breakdayData.keys.contains(yymmdd)) {
+          appointmentColor = Colors.red;
+          subject = '[임시휴일] ${breakdayData[yymmdd]}';
+        } else if (cancelDates.contains(currentLessonDate)) {
           appointmentColor = Colors.red;
           subject = '[수업 취소] 학생 취소';
         } else if (tutorCancelDates.contains(currentLessonDate)) {
@@ -1063,7 +1103,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
       },
     );
     return [
-      ListTile(title: Text(message)),
+      if (buttonText.isNotEmpty) ListTile(title: Text(message)),
       ...buttonText.map(
         (items) {
           var text1 = items.$1;
@@ -1241,90 +1281,59 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
     // 마지막 수업일 계산
     var data = widget.user.data;
 
-    // 취소일 count
-    // Student 취소일
-    // int cancelCount = data['cancelDates'].length;
-    num cancelCount =
-        (data['cancelCountTotal'] ?? 0) - (data['cancelCountLeft'] ?? 0);
+    // 수업취소
+    var cancelDates = ((data['cancelDates'] ?? []) +
+            (data['cancelRequestDates'] ?? []) +
+            (data['tutorCancelDates'] ?? []))
+        .map((e) => DateTime.tryParse(e))
+        .toSet();
 
-    // Tutor 취소일
-    cancelCount += (data['tutorCancelDates'] ?? []).length;
+    // 장기홀드
+    for (String dateRange
+        in ((data['holdDates'] ?? []) + (data['holdRequestDates'] ?? []))) {
+      List<String> dateRangeParts = dateRange.split("~");
+      if (dateRangeParts.length == 2) {
+        DateTime startDate =
+            DateTime.parse(dateRangeParts[0].replaceAll('. ', '-'));
+        DateTime endDate =
+            DateTime.parse(dateRangeParts[1].replaceAll('. ', '-'));
+
+        // startDate와 endDate 사이에 있는 날짜를 확인하면서 lessonDays에 포함된 weekDay를 count
+        for (DateTime date = startDate;
+            date.isBefore(endDate) || date.isAtSameMomentAs(endDate);
+            date = date.add(const Duration(days: 1))) {
+          cancelDates.add(date);
+        }
+      }
+    }
 
     List<int> lessonDays =
         _getLessonDatesFromLessonTime(data['lessonTime'] ?? []).keys.toList();
     if (lessonDays.isEmpty) return;
 
-    // holdDays 계산
-    if (data.containsKey('holdDates')) {
-      for (String dateRange in data['holdDates']) {
-        List<String> dateRangeParts = dateRange.split("~");
-        if (dateRangeParts.length == 2) {
-          DateTime startDate =
-              DateTime.parse(dateRangeParts[0].replaceAll('. ', '-'));
-          DateTime endDate =
-              DateTime.parse(dateRangeParts[1].replaceAll('. ', '-'));
-
-          int lessonDaysInRange = 0;
-
-          // startDate와 endDate 사이에 있는 날짜를 확인하면서 lessonDays에 포함된 weekDay를 count
-          for (DateTime date = startDate;
-              date.isBefore(endDate) || date.isAtSameMomentAs(endDate);
-              date = date.add(const Duration(days: 1))) {
-            int weekDay = date.weekday;
-            if (lessonDays.contains(weekDay)) {
-              lessonDaysInRange++;
-            }
-          }
-
-          cancelCount += lessonDaysInRange;
-        }
-      }
-    }
-    // holdRequestDays 계산
-    if (data.containsKey('holdRequestDates')) {
-      List<int> lessonDays =
-          _getLessonDatesFromLessonTime(data['lessonTime'] ?? []).keys.toList();
-
-      for (String dateRange in data['holdRequestDates']) {
-        List<String> dateRangeParts = dateRange.split("~");
-        if (dateRangeParts.length == 2) {
-          DateTime startDate =
-              DateTime.parse(dateRangeParts[0].replaceAll('. ', '-'));
-          DateTime endDate =
-              DateTime.parse(dateRangeParts[1].replaceAll('. ', '-'));
-
-          int lessonDaysInRange = 0;
-
-          // startDate와 endDate 사이에 있는 날짜를 확인하면서 lessonDays에 포함된 weekDay를 count
-          for (DateTime date = startDate;
-              date.isBefore(endDate) || date.isAtSameMomentAs(endDate);
-              date = date.add(const Duration(days: 1))) {
-            int weekDay = date.weekday;
-            if (lessonDays.contains(weekDay)) {
-              lessonDaysInRange++;
-            }
-          }
-
-          cancelCount += lessonDaysInRange;
-        }
-      }
-    }
-
-    var lastLessonDate =
+    var lessonStartDate =
+        DateTime.parse(data['lessonStartDate'].replaceAll('. ', '-'));
+    var lessonEndDate =
         DateTime.parse(data['lessonEndDate'].replaceAll('. ', '-'));
-    while (!lessonDays.contains(lastLessonDate.weekday)) {
-      lastLessonDate = lastLessonDate.subtract(const Duration(days: 1));
-    }
-    for (int i = 0; i < cancelCount; i++) {
-      lastLessonDate = lastLessonDate.add(const Duration(days: 1));
-      // 다음 수업 날짜를 찾을 때까지 반복합니다.
-      while (!lessonDays.contains(lastLessonDate.weekday)) {
-        lastLessonDate = lastLessonDate.add(const Duration(days: 1));
+    var today = lessonStartDate;
+    while (today.isBefore(lessonEndDate) ||
+        today.isAtSameMomentAs(lessonEndDate)) {
+      if (lessonDays.contains(today.weekday)) {
+        if (cancelDates.contains(today) ||
+            holidayData.keys.contains(DateFormat('MM-dd').format(today)) ||
+            breakdayData.keys
+                .contains(DateFormat('yyyy-MM-dd').format(today))) {
+          lessonEndDate = lessonEndDate.add(const Duration(days: 1));
+          while (!lessonDays.contains(lessonEndDate.weekday)) {
+            lessonEndDate = lessonEndDate.add(const Duration(days: 1));
+          }
+        }
       }
+      today = today.add(const Duration(days: 1));
     }
 
     // 데이터 저장
-    String formattedDate = DateFormat('yyyy-MM-dd').format(lastLessonDate);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(lessonEndDate);
     widget.user.data['modifiedLessonEndDate'] = formattedDate;
   }
 }

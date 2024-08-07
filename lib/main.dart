@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/screens/admin_feedback_screen.dart';
 import 'package:strawberryenglish/screens/admin_dashboard_screen.dart';
+import 'package:strawberryenglish/screens/admin_holiday_screen.dart';
 import 'package:strawberryenglish/screens/admin_students_screen.dart';
 import 'package:strawberryenglish/screens/announcement_screen.dart';
 import 'package:strawberryenglish/screens/enrollment_screen.dart';
@@ -175,6 +176,11 @@ class MyApp extends StatelessWidget {
                   settings: settings,
                   pageBuilder: (context, animation1, animation2) =>
                       const AdminDashboardScreen());
+            case '/admin_holiday':
+              return PageRouteBuilder(
+                  settings: settings,
+                  pageBuilder: (context, animation1, animation2) =>
+                      const AdminHolidayScreen());
             // Add more routes if needed
             default:
               return null;
