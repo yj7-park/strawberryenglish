@@ -12,6 +12,7 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
+import 'package:universal_html/js.dart' as js;
 
 class TrialScreen extends StatefulWidget {
   TrialScreen({super.key});
@@ -39,6 +40,8 @@ class TrialScreen extends StatefulWidget {
 class _TrialScreenState extends State<TrialScreen> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fontSize = (screenWidth * 0.025).clamp(12, 18);
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
@@ -90,19 +93,25 @@ class _TrialScreenState extends State<TrialScreen> {
                       // 커버 페이지
                       if (snapshot.data!.getStudentTrialState() ==
                           StudentState.trialRequested) ...[
-                        const Text(
+                        Text(
                           """
 
 *체험 수업 신청 완료
 
-체험 수업 신청이 완료되어, 일정을 확인 중입니다.
+체험 수업 확정 안내를 위해 
 
-체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+반드시 카카오톡 채널을 통해 '체험 수업 신청 완료'라고 말씀해 주세요. 
 
-신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
+체험 수업 일정이 확정되면 카카오톡으로 안내드리겠습니다.
+
+그 외 정보 수정 및 문의사항 있으시다면 카카오톡 채널로 문의해 주세요.
 
 """,
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ]
                       // 체험 확정 상태
@@ -131,6 +140,10 @@ Enjoy your English with 🍓
 
 """,
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ]
                       // 체험 완료 상태
@@ -155,6 +168,10 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
 
 """,
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         Center(
                           child: SizedBox(
@@ -220,19 +237,19 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
                 }
               },
             ),
-            // Positioned(
-            //   bottom: 30,
-            //   right: 30,
-            //   child: InkWell(
-            //     onTap: () {
-            //       js.context
-            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-            //     },
-            //     child: Image.asset(
-            //       'assets/images/kakao_talk.png',
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                ),
+              ),
+            ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

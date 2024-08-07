@@ -1340,5 +1340,6 @@ int getWeekdayFromString(String weekday) {
 }
 
 String getWeekdayFromNumber(int weekday) {
-  return '월화수목금토일'[weekday];
+  weekday = weekday % 7;
+  return '일월화수목금토'[weekday];
 }

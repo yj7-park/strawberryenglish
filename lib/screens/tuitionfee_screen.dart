@@ -5,6 +5,7 @@ import 'package:strawberryenglish/widgets/company_info.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
+import 'package:universal_html/js.dart' as js;
 
 class TuitionfeeScreen extends StatelessWidget {
   const TuitionfeeScreen({super.key});
@@ -29,19 +30,19 @@ class TuitionfeeScreen extends StatelessWidget {
                 CompanyInfo(),
               ],
             ),
-            // Positioned(
-            //   bottom: 30,
-            //   right: 30,
-            //   child: InkWell(
-            //     onTap: () {
-            //       js.context
-            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-            //     },
-            //     child: Image.asset(
-            //       'assets/images/kakao_talk.png',
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                ),
+              ),
+            ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

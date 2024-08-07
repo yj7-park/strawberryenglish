@@ -9,6 +9,7 @@ import 'package:strawberryenglish/screens/calendar_body.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/js.dart' as js;
 
 class StudentCalendarScreen extends StatelessWidget {
   const StudentCalendarScreen({super.key});
@@ -66,20 +67,20 @@ class StudentCalendarScreen extends StatelessWidget {
                 )
               ],
             ),
-            // Positioned(
-            //   bottom: 30,
-            //   right: 30,
-            //   child: InkWell(
-            //     onTap: () {
-            //       js.context
-            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-            //     },
-            //     child: Image.asset(
-            //       'assets/images/kakao_talk.png',
-            //       width: 70,
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                  width: 70,
+                ),
+              ),
+            ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

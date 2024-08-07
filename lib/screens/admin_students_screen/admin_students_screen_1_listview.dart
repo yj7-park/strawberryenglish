@@ -605,9 +605,9 @@ class _AdminStudentsScreen1ListviewState
                                                   true;
                                             }
 
-                                            // 정상수강 / 장기홀드
                                             var lectureState = student
                                                 .getStudentLectureState();
+                                            // 정상수강 / 장기홀드
                                             bool isLectureOnGoing =
                                                 lectureState ==
                                                         StudentState
@@ -629,6 +629,22 @@ class _AdminStudentsScreen1ListviewState
                                                   true;
                                               inputCondition['program'] = true;
                                               inputCondition['topic'] = true;
+                                            }
+
+                                            // 체험 신청 완료
+                                            var trialState =
+                                                student.getStudentTrialState();
+                                            if (trialState ==
+                                                StudentState.trialConfirmed) {
+                                              inputCondition['체험 수업 정보'] =
+                                                  false;
+
+                                              inputCondition['trialTutor'] =
+                                                  true;
+                                              inputCondition['trialTime'] =
+                                                  true;
+                                              inputCondition['trialDate'] =
+                                                  true;
                                             }
 
                                             return SizedBox(
@@ -860,9 +876,6 @@ class _AdminStudentsScreen1ListviewState
                                                                 }
                                                                 d[id]![e.key] =
                                                                     updateText;
-                                                                inputText
-                                                                    .split(',')
-                                                                    .length = 0;
                                                               }
                                                             }
 

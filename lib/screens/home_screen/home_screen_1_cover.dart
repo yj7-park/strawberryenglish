@@ -83,11 +83,11 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
                         style: TextStyle(
                           color: Colors.white,
                           // color: customTheme.colorScheme.secondary,
-                          fontSize: (screenWidth * 0.04).clamp(14, 60),
+                          fontSize: (screenWidth * 0.04).clamp(20, 60),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: (screenWidth * 0.04).clamp(14, 32)),
                       Text(
                         "좋은 수업은",
                         style: TextStyle(
@@ -96,16 +96,16 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: (screenWidth * 0.025).clamp(5, 10)),
                       Text(
                         "좋은 튜터로부터",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: (screenWidth * 0.025).clamp(14, 30) + 3,
+                          fontSize: (screenWidth * 0.025).clamp(14, 30),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: (screenWidth * 0.04).clamp(14, 32)),
                     ],
                   ),
                   // Row(
@@ -135,11 +135,13 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 200,
+                    width: (screenWidth * 0.3).clamp(100, 200),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        minimumSize:
-                            const Size(double.infinity, 60), // 버튼 사이즈 조정
+                        minimumSize: Size(
+                          double.infinity,
+                          (screenWidth * 0.06).clamp(30, 60),
+                        ), // 버튼 사이즈 조정
                       ),
                       onPressed: () {
                         if (FirebaseAuth.instance.currentUser == null) {
@@ -150,10 +152,10 @@ class _HomeScreen1CoverState extends State<HomeScreen1Cover> {
                           Navigator.pushNamed(context, '/trial');
                         }
                       },
-                      child: const Text(
+                      child: Text(
                         '체험하기',
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: (screenWidth * 0.02).clamp(12, 18),
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),

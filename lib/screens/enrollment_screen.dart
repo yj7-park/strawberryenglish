@@ -11,6 +11,7 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
+import 'package:universal_html/js.dart' as js;
 
 class EnrollmentScreen extends StatefulWidget {
   EnrollmentScreen({super.key});
@@ -210,20 +211,20 @@ ${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
                 }
               },
             ),
-            // Positioned(
-            //   bottom: 30,
-            //   right: 30,
-            //   child: InkWell(
-            //     onTap: () {
-            //       js.context
-            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-            //     },
-            //     child: Image.asset(
-            //       'assets/images/kakao_talk.png',
-            //       width: 70,
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              bottom: 30,
+              right: 30,
+              child: InkWell(
+                onTap: () {
+                  js.context
+                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+                },
+                child: Image.asset(
+                  'assets/images/kakao_talk.png',
+                  width: 70,
+                ),
+              ),
+            ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

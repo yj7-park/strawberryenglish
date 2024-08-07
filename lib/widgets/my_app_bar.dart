@@ -62,7 +62,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        if (isLoggedIn) ...[
+                        if (isLoggedIn && (screenWidth >= 450)) ...[
                           !isAdmin
                               ? DropdownMenu(
                                   onSelected: (value) {

@@ -75,9 +75,6 @@ class Student {
   }
 
   StudentState getStudentLectureState() {
-    if (data['name'] == '박용준') {
-      print('now');
-    }
     if ((data['tutor'] ?? '').isNotEmpty) {
       if ((DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
               DateTime.tryParse(data['lessonEndDate'] ?? '') ??
