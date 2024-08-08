@@ -824,14 +824,14 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
         String daysStr = parts[0].trim();
         String timeStr = parts[1].trim();
 
-        daysStr.runes.forEach((int rune) {
+        for (var rune in daysStr.runes) {
           var day = String.fromCharCode(rune);
           int targetDay = getWeekdayFromString(day);
           var timeParts = timeStr.split(':');
           int hour = int.tryParse(timeParts[0]) ?? 0;
           int minute = int.tryParse(timeParts[1]) ?? 0;
           lessonDates[targetDay] = DateTime(0, 0, 0, hour, minute);
-        });
+        }
       }
     }
 

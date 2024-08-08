@@ -5,12 +5,13 @@ class Student {
     required this.data,
   });
 
-  StudentState getStudentState() {
+  StudentState getStudentState({DateTime? now}) {
+    now ??= DateTime.now();
     if ((data['tutor'] ?? '').isNotEmpty) {
       if ((DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
               DateTime.tryParse(data['lessonEndDate'] ?? '') ??
-              DateTime.now())
-          .isAfter(DateTime.now())) {
+              now)
+          .isAfter(now)) {
         bool inHold = false;
         for (String range in data['holdDates']) {
           List<String> dateParts =
@@ -21,7 +22,6 @@ class Student {
                 .add(const Duration(days: 1))
                 .subtract(const Duration(microseconds: 1));
 
-            var now = DateTime.now();
             if (startDate.isBefore(endDate) &&
                 (startDate.isBefore(now) && endDate.isAfter(now))) {
               inHold = true;
@@ -44,7 +44,7 @@ class Student {
         (DateTime.tryParse('${data['trialDate']} ${data['trialTime']}') !=
             null)) {
       var trialDate = DateTime.parse(data['trialDate']);
-      if (trialDate.isBefore(DateTime.now())) {
+      if (trialDate.isBefore(now)) {
         return StudentState.trialFinished;
       } else {
         return StudentState.trialConfirmed;
@@ -56,13 +56,14 @@ class Student {
     }
   }
 
-  StudentState getStudentTrialState() {
+  StudentState getStudentTrialState({DateTime? now}) {
+    now ??= DateTime.now();
     if ((data['trialTutor'] ?? '').isNotEmpty &&
         (DateTime.tryParse(
                 '${data['trialDate'] ?? ''} ${data['trialTime'] ?? ''}') !=
             null)) {
       var trialDate = DateTime.parse(data['trialDate']);
-      if (trialDate.isBefore(DateTime.now())) {
+      if (trialDate.isBefore(now)) {
         return StudentState.trialFinished;
       } else {
         return StudentState.trialConfirmed;
@@ -74,12 +75,13 @@ class Student {
     }
   }
 
-  StudentState getStudentLectureState() {
+  StudentState getStudentLectureState({DateTime? now}) {
+    now ??= DateTime.now();
     if ((data['tutor'] ?? '').isNotEmpty) {
       if ((DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
               DateTime.tryParse(data['lessonEndDate'] ?? '') ??
-              DateTime.now())
-          .isAfter(DateTime.now())) {
+              now)
+          .isAfter(now)) {
         bool inHold = false;
         for (String range in data['holdDates']) {
           List<String> dateParts =
@@ -90,7 +92,6 @@ class Student {
                 .add(const Duration(days: 1))
                 .subtract(const Duration(microseconds: 1));
 
-            var now = DateTime.now();
             if (startDate.isBefore(endDate) &&
                 (startDate.isBefore(now) && endDate.isAfter(now))) {
               inHold = true;

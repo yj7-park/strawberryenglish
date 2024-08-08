@@ -54,7 +54,7 @@ class StudentProvider extends ChangeNotifier {
     return (await getStudent(), await getStudentList(_student!.data['email']));
   }
 
-  Future<Student?> getStudent([String? email]) async {
+  Future<Student?> getStudent([String? email, bool force = false]) async {
     if (currentUser == null) return null;
     // if (_student != null) return _student;
 

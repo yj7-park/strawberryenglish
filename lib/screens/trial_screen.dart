@@ -182,7 +182,8 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
                                     double.infinity, 60), // 버튼 사이즈 조정
                               ),
                               onPressed: () {
-                                Navigator.popAndPushNamed(context, '/login')
+                                Navigator.popAndPushNamed(
+                                        context, '/enrollment')
                                     .then((_) => setState(() {}));
                               },
                               child: const Text(

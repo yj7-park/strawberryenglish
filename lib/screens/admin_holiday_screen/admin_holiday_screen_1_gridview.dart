@@ -40,11 +40,11 @@ class AdminHolidayScreen1Gridview extends StatelessWidget {
                         // dotData: const FlDotData(show: false),
                         belowBarData: BarAreaData(show: false),
                         spots: [
-                          FlSpot(1, 2.8),
-                          FlSpot(3, 1.9),
-                          FlSpot(6, 3),
-                          FlSpot(10, 1.3),
-                          FlSpot(13, 2.5),
+                          const FlSpot(1, 2.8),
+                          const FlSpot(3, 1.9),
+                          const FlSpot(6, 3),
+                          const FlSpot(10, 1.3),
+                          const FlSpot(13, 2.5),
                         ],
                       )
                     ]))),

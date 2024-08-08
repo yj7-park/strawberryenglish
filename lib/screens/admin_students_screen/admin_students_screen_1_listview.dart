@@ -19,8 +19,20 @@ class AdminStudentsScreen1Listview extends StatefulWidget {
     // on/off flag
     ('취소요청', Colors.redAccent, 'cancel'),
     ('홀드요청', Colors.orangeAccent, 'hold'),
-    ('수강신청', Colors.blueAccent, 'enroll'),
-    ('체험신청', Colors.green, 'trial'),
+    ('수강신청', Colors.blueAccent, 'lectureRequested'),
+    ('체험신청', Colors.green, 'trialRequested'),
+  ];
+  static const filterEtc = [
+    ('체험대기', Colors.orangeAccent, 'trialRequested'),
+    ('무료체험', Colors.green, 'trialConfirmed'),
+    ('체험종료', Colors.red, 'trialFinished'),
+    ('유령회원', Colors.brown, 'registeredOnly'),
+  ];
+  static const filterOnLecture = [
+    ('수강대기', Colors.orangeAccent, 'lectureRequested'),
+    ('정상수강', Colors.green, 'lectureOnGoing'),
+    ('수업종료', Colors.red, 'lectureFinished'),
+    ('장기홀드', Colors.brown, 'lectureOnHold'),
   ];
   static const filterDday = [
     // button color
@@ -65,7 +77,13 @@ class _AdminStudentsScreen1ListviewState
         };
         // 초기화
         filters = {};
-        listNames = {};
+        listNames = {
+          'lessonTime',
+          'cancelDates',
+          'cancelRequestDates',
+          'holdDates',
+          'holdRequestDates'
+        };
         intNames = {};
         // searchedData = data;
         for (var e in userData.entries) {
@@ -109,7 +127,7 @@ class _AdminStudentsScreen1ListviewState
           }
 
           // 수강신청
-          flag = 'enroll';
+          flag = 'lectureRequested';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
           if (Student(data: v).getStudentState() ==
               StudentState.lectureRequested) {
@@ -122,10 +140,101 @@ class _AdminStudentsScreen1ListviewState
           }
 
           // 체험신청
-          flag = 'trial';
+          flag = 'trialRequested';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
           if (Student(data: v).getStudentState() ==
               StudentState.trialRequested) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            customData[k]![flag]++;
+          }
+
+          // 정상수강
+          flag = 'lectureOnGoing';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.lectureOnGoing) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            customData[k]![flag]++;
+          }
+
+          // 수강대기
+          flag = 'lectureRequested';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.lectureRequested) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            // customData[k]![flag]++;
+          }
+
+          // 수업종료
+          flag = 'lectureFinished';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.lectureFinished) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            customData[k]![flag]++;
+          }
+
+          // 수강홀드
+          flag = 'lectureOnHold';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.lectureOnHold) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            customData[k]![flag]++;
+          }
+
+          // 체험대기
+          flag = 'trialConfirmed';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.trialConfirmed) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            // customData[k]![flag]++;
+          }
+
+          // 체험완료
+          flag = 'trialFinished';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.trialFinished) {
+            // holdRequestsCount++;
+            filters[flag] = (false, filters[flag]!.$2 + 1);
+            if (!customData[k]!.containsKey(flag)) {
+              customData[k]![flag] = 0;
+            }
+            customData[k]![flag]++;
+          }
+
+          // 유령회원
+          flag = 'registeredOnly';
+          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (Student(data: v).getStudentState() ==
+              StudentState.registeredOnly) {
             // holdRequestsCount++;
             filters[flag] = (false, filters[flag]!.$2 + 1);
             if (!customData[k]!.containsKey(flag)) {
@@ -251,46 +360,54 @@ class _AdminStudentsScreen1ListviewState
                       children: [
                         for (var filterList in [
                           AdminStudentsScreen1Listview.filterRequests,
+                          [],
+                          AdminStudentsScreen1Listview.filterEtc,
+                          AdminStudentsScreen1Listview.filterOnLecture,
+                          [],
                           AdminStudentsScreen1Listview.filterDday,
                         ])
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (var (t, c, f) in filterList)
-                                Builder(
-                                  builder: (context) {
-                                    var count = filters.containsKey(f)
-                                        ? filters[f]!.$2
-                                        : 0;
-                                    var toggle = filters.containsKey(f)
-                                        ? filters[f]!.$1
-                                        : false;
-                                    return Expanded(
-                                      child: Card(
-                                        margin: const EdgeInsets.all(3),
-                                        color: count > 0 ? c : Colors.grey,
-                                        child: CheckboxListTile(
-                                          value: toggle,
-                                          onChanged: (v) {
-                                            filters[f] = (v, count);
-                                            filterData(v);
-                                          },
-                                          enabled: count > 0,
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
-                                          title: Text(
-                                            '$t ($count)',
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                          filterList.isEmpty
+                              ? const SizedBox(height: 20)
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    for (var (t, c, f) in filterList)
+                                      Builder(
+                                        builder: (context) {
+                                          var count = filters.containsKey(f)
+                                              ? filters[f]!.$2
+                                              : 0;
+                                          var toggle = filters.containsKey(f)
+                                              ? filters[f]!.$1
+                                              : false;
+                                          return Expanded(
+                                            child: Card(
+                                              margin: const EdgeInsets.all(3),
+                                              color:
+                                                  count > 0 ? c : Colors.grey,
+                                              child: CheckboxListTile(
+                                                value: toggle,
+                                                onChanged: (v) {
+                                                  filters[f] = (v, count);
+                                                  filterData(v);
+                                                },
+                                                enabled: count > 0,
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                title: Text(
+                                                  '$t ($count)',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
+                                  ],
                                 ),
-                            ],
-                          ),
                       ],
                     ),
                   ),
@@ -552,10 +669,10 @@ class _AdminStudentsScreen1ListviewState
                                             inputCondition['level'] = true;
 
                                             // 수강신청
-                                            bool isEnroll =
-                                                (customData[id]!['enroll'] ??
-                                                        0) >
-                                                    0;
+                                            bool isEnroll = (customData[id]![
+                                                        'lectureRequested'] ??
+                                                    0) >
+                                                0;
                                             if (isEnroll) {
                                               inputCondition['수강신청 정보'] = false;
 
@@ -590,10 +707,10 @@ class _AdminStudentsScreen1ListviewState
                                             }
 
                                             // 체험신청
-                                            bool isTrial =
-                                                (customData[id]!['trial'] ??
-                                                        0) >
-                                                    0;
+                                            bool isTrial = (customData[id]![
+                                                        'trialRequested'] ??
+                                                    0) >
+                                                0;
                                             if (isTrial) {
                                               inputCondition['체험신청 정보'] = false;
 
@@ -664,8 +781,62 @@ class _AdminStudentsScreen1ListviewState
                                                           color: Colors.red,
                                                         ),
                                                       ),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          for (var ic
+                                                              in inputCondition
+                                                                  .entries) {
+                                                            var e = MapEntry(
+                                                                ic.key,
+                                                                doc[ic.key]);
+                                                            if (ic.value) {
+                                                              var inputText =
+                                                                  controllers[
+                                                                          '${id}_${e.key}']!
+                                                                      .text;
+                                                              dynamic
+                                                                  updateText;
+                                                              if (listNames
+                                                                  .contains(
+                                                                      e.key)) {
+                                                                updateText =
+                                                                    inputText
+                                                                        .split(
+                                                                            ',');
+                                                                if (updateText[
+                                                                        0]
+                                                                    .isEmpty) {
+                                                                  updateText
+                                                                      .length = 0;
+                                                                }
+                                                              } else if (intNames
+                                                                  .contains(
+                                                                      e.key)) {
+                                                                updateText =
+                                                                    int.tryParse(
+                                                                            inputText) ??
+                                                                        0;
+                                                              } else {
+                                                                updateText =
+                                                                    inputText;
+                                                              }
+                                                              d[id]![e.key] =
+                                                                  updateText;
+                                                            }
+                                                          }
+
+                                                          updateStudentToFirestoreAsAdmin(
+                                                            Student(
+                                                                data: d[id]!),
+                                                          );
+                                                        },
+                                                        child:
+                                                            const Text('업데이트'),
+                                                      ),
                                                       // 수강신청
                                                       if (isEnroll) ...[
+                                                        const SizedBox(
+                                                            height: 5),
                                                         ElevatedButton(
                                                           onPressed: (() {
                                                             Clipboard.setData(
@@ -691,11 +862,11 @@ class _AdminStudentsScreen1ListviewState
                                                           child: const Text(
                                                               '수강 정보 복사'),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 5)
                                                       ],
                                                       // 체험신청
                                                       if (isTrial) ...[
+                                                        const SizedBox(
+                                                            height: 5),
                                                         ElevatedButton(
                                                           onPressed: (() {
                                                             Clipboard.setData(
@@ -719,8 +890,6 @@ class _AdminStudentsScreen1ListviewState
                                                           child: const Text(
                                                               '체험 정보 복사'),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 5)
                                                       ],
                                                       ...[
                                                         for (var ic
@@ -728,21 +897,23 @@ class _AdminStudentsScreen1ListviewState
                                                                 .entries)
                                                           if (ic.value ==
                                                               false) ...[
-                                                            SizedBox(
+                                                            const SizedBox(
                                                                 height: 50),
-                                                            Divider(
+                                                            const Divider(
                                                               height: 0,
                                                               thickness: 2,
                                                             ),
-                                                            Text(ic.key,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 17,
-                                                                )),
-                                                            Divider(
+                                                            Text(
+                                                              ic.key,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 17,
+                                                              ),
+                                                            ),
+                                                            const Divider(
                                                               height: 0,
                                                               thickness: 2,
                                                             ),
@@ -754,10 +925,9 @@ class _AdminStudentsScreen1ListviewState
                                                                     ic.key,
                                                                     doc[ic
                                                                         .key]);
-                                                                var initialText = e
-                                                                            .value
-                                                                            .runtimeType ==
-                                                                        List
+                                                                var initialText = listNames
+                                                                        .contains(
+                                                                            e.key)
                                                                     ? '${e.value.join(',')}'
                                                                     : '${e.value ?? (intNames.contains(e.key) ? 0 : '')}';
                                                                 controllers[
@@ -833,60 +1003,6 @@ class _AdminStudentsScreen1ListviewState
                                                                 );
                                                               },
                                                             ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        ElevatedButton(
-                                                          onPressed: () {
-                                                            for (var ic
-                                                                in inputCondition
-                                                                    .entries) {
-                                                              var e = MapEntry(
-                                                                  ic.key,
-                                                                  doc[ic.key]);
-                                                              if (ic.value) {
-                                                                var inputText =
-                                                                    controllers[
-                                                                            '${id}_${e.key}']!
-                                                                        .text;
-                                                                dynamic
-                                                                    updateText;
-                                                                if (listNames
-                                                                    .contains(e
-                                                                        .key)) {
-                                                                  updateText =
-                                                                      inputText
-                                                                          .split(
-                                                                              ',');
-                                                                  if (updateText[
-                                                                          0]
-                                                                      .isEmpty) {
-                                                                    updateText
-                                                                        .length = 0;
-                                                                  }
-                                                                } else if (intNames
-                                                                    .contains(e
-                                                                        .key)) {
-                                                                  updateText =
-                                                                      int.tryParse(
-                                                                              inputText) ??
-                                                                          0;
-                                                                } else {
-                                                                  updateText =
-                                                                      inputText;
-                                                                }
-                                                                d[id]![e.key] =
-                                                                    updateText;
-                                                              }
-                                                            }
-
-                                                            updateStudentToFirestoreAsAdmin(
-                                                              Student(
-                                                                  data: d[id]!),
-                                                            );
-                                                          },
-                                                          child: const Text(
-                                                              '업데이트'),
-                                                        ),
                                                       ],
                                                     ],
                                                   ),
@@ -1097,6 +1213,8 @@ class _AdminStudentsScreen1ListviewState
     for (var flag in [
               for (var e in AdminStudentsScreen1Listview.filterRequests) e.$3
             ] +
+            [for (var e in AdminStudentsScreen1Listview.filterEtc) e.$3] +
+            [for (var e in AdminStudentsScreen1Listview.filterOnLecture) e.$3] +
             [for (var e in AdminStudentsScreen1Listview.filterDday) e.$3]
         // ['cancel', 'hold', 'd-1', 'd-3', 'd-7', 'd-15']
         ) {

@@ -1,7 +1,6 @@
 // import 'package:video_player/video_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:strawberryenglish/themes/my_theme.dart';
 
 class HomeScreen1Cover extends StatefulWidget {
   const HomeScreen1Cover({

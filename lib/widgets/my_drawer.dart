@@ -7,7 +7,6 @@ import 'package:strawberryenglish/themes/my_theme.dart';
 
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:strawberryenglish/utils/my_dialogs.dart';
 import 'package:strawberryenglish/widgets/my_app_bar.dart';
 
 class MyDrawer extends StatefulWidget {
