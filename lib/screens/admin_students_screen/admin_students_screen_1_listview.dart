@@ -19,8 +19,8 @@ class AdminStudentsScreen1Listview extends StatefulWidget {
     // on/off flag
     ('취소요청', Colors.redAccent, 'cancel'),
     ('홀드요청', Colors.orangeAccent, 'hold'),
-    ('수강신청', Colors.blueAccent, 'lectureRequested'),
     ('체험신청', Colors.green, 'trialRequested'),
+    ('수강신청', Colors.blueAccent, 'lectureRequested'),
   ];
   static const filterEtc = [
     ('체험대기', Colors.orangeAccent, 'trialRequested'),
@@ -77,6 +77,8 @@ class _AdminStudentsScreen1ListviewState
         };
         // 초기화
         filters = {};
+        //TODO: 배포 시 minified:y<dynamic>로 List 타입이 표시되어 동작하지 않음
+        //TODO: 하드코딩
         listNames = {
           'lessonTime',
           'cancelDates',
@@ -97,12 +99,14 @@ class _AdminStudentsScreen1ListviewState
           customData[k]!['isDBEditTabOpened'] = false;
           customData[k]!['status'] = '';
 
-          // 수업 취소 요청
-          flag = 'cancel';
           for (var e2 in v.entries) {
+            //TODO: 배포 시 minified:y<dynamic>로 List 타입이 표시되어 동작하지 않음
             if (e2.value.runtimeType == List) listNames.add(e2.key);
             if (e2.value.runtimeType == int) intNames.add(e2.key);
           }
+
+          // 수업 취소 요청
+          flag = 'cancel';
           if (!filters.containsKey(flag)) filters[flag] = (false, 0);
           if (v.containsKey('cancelRequestDates') &&
               v['cancelRequestDates'].isNotEmpty) {
@@ -126,121 +130,27 @@ class _AdminStudentsScreen1ListviewState
             customData[k]![flag] = v['holdRequestDates'].length;
           }
 
-          // 수강신청
-          flag = 'lectureRequested';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.lectureRequested) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
+          // 학생 상태 기준
+          for (var e in [
+            ('trialRequested', StudentState.trialRequested),
+            ('trialConfirmed', StudentState.trialConfirmed),
+            ('trialFinished', StudentState.trialFinished),
+            ('registeredOnly', StudentState.registeredOnly),
+            ('lectureRequested', StudentState.lectureRequested),
+            ('lectureOnGoing', StudentState.lectureOnGoing),
+            ('lectureFinished', StudentState.lectureFinished),
+            ('lectureOnHold', StudentState.lectureOnHold),
+          ]) {
+            flag = e.$1;
+            if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+            if (Student(data: v).getStudentState() == e.$2) {
+              // holdRequestsCount++;
+              filters[flag] = (false, filters[flag]!.$2 + 1);
+              if (!customData[k]!.containsKey(flag)) {
+                customData[k]![flag] = 0;
+              }
+              customData[k]![flag]++;
             }
-            customData[k]![flag]++;
-          }
-
-          // 체험신청
-          flag = 'trialRequested';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.trialRequested) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            customData[k]![flag]++;
-          }
-
-          // 정상수강
-          flag = 'lectureOnGoing';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.lectureOnGoing) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            customData[k]![flag]++;
-          }
-
-          // 수강대기
-          flag = 'lectureRequested';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.lectureRequested) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            // customData[k]![flag]++;
-          }
-
-          // 수업종료
-          flag = 'lectureFinished';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.lectureFinished) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            customData[k]![flag]++;
-          }
-
-          // 수강홀드
-          flag = 'lectureOnHold';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.lectureOnHold) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            customData[k]![flag]++;
-          }
-
-          // 체험대기
-          flag = 'trialConfirmed';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.trialConfirmed) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            // customData[k]![flag]++;
-          }
-
-          // 체험완료
-          flag = 'trialFinished';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.trialFinished) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            customData[k]![flag]++;
-          }
-
-          // 유령회원
-          flag = 'registeredOnly';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-          if (Student(data: v).getStudentState() ==
-              StudentState.registeredOnly) {
-            // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
-            if (!customData[k]!.containsKey(flag)) {
-              customData[k]![flag] = 0;
-            }
-            customData[k]![flag]++;
           }
 
           // 수업 종료 기준 (D-n)
@@ -765,8 +675,6 @@ class _AdminStudentsScreen1ListviewState
                                             }
 
                                             return SizedBox(
-                                              // duration:
-                                              //     const Duration(milliseconds: 500),
                                               width: 200,
                                               child: SingleChildScrollView(
                                                 child: Padding(
@@ -956,49 +864,6 @@ class _AdminStudentsScreen1ListviewState
                                                                     controller:
                                                                         controllers[
                                                                             '${id}_${e.key}'],
-                                                                    // initialValue:
-                                                                    //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
-                                                                    // onEditingComplete:
-                                                                    //     () {
-                                                                    //   var inputText =
-                                                                    //       controllers['${id}_${e.key}']!
-                                                                    //           .text;
-                                                                    //   dynamic
-                                                                    //       updateText;
-                                                                    //   if (listNames
-                                                                    //       .contains(e
-                                                                    //           .key)) {
-                                                                    //     updateText =
-                                                                    //         inputText
-                                                                    //             .split(',');
-                                                                    //     if (updateText[
-                                                                    //             0]
-                                                                    //         .isEmpty) {
-                                                                    //       updateText
-                                                                    //           .length = 0;
-                                                                    //     }
-                                                                    //   } else if (intNames
-                                                                    //       .contains(
-                                                                    //           e.key)) {
-                                                                    //     updateText =
-                                                                    //         int.tryParse(inputText) ??
-                                                                    //             0;
-                                                                    //   } else {
-                                                                    //     updateText =
-                                                                    //         inputText;
-                                                                    //   }
-                                                                    //   d[id]![e.key] =
-                                                                    //       updateText;
-                                                                    //   inputText
-                                                                    //       .split(
-                                                                    //           ',')
-                                                                    //       .length = 0;
-                                                                    //   updateStudentToFirestoreAsAdmin(
-                                                                    //       Student(
-                                                                    //           data:
-                                                                    //               d[id]!),
-                                                                    //               );
-                                                                    // },
                                                                   ),
                                                                 );
                                                               },
@@ -1050,8 +915,6 @@ class _AdminStudentsScreen1ListviewState
                                         if (customData[id]![
                                             'isDBEditTabOpened'])
                                           SizedBox(
-                                            // duration:
-                                            //     const Duration(milliseconds: 500),
                                             width: 200,
                                             child: SingleChildScrollView(
                                               child: Padding(
@@ -1059,22 +922,9 @@ class _AdminStudentsScreen1ListviewState
                                                     const EdgeInsets.all(20),
                                                 child: Column(
                                                   children: [
-                                                    // Text(
-                                                    //   'Database',
-                                                    //   style: TextStyle(
-                                                    //     color: customTheme
-                                                    //         .colorScheme
-                                                    //         .secondary,
-                                                    //     fontSize: 16,
-                                                    //     fontWeight:
-                                                    //         FontWeight.bold,
-                                                    //   ),
-                                                    // ),
-                                                    // Divider(),
                                                     ...doc.entries.map((e) {
-                                                      var initialText = e.value
-                                                                  .runtimeType ==
-                                                              List
+                                                      var initialText = listNames
+                                                              .contains(e.key)
                                                           ? '${e.value.join(',')}'
                                                           : '${e.value}';
                                                       controllers[
@@ -1094,8 +944,6 @@ class _AdminStudentsScreen1ListviewState
                                                           ),
                                                           controller: controllers[
                                                               '${id}_${e.key}'],
-                                                          // initialValue:
-                                                          //     '${e.value.runtimeType == List ? e.value.join(', ') : e.value}',
                                                           onEditingComplete:
                                                               () {
                                                             var inputText =
@@ -1254,7 +1102,7 @@ class _AdminStudentsScreen1ListviewState
     }
   }
 
-  userAge(String usersBirthDate) {
+  String userAge(String usersBirthDate) {
     Duration parse = DateTime.now()
         .difference(DateTime.tryParse(usersBirthDate) ?? DateTime.now())
         .abs();
