@@ -39,7 +39,7 @@ class StudentProvider extends ChangeNotifier {
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
         // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
-        _student = await getStudentFromFirestore(email);
+        // _student = await getStudentFromFirestore(email);
         _studentList = await getStudentList(currentUser!.email!);
         notifyListeners();
       }
@@ -75,7 +75,7 @@ class StudentProvider extends ChangeNotifier {
         } else {
           // Google Sheets에서 사용자 데이터 가져오기
           // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
-          _student = await getStudentFromFirestore(email);
+          // _student = await getStudentFromFirestore(email);
         }
         return _student;
       }
@@ -127,8 +127,8 @@ class StudentProvider extends ChangeNotifier {
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
         // _student = await getStudentFromGoogleSheets(username);
-        _student = await getStudentFromFirestore(username);
-        _studentList = await getStudentList(currentUser!.email!);
+        // _student = await getStudentFromFirestore(username);
+        // _studentList = await getStudentList(currentUser!.email!);
       }
       notifyListeners();
       return "";
@@ -166,12 +166,18 @@ class StudentProvider extends ChangeNotifier {
   //   throw Exception('Student를 찾을 수 없습니다.');
   // }
 
-  Future<Student> getStudentFromFirestore(String email) async {
+  Stream<Student> getStudentFromFirestore(String email) async* {
     try {
-      var values =
-          await FirebaseFirestore.instance.collection('users').doc(email).get();
+      Stream<DocumentSnapshot> values =
+          FirebaseFirestore.instance.collection('users').doc(email).snapshots();
       // print(response.values);
-      return Student(data: values.data()!);
+      yield* values.map((e) {
+        if (e.exists) {
+          return Student.fromJson(e.data() as Map<String, dynamic>);
+        } else {
+          throw Exception('Student를 찾을 수 없습니다.');
+        }
+      });
     } catch (e) {
       if (kDebugMode) {
         print('Firestore에서 Student 가져오는 중 오류 발생: $e');
@@ -283,7 +289,7 @@ class StudentProvider extends ChangeNotifier {
           // .doc(currentUser!.email)
           .doc(updatedStudent.data['email'])
           .set(updatedStudent.data);
-      notifyListeners();
+      // notifyListeners();
       // }
     } catch (e) {
       if (kDebugMode) {

@@ -27,7 +27,7 @@ class CalendarBodyState extends State<CalendarBody> {
   late TextEditingController feedbackBodyController;
 
   String selectedHoldStartDate = '';
-  DateTime selectedDate = DateTime.now();
+  late DateTime selectedDate;
   bool isBottomSheetOpened = false;
   bool feedbackNeeded = false;
   late CalendarDataSource calendarDataSource;
@@ -78,6 +78,7 @@ class CalendarBodyState extends State<CalendarBody> {
             (widget.user.getStudentState() == StudentState.lectureFinished);
     if (needCalendar) {
       calendarController = CalendarController();
+      selectedDate = calendarController.selectedDate ?? DateTime.now();
       calendarController.selectedDate = DateTime.now();
 
       feedbackTitleController = TextEditingController();
@@ -485,12 +486,12 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                     _bottomSheetController?.close();
                     _updateLessonInformation();
                     Provider.of<StudentProvider>(context, listen: false)
-                        .updateStudentToFirestoreWithMap(widget.user)
-                        .then((context) {
-                      setState(() {
-                        if (widget.updated != null) widget.updated!('');
-                      });
-                    });
+                        .updateStudentToFirestoreWithMap(widget.user);
+                    //     .then((context) {
+                    //   setState(() {
+                    //     if (widget.updated != null) widget.updated!('');
+                    //   });
+                    // });
                   }
                 },
         ),

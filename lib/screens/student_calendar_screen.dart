@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:strawberryenglish/widgets/my_drawer.dart';
 import 'package:strawberryenglish/widgets/my_header.dart';
 // ignore_for_file: use_build_context_synchronously
@@ -28,9 +29,10 @@ class StudentCalendarScreen extends StatelessWidget {
               children: [
                 // 제목
                 const MyHeader('마이페이지'),
-                FutureBuilder<Student?>(
-                  future: Provider.of<StudentProvider>(context)
-                      .getStudent(), // 새로운 Future 생성
+                StreamBuilder<Student?>(
+                  stream: Provider.of<StudentProvider>(context)
+                      .getStudentFromFirestore(FirebaseAuth
+                          .instance.currentUser!.email!), // 새로운 Future 생성
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting ||
                         !snapshot.hasData) {

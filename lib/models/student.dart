@@ -5,6 +5,10 @@ class Student {
     required this.data,
   });
 
+  factory Student.fromJson(Map<String, dynamic> json) {
+    return Student(data: json);
+  }
+
   StudentState getStudentState() {
     if ((data['tutor'] ?? '').isNotEmpty) {
       if ((DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
