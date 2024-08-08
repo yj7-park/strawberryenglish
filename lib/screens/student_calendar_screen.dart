@@ -30,7 +30,7 @@ class StudentCalendarScreen extends StatelessWidget {
                 const MyHeader('마이페이지'),
                 FutureBuilder<Student?>(
                   future: Provider.of<StudentProvider>(context)
-                      .getStudent(), // 새로운 Future 생성
+                      .getStudent(force: true), // 새로운 Future 생성
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting ||
                         !snapshot.hasData) {
