@@ -63,7 +63,9 @@ class StudentProvider extends ChangeNotifier {
     // if (index != null) {
     //   email = '$email#$index';
     // }
-    if ((_student != null) && (_student!.data['email'].contains(email))) {
+    if ((force == false) &&
+        (_student != null) &&
+        (_student!.data['email'].contains(email))) {
       return _student;
     }
 
