@@ -88,30 +88,30 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
   Future<void> _selectDate(BuildContext context) async {
     String initialDate = widget.lessonStartDateController.value.text;
     final DateTime? picked = await showDatePicker(
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: ColorScheme.light(
-                primary: customTheme
-                    .colorScheme.secondary, // header background color
-                onPrimary:
-                    customTheme.colorScheme.onPrimary, // header text color
-                onSurface: customTheme.colorScheme.onSurface, // body text color
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor:
-                      customTheme.colorScheme.primary, // button text color
-                ),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary:
+                  customTheme.colorScheme.secondary, // header background color
+              onPrimary: customTheme.colorScheme.onPrimary, // header text color
+              onSurface: customTheme.colorScheme.onSurface, // body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    customTheme.colorScheme.primary, // button text color
               ),
             ),
-            child: child!,
-          );
-        },
-        context: context,
-        initialDate: DateTime.tryParse(initialDate) ?? DateTime.now(),
-        firstDate: DateTime(1950, 1),
-        lastDate: DateTime(2030, 12));
+          ),
+          child: child!,
+        );
+      },
+      context: context,
+      initialDate: DateTime.tryParse(initialDate) ?? DateTime.now(),
+      firstDate: DateTime.now().add(const Duration(days: 1)),
+      lastDate: DateTime(2030, 12),
+    );
     if (picked != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
 

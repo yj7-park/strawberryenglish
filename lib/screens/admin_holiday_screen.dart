@@ -1,6 +1,5 @@
 import 'package:strawberryenglish/screens/admin_holiday_screen/admin_holiday_screen_1_gridview.dart';
 import 'package:strawberryenglish/widgets/my_drawer.dart';
-import 'package:universal_html/js.dart' as js;
 import 'package:flutter/material.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 import 'package:strawberryenglish/widgets/company_info.dart';
@@ -29,20 +28,20 @@ class AdminHolidayScreen extends StatelessWidget {
                 CompanyInfo(),
               ],
             ),
-            Positioned(
-              bottom: 30,
-              right: 30,
-              child: InkWell(
-                onTap: () {
-                  js.context
-                      .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-                },
-                child: Image.asset(
-                  'assets/images/kakao_talk.png',
-                  width: 70,
-                ),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 30,
+            //   right: 30,
+            //   child: InkWell(
+            //     onTap: () {
+            //       js.context
+            //           .callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/kakao_talk.png',
+            //       width: 70,
+            //     ),
+            //   ),
+            // ),
             const Positioned(
               child: MyMenuAppBar(),
             ),

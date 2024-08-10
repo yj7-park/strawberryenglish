@@ -944,12 +944,12 @@ class _AdminStudentsScreen1ListviewState
                                                           ),
                                                           controller: controllers[
                                                               '${id}_${e.key}'],
-                                                          onEditingComplete:
-                                                              () {
-                                                            var inputText =
-                                                                controllers[
-                                                                        '${id}_${e.key}']!
-                                                                    .text;
+                                                          onFieldSubmitted:
+                                                              (inputText) {
+                                                            // var inputText =
+                                                            //     controllers[
+                                                            //             '${id}_${e.key}']!
+                                                            //         .text;
                                                             dynamic updateText;
                                                             if (listNames
                                                                 .contains(
@@ -1047,7 +1047,7 @@ class _AdminStudentsScreen1ListviewState
       var removes = <String>{};
       temp.forEach((k, v) {
         if (!(k.contains(controller.text) ||
-            v['name'].contains(controller.text) ||
+            (v['name'] ?? '').contains(controller.text) ||
             (((v['tutor'] ?? '').toLowerCase())
                 .contains(controller.text.toLowerCase())) ||
             (((v['trialTutor'] ?? '').toLowerCase())

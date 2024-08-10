@@ -79,6 +79,7 @@ class CalendarBodyState extends State<CalendarBody> {
     if (needCalendar) {
       calendarController = CalendarController();
       calendarController.selectedDate = DateTime.now();
+      selectedDate = calendarController.selectedDate!;
 
       feedbackTitleController = TextEditingController();
       feedbackBodyController = TextEditingController();
@@ -1146,6 +1147,16 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                     .remove(formattedDate)) {
                   widget.user.data['cancelCountLeft'] =
                       widget.user.data['cancelCountLeft'] + 1;
+                  if (widget.user.data['cancelCountLeft'] >
+                      widget.user.data['cancelCountTotal']) {
+                    if (kDebugMode) {
+                      print(
+                          'error : cancelCountLeft (${widget.user.data['cancelCountLeft']}) exceeded cancelCountTotal (${widget.user.data['cancelCountTotal']})');
+                    }
+
+                    widget.user.data['cancelCountLeft'] =
+                        widget.user.data['cancelCountTotal'];
+                  }
                 }
               } else if (items.$1 == '장기 홀드') {
                 // widget.user.data['holdCountLeft'] = widget.user.data['holdCountLeft'] - 1;
