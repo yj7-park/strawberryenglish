@@ -385,7 +385,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['billingDiscount'] = pointDiscount;
         updatedStudent.data['billingFinal'] = finalPrice;
 
-        // 초기화 필요 항목
+        // 기타 초기화 필요 항목
+        updatedStudent.data['tutorCancelDates'] = [];
         updatedStudent.data['lessonTime'] = [];
         updatedStudent.data['tutor'] = '';
 

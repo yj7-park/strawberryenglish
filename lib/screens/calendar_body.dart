@@ -1267,6 +1267,9 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                   }
                 }
               } else if (items.$1 == '🛡튜터 취소') {
+                if (!widget.user.data.containsKey('tutorCancelDates')) {
+                  widget.user.data['tutorCancelDates'] = [];
+                }
                 widget.user.data['tutorCancelDates'].add(formattedDate);
               } else if (items.$1 == '🛡수업 재개 (튜터 취소)') {
                 if (widget.user.data['tutorCancelDates']
