@@ -175,7 +175,7 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
                         ),
                         Center(
                           child: SizedBox(
-                            width: 500,
+                            width: (screenWidth * 0.5).clamp(100, 500),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(
@@ -186,10 +186,11 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
                                         context, '/enrollment')
                                     .then((_) => setState(() {}));
                               },
-                              child: const Text(
+                              child: Text(
                                 '수강신청',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize:
+                                        (screenWidth * 0.025).clamp(10, 16),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),

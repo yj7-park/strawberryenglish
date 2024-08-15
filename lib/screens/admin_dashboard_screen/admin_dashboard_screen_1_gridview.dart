@@ -21,6 +21,7 @@ class _AdminDashboardScreen1GridviewState
     extends State<AdminDashboardScreen1Gridview> {
   late Stream<List<Student>> stream;
   late CalendarDataSource calendarDataSource;
+  CalendarController controller = CalendarController();
 
   var barData = [
     (
@@ -205,11 +206,15 @@ class _AdminDashboardScreen1GridviewState
                   view: CalendarView.workWeek,
                   todayHighlightColor: const Color(0xfffcc021),
                   dataSource: _getCalendarDataSource(snapshot),
+                  controller: controller,
                   timeSlotViewSettings: const TimeSlotViewSettings(
                     startHour: 8,
                     endHour: 24,
                     timeIntervalHeight: 25,
                   ),
+                  onTap: (_) {
+                    setState(() {});
+                  },
                   allowedViews: const [
                     CalendarView.workWeek,
                     CalendarView.month,
@@ -220,6 +225,9 @@ class _AdminDashboardScreen1GridviewState
                   //   fontSize: 12,
                   //   color: Colors.white,
                   // ),
+                  scheduleViewSettings: const ScheduleViewSettings(
+                    hideEmptyScheduleWeek: true,
+                  ),
                   allowDragAndDrop: true,
                   // onDragStart: null,
                   dragAndDropSettings: const DragAndDropSettings(
@@ -242,7 +250,6 @@ class _AdminDashboardScreen1GridviewState
                     //     appointmentDragEndDetails.targetResource;
                     final DateTime draggingTime =
                         appointmentDragEndDetails.droppingTime!;
-                    print(draggingTime.hour);
                     DateTime newTime = DateTime(
                       draggingTime.year,
                       draggingTime.month,
@@ -286,12 +293,11 @@ class _AdminDashboardScreen1GridviewState
   }
 
   Widget _buildChart(context, snapshot) {
-    var now = DateTime.now();
+    var now = controller.selectedDate ?? DateTime.now();
     double startdate =
-        (DateTime(now.year, now.month - 1, 1).difference(DateTime(0)).inDays +
-                1)
+        (DateTime(now.year, now.month, 1).difference(DateTime(0)).inDays + 1)
             .toDouble();
-    double enddate = (DateTime(now.year, now.month, 1))
+    double enddate = (DateTime(now.year, now.month + 1, 1))
         .difference(DateTime(0))
         .inDays
         .toDouble();

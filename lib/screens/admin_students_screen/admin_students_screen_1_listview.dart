@@ -57,13 +57,26 @@ class _AdminStudentsScreen1ListviewState
   TextEditingController controller = TextEditingController();
   Map<String, TextEditingController> controllers = {};
 
-  Map<String, (dynamic, int)> filters = {};
+  Map<String, int> filterCount = {};
+  Map<String, bool> filterChecked = {};
 
   Set<String> listNames = {};
   Set<String> intNames = {};
 
   Map<String, Map<String, dynamic>> customData = {};
   bool isValidAccess = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // TODO: for test
+    // isValidAccess = (FirebaseAuth.instance.currentUser != null &&
+    //     FirebaseAuth.instance.currentUser!.email == 'admin@admin.com');
+    isValidAccess = true;
+    if (isValidAccess) {
+      getData();
+    }
+  }
 
   Future<dynamic> getData() async {
     final collection = FirebaseFirestore.instance.collection("users");
@@ -76,7 +89,7 @@ class _AdminStudentsScreen1ListviewState
           for (var doc in snapshot.docs) doc.id: doc.data(),
         };
         // 초기화
-        filters = {};
+        filterCount = {};
         //TODO: 배포 시 minified:y<dynamic>로 List 타입이 표시되어 동작하지 않음
         //TODO: 하드코딩
         listNames = {
@@ -84,7 +97,8 @@ class _AdminStudentsScreen1ListviewState
           'cancelDates',
           'cancelRequestDates',
           'holdDates',
-          'holdRequestDates'
+          'holdRequestDates',
+          'tutorCancelDates',
         };
         intNames = {};
         // searchedData = data;
@@ -107,10 +121,10 @@ class _AdminStudentsScreen1ListviewState
 
           // 수업 취소 요청
           flag = 'cancel';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
           if (v.containsKey('cancelRequestDates') &&
               v['cancelRequestDates'].isNotEmpty) {
-            filters[flag] = (false, filters[flag]!.$2 + 1);
+            filterCount[flag] = filterCount[flag]! + 1;
             if (!customData[k]!.containsKey(flag)) {
               customData[k]![flag] = 0;
             }
@@ -119,11 +133,11 @@ class _AdminStudentsScreen1ListviewState
 
           // 장기 홀드 요청
           flag = 'hold';
-          if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+          if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
           if (v.containsKey('holdRequestDates') &&
               v['holdRequestDates'].isNotEmpty) {
             // holdRequestsCount++;
-            filters[flag] = (false, filters[flag]!.$2 + 1);
+            filterCount[flag] = filterCount[flag]! + 1;
             if (!customData[k]!.containsKey(flag)) {
               customData[k]![flag] = 0;
             }
@@ -142,10 +156,10 @@ class _AdminStudentsScreen1ListviewState
             ('lectureOnHold', StudentState.lectureOnHold),
           ]) {
             flag = e.$1;
-            if (!filters.containsKey(flag)) filters[flag] = (false, 0);
+            if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
             if (Student(data: v).getStudentState() == e.$2) {
               // holdRequestsCount++;
-              filters[flag] = (false, filters[flag]!.$2 + 1);
+              filterCount[flag] = filterCount[flag]! + 1;
               if (!customData[k]!.containsKey(flag)) {
                 customData[k]![flag] = 0;
               }
@@ -161,8 +175,8 @@ class _AdminStudentsScreen1ListviewState
                   .subtract(const Duration(days: 1))
                   .isBefore(DateTime.now())) {
                 flag = 'd-1';
-                if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-                filters[flag] = (false, filters[flag]!.$2 + 1);
+                if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
+                filterCount[flag] = filterCount[flag]! + 1;
                 if (!customData[k]!.containsKey(flag)) {
                   customData[k]![flag] = 0;
                 }
@@ -171,8 +185,8 @@ class _AdminStudentsScreen1ListviewState
                   .subtract(const Duration(days: 3))
                   .isBefore(DateTime.now())) {
                 flag = 'd-3';
-                if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-                filters[flag] = (false, filters[flag]!.$2 + 1);
+                if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
+                filterCount[flag] = filterCount[flag]! + 1;
                 if (!customData[k]!.containsKey(flag)) {
                   customData[k]![flag] = 0;
                 }
@@ -181,8 +195,8 @@ class _AdminStudentsScreen1ListviewState
                   .subtract(const Duration(days: 7))
                   .isBefore(DateTime.now())) {
                 flag = 'd-7';
-                if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-                filters[flag] = (false, filters[flag]!.$2 + 1);
+                if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
+                filterCount[flag] = filterCount[flag]! + 1;
                 if (!customData[k]!.containsKey(flag)) {
                   customData[k]![flag] = 0;
                 }
@@ -191,8 +205,8 @@ class _AdminStudentsScreen1ListviewState
                   .subtract(const Duration(days: 15))
                   .isBefore(DateTime.now())) {
                 flag = 'd-15';
-                if (!filters.containsKey(flag)) filters[flag] = (false, 0);
-                filters[flag] = (false, filters[flag]!.$2 + 1);
+                if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
+                filterCount[flag] = filterCount[flag]! + 1;
                 if (!customData[k]!.containsKey(flag)) {
                   customData[k]![flag] = 0;
                 }
@@ -235,23 +249,11 @@ class _AdminStudentsScreen1ListviewState
   }
 
   @override
-  void initState() {
-    super.initState();
-    // TODO: for test
-    // isValidAccess = (FirebaseAuth.instance.currentUser != null &&
-    //     FirebaseAuth.instance.currentUser!.email == 'admin@admin.com');
-    isValidAccess = true;
-    if (isValidAccess) {
-      getData();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isMobile = screenWidth < 1000;
     bool noFilter = controller.text.isNotEmpty ||
-        [for (var e in filters.values) e.$1].contains(true);
+        [for (var e in filterChecked.values) e].contains(true);
     return Theme(
       data: customTheme,
       child: Padding(
@@ -284,12 +286,13 @@ class _AdminStudentsScreen1ListviewState
                                     for (var (t, c, f) in filterList)
                                       Builder(
                                         builder: (context) {
-                                          var count = filters.containsKey(f)
-                                              ? filters[f]!.$2
+                                          var count = filterCount.containsKey(f)
+                                              ? filterCount[f]!
                                               : 0;
-                                          var toggle = filters.containsKey(f)
-                                              ? filters[f]!.$1
-                                              : false;
+                                          var toggle =
+                                              filterChecked.containsKey(f)
+                                                  ? filterChecked[f]!
+                                                  : false;
                                           return Expanded(
                                             child: Card(
                                               margin: const EdgeInsets.all(3),
@@ -298,7 +301,7 @@ class _AdminStudentsScreen1ListviewState
                                               child: CheckboxListTile(
                                                 value: toggle,
                                                 onChanged: (v) {
-                                                  filters[f] = (v, count);
+                                                  filterChecked[f] = v ?? false;
                                                   filterData(v);
                                                 },
                                                 enabled: count > 0,
@@ -892,13 +895,13 @@ class _AdminStudentsScreen1ListviewState
                                           user: Student(data: doc),
                                           isAdmin: true,
                                           updated: (_) {
-                                            Future.delayed(
-                                                const Duration(
-                                                    milliseconds: 200), () {
-                                              setState(() {
-                                                getData();
-                                              });
+                                            // Future.delayed(
+                                            //     const Duration(
+                                            //         milliseconds: 200), () {
+                                            setState(() {
+                                              getData();
                                             });
+                                            // });
                                           }),
                                     ),
                                   ),
@@ -1066,7 +1069,7 @@ class _AdminStudentsScreen1ListviewState
             [for (var e in AdminStudentsScreen1Listview.filterDday) e.$3]
         // ['cancel', 'hold', 'd-1', 'd-3', 'd-7', 'd-15']
         ) {
-      if (filters.containsKey(flag) && filters[flag]!.$1) {
+      if (filterChecked[flag] ?? false) {
         var removes = <String>{};
         temp.forEach((k, v) {
           if (!customData[k]!.keys.contains(flag)) {

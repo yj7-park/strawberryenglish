@@ -109,7 +109,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
       },
       context: context,
       initialDate: DateTime.tryParse(initialDate) ?? DateTime.now(),
-      firstDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2030, 12),
     );
     if (picked != null) {

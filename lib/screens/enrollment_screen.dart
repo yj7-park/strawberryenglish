@@ -47,6 +47,7 @@ class EnrollmentScreen extends StatefulWidget {
 class _EnrollmentScreenState extends State<EnrollmentScreen> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
@@ -138,7 +139,7 @@ ${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
                         ),
                         Center(
                           child: SizedBox(
-                            width: 500,
+                            width: (screenWidth * 0.5).clamp(100, 500),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(
@@ -149,10 +150,11 @@ ${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
                                         context, '/student_calendar')
                                     .then((_) => setState(() {}));
                               },
-                              child: const Text(
+                              child: Text(
                                 '마이페이지',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize:
+                                        (screenWidth * 0.025).clamp(10, 16),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
