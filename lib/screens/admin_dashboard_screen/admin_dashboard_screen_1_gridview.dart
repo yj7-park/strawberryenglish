@@ -491,8 +491,10 @@ class _AdminDashboardScreen1GridviewState
           Appointment(
             startTime: trialTime,
             endTime: trialTime.add(const Duration(hours: 1)),
-            color: (student.getStudentLectureState() ==
-                    StudentState.registeredOnly)
+            color: (student.getStudentLectureState() !=
+                        StudentState.registeredOnly &&
+                    student.getStudentLectureState() !=
+                        StudentState.lectureRequested)
                 ? Colors.greenAccent.shade700
                 : Colors.orangeAccent.shade200,
             subject: '${student.data['name']} (${student.data['trialTutor']})',

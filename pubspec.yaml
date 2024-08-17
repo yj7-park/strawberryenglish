@@ -57,6 +57,7 @@ dependencies:
   universal_html: ^2.2.4
   pointer_interceptor: ^0.10.1+1
   fl_chart: ^0.68.0
+  bootpay: ^4.9.91
   # video_player: ^2.9.1
   # flutter_multi_formatter: ^2.12.8
 

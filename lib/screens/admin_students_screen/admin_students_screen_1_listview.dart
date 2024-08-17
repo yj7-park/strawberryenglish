@@ -168,8 +168,8 @@ class _AdminStudentsScreen1ListviewState
           }
 
           // 수업 종료 기준 (D-n)
-          if (v.containsKey('lessonEndDate')) {
-            var date = DateTime.tryParse(v['lessonEndDate']);
+          if (v.containsKey('modifiedLessonEndDate')) {
+            var date = DateTime.tryParse(v['modifiedLessonEndDate']);
             if (date != null && date.isAfter(DateTime.now())) {
               if (date
                   .subtract(const Duration(days: 1))

@@ -58,7 +58,7 @@ class StudentProvider extends ChangeNotifier {
     if (currentUser == null) return null;
     // if (_student != null) return _student;
 
-    email ??= currentUser!.email!;
+    email ??= student != null ? student!.data['email'] : currentUser!.email;
     // 계정 별 복수개 수업 DB 기능
     // if (index != null) {
     //   email = '$email#$index';
@@ -77,7 +77,7 @@ class StudentProvider extends ChangeNotifier {
         } else {
           // Google Sheets에서 사용자 데이터 가져오기
           // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
-          _student = await getStudentFromFirestore(email);
+          _student = await getStudentFromFirestore(email!);
         }
         return _student;
       }

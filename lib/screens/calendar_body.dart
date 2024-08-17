@@ -512,7 +512,6 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
 // }
 
   Widget _buildLessonInfo(bool isMobile) {
-    print(widget.user.data['cancelCountLeft']);
     return Column(
       children: [
         Row(

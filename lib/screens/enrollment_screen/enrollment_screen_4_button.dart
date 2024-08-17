@@ -1,3 +1,10 @@
+import 'package:flutter/foundation.dart';
+import 'package:bootpay/bootpay.dart';
+import 'package:bootpay/model/extra.dart';
+import 'package:bootpay/model/item.dart';
+import 'package:bootpay/model/payload.dart';
+import 'package:bootpay/model/stat_item.dart';
+import 'package:bootpay/model/user.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:universal_html/js.dart' as js;
 // import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
@@ -144,15 +151,6 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       });
       return;
     }
-
-    var price =
-        EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![
-                EnrollmentScreen.selectedDays
-                    .first]![EnrollmentScreen.selectedMins.first]! *
-            EnrollmentScreen.selectedMonths.first;
-    var pointDiscount = int.tryParse(pointsController.text) ?? 0;
-    var finalPrice = price - pointDiscount;
-
     try {
       setState(() {});
       bool? confirm = await ConfirmDialog.show(
@@ -309,6 +307,15 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                       const Spacer(),
                       Builder(
                         builder: (context) {
+                          var price = EnrollmentScreen1Input.fee[
+                                          EnrollmentScreen
+                                              .selectedMonths.first]![
+                                      EnrollmentScreen.selectedDays.first]![
+                                  EnrollmentScreen.selectedMins.first]! *
+                              EnrollmentScreen.selectedMonths.first;
+                          var pointDiscount =
+                              int.tryParse(pointsController.text) ?? 0;
+                          var finalPrice = price - pointDiscount;
                           return Text(
                             style: TextStyle(
                               fontSize: 14,
@@ -331,6 +338,31 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       );
 
       if (confirm == true) {
+        // var order =
+        //     '${EnrollmentScreen.selectedMonths.first}개월 (주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분)';
+        // var price = finalPrice.toDouble();
+        // Item item = Item();
+        // item.name = order; // 주문정보에 담길 상품명
+        // item.qty = 1; // 해당 상품의 주문 수량
+        // item.id =
+        //     '${EnrollmentScreen.selectedMonths.first}MONTH_${EnrollmentScreen.selectedDays.first}TIMES_PER_WEEK_${EnrollmentScreen.selectedMins.first}MINUTES'; // 해당 상품의 고유 키
+        // item.price = price; // 상품의 가격
+
+        // User user = User(); // 구매자 정보
+        // user.username = name;
+        // user.email = studentProvider.student!.data['email'];
+        // user.area = country;
+        // user.phone = phoneNumber;
+        // // user.addr = '서울시 동작구 상도로 222';
+        // bool confirm2 = bootpay(
+        //   context,
+        //   item,
+        //   user,
+        //   order,
+        //   price,
+        // );
+
+        // if (confirm2 == true) {
         // 성공 시 동작
         Student? updatedStudent = studentProvider.student;
         updatedStudent!.data['name'] = name;
@@ -381,6 +413,13 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         updatedStudent.data['holdRequestDates'] = [];
 
         // 결재 데이터
+        var price =
+            EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![
+                    EnrollmentScreen.selectedDays
+                        .first]![EnrollmentScreen.selectedMins.first]! *
+                EnrollmentScreen.selectedMonths.first;
+        var pointDiscount = int.tryParse(pointsController.text) ?? 0;
+        var finalPrice = price - pointDiscount;
         updatedStudent.data['billingAmount'] = price;
         updatedStudent.data['billingDiscount'] = pointDiscount;
         updatedStudent.data['billingFinal'] = finalPrice;
@@ -453,6 +492,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         if (confirm2 == true) {
           js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
           Navigator.of(context).pop(true);
+          // }
         }
       }
     } catch (e) {
@@ -460,5 +500,122 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         errorMessage = e.toString().replaceFirst(RegExp(r'\[.*\] '), '');
       });
     }
+  }
+
+  String webApplicationId = '5b8f6a4d396fa665fdc2b5e7';
+  String androidApplicationId = '5b8f6a4d396fa665fdc2b5e8';
+  String iosApplicationId = '5b8f6a4d396fa665fdc2b5e9';
+
+  bool bootpay(
+    BuildContext context,
+    Item item,
+    User user,
+    String orderName,
+    double price,
+  ) {
+    bool result = false;
+
+    Payload payload = getPayload(item, user, orderName, price);
+    if (kIsWeb) {
+      payload.extra?.openType = "iframe";
+    }
+
+    Bootpay().requestPayment(
+      context: context,
+      payload: payload,
+      showCloseButton: false,
+      // closeButton: Icon(Icons.close, size: 35.0, color: Colors.black54),
+      onCancel: (String data) {
+        print('------- onCancel: $data');
+      },
+      onError: (String data) {
+        print('------- onError: $data');
+      },
+      onClose: () {
+        print('------- onClose');
+        if (!kIsWeb) {
+          Bootpay().dismiss(context); //명시적으로 부트페이 뷰 종료 호출
+        }
+        //TODO - 원하시는 라우터로 페이지 이동
+      },
+      onIssued: (String data) {
+        print('------- onIssued: $data');
+      },
+      onConfirm: (String data) {
+        result = true;
+        print('------- onConfirm: $data');
+        /**
+            1. 바로 승인하고자 할 때
+            return true;
+         **/
+        /***
+            2. 비동기 승인 하고자 할 때
+            checkQtyFromServer(data);
+            return false;
+         ***/
+        /***
+            3. 서버승인을 하고자 하실 때 (클라이언트 승인 X)
+            return false; 후에 서버에서 결제승인 수행
+         */
+        // checkQtyFromServer(data);
+        return true;
+      },
+      onDone: (String data) {
+        print('------- onDone: $data');
+      },
+    );
+    return result;
+  }
+
+  Payload getPayload(Item item, User user, orderName, price) {
+    Payload payload = Payload();
+    payload.webApplicationId = webApplicationId; // web application id
+    payload.androidApplicationId =
+        androidApplicationId; // android application id
+    payload.iosApplicationId = iosApplicationId; // ios application id
+
+    payload.pg = '나이스페이';
+    // payload.method = '카드';
+    payload.methods = [
+      'card',
+      'phone',
+      'vbank',
+      'bank',
+      'kakao',
+    ];
+    payload.orderName = orderName; //결제할 상품명
+    payload.price = price; //정기결제시 0 혹은 주석
+
+    payload.orderId = DateTime.now()
+        .millisecondsSinceEpoch
+        .toString(); //주문번호, 개발사에서 고유값으로 지정해야함
+
+    payload.metadata = {
+      "callbackParam1": "value12",
+      "callbackParam2": "value34",
+      "callbackParam3": "value56",
+      "callbackParam4": "value78",
+    }; // 전달할 파라미터, 결제 후 되돌려 주는 값
+
+    // Item item1 = Item();
+    // item1.name = ; // 주문정보에 담길 상품명
+    // item1.qty = 1; // 해당 상품의 주문 수량
+    // item1.id = "ITEM_CODE_MOUSE"; // 해당 상품의 고유 키
+    // item1.price = 500; // 상품의 가격
+
+    List<Item> itemList = [item];
+    payload.items = itemList; // 상품정보 배열
+    payload.user = user;
+
+    Extra extra = Extra(); // 결제 옵션
+    extra.appScheme = 'bootpayFlutterExample';
+    extra.cardQuota = '3';
+    payload.extra = extra;
+    // extra.openType = 'popup';
+
+    // extra.carrier = "SKT,KT,LGT"; //본인인증 시 고정할 통신사명
+    // extra.ageLimit = 20; // 본인인증시 제한할 최소 나이 ex) 20 -> 20살 이상만 인증이 가능
+
+    return payload;
   }
 }
