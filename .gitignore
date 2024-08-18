@@ -28,7 +28,7 @@ ios/
 linux/
 macos/
 test/
-web/
+# web/
 windows/
 .metadata
 analysis_options.yaml
