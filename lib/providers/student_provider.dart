@@ -40,7 +40,7 @@ class StudentProvider extends ChangeNotifier {
         // Google Sheets에서 사용자 데이터 가져오기
         // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
         _student = await getStudentFromFirestore(email);
-        _studentList = await getStudentList(currentUser!.email!);
+        _studentList = await getStudentListFromFirestore(currentUser!.email!);
         notifyListeners();
       }
     } catch (e) {

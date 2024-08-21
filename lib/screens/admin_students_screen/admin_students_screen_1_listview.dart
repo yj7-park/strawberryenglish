@@ -589,9 +589,13 @@ class _AdminStudentsScreen1ListviewState
                                             if (isEnroll) {
                                               inputCondition['수강신청 정보'] = false;
 
-                                              inputCondition['tutor'] = true;
+                                              inputCondition['requestTime'] =
+                                                  true;
+                                              inputCondition['requestDay'] =
+                                                  true;
                                               inputCondition['lessonTime'] =
                                                   true;
+                                              inputCondition['tutor'] = true;
                                               inputCondition['lessonMonths'] =
                                                   true;
                                               inputCondition['lessonDays'] =
@@ -757,7 +761,8 @@ class _AdminStudentsScreen1ListviewState
 *Student's Name: ${doc['name']}
 *Age: ${userAge(doc['birthDate'].replaceAll('.', '-'))}
 *Skype ID: ${doc['skypeId'] ?? '-'}
-*Times (KST): ${(doc['lessonTime'] ?? []).join(', ')}
+*Days: ${doc['requestDay'] ?? '-'}
+*Times (KST): ${doc['requestTime'] ?? '-'}
 *GOAL: ${doc['studyPurpose'] ?? 'No comment'}
 *Starting Date: ${DateFormat('d MMM, E').format(DateTime.tryParse(doc['lessonStartDate'] ?? '') ?? DateTime.now())}
 *Program: ${doc['program'] ?? '-'} (${doc['topic'] ?? '-'})

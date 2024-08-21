@@ -86,8 +86,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       snapshot.data!.data['studyPurpose'] ?? '';
                   widget.referralSourceController.text =
                       snapshot.data!.data['referralSource'] ?? '';
-                  widget.lessonStartDateController.text =
-                      snapshot.data!.data['lessonStartDate'] ?? '';
+                  // widget.lessonStartDateController.text =
+                  //     snapshot.data!.data['lessonStartDate'] ?? '';
                   widget.requestDayController.text =
                       snapshot.data!.data['requestDay'] ?? '';
                   widget.requestTimeController.text =
@@ -101,67 +101,68 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       // 제목
                       const MyHeader('수강신청'),
                       // 커버 페이지
-                      if (snapshot.data!.getStudentLectureState() ==
-                          StudentState.lectureRequested) ...[
-                        const Text(
-                          """
+//                       if (snapshot.data!.getStudentLectureState() ==
+//                           StudentState.lectureRequested) ...[
+//                         const Text(
+//                           """
 
-*수강 신청 완료
+// *수강 신청 완료
 
-수강 신청이 완료되어, 일정을 확인 중입니다.
+// 수강 신청이 완료되어, 일정을 확인 중입니다.
 
-수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
+// 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
 
-신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
+// 신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
 
-""",
-                          textAlign: TextAlign.center,
-                        ),
-                      ] else if ((snapshot.data!.getStudentState() ==
-                                  StudentState.lectureOnGoing) ||
-                              (snapshot.data!.getStudentState() ==
-                                  StudentState.lectureOnHold)
-                          // || (snapshot.data!.getStudentState() == StudentState.lectureFinished)
-                          ) ...[
-                        Text(
-                          """
+// """,
+//                           textAlign: TextAlign.center,
+//                         ),
+//                       ] else if ((snapshot.data!.getStudentState() ==
+//                                   StudentState.lectureOnGoing) ||
+//                               (snapshot.data!.getStudentState() ==
+//                                   StudentState.lectureOnHold)
+//                           // || (snapshot.data!.getStudentState() == StudentState.lectureFinished)
+//                           ) ...[
+//                         Text(
+//                           """
 
-*수업 확정
+// *수업 확정
 
-${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
+// ${snapshot.data!.data['name']} 님의 수업이 확정되었습니다 :)
 
-자세한 수업 일정은 [마이페이지]에서 확인하실 수 있습니다.
+// 자세한 수업 일정은 [마이페이지]에서 확인하실 수 있습니다.
 
-추가로 수업을 신청하고 싶으신 경우 카카오톡 채널로 문의해주시기 바랍니다.
+// 추가로 수업을 신청하고 싶으신 경우 카카오톡 채널로 문의해주시기 바랍니다.
 
-""",
-                          textAlign: TextAlign.center,
-                        ),
-                        Center(
-                          child: SizedBox(
-                            width: (screenWidth * 0.5).clamp(100, 500),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(
-                                    double.infinity, 60), // 버튼 사이즈 조정
-                              ),
-                              onPressed: () {
-                                Navigator.popAndPushNamed(
-                                        context, '/student_calendar')
-                                    .then((_) => setState(() {}));
-                              },
-                              child: Text(
-                                '마이페이지',
-                                style: TextStyle(
-                                    fontSize:
-                                        (screenWidth * 0.025).clamp(10, 16),
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ] else ...[
+// """,
+//                           textAlign: TextAlign.center,
+//                         ),
+//                         Center(
+//                           child: SizedBox(
+//                             width: (screenWidth * 0.5).clamp(100, 500),
+//                             child: ElevatedButton(
+//                               style: ElevatedButton.styleFrom(
+//                                 minimumSize: const Size(
+//                                     double.infinity, 60), // 버튼 사이즈 조정
+//                               ),
+//                               onPressed: () {
+//                                 Navigator.popAndPushNamed(
+//                                         context, '/student_calendar')
+//                                     .then((_) => setState(() {}));
+//                               },
+//                               child: Text(
+//                                 '마이페이지',
+//                                 style: TextStyle(
+//                                     fontSize:
+//                                         (screenWidth * 0.025).clamp(10, 16),
+//                                     fontWeight: FontWeight.bold,
+//                                     color: Colors.white),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ] else
+                      ...[
                         SignupScreen2Input(
                           nameController: widget.nameController,
                           birthDateController: widget.birthDateController,

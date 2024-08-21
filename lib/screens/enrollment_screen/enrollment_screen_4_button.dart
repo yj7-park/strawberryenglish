@@ -364,53 +364,55 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
         // if (confirm2 == true) {
         // 성공 시 동작
-        Student? updatedStudent = studentProvider.student;
-        updatedStudent!.data['name'] = name;
-        updatedStudent.data['birthDate'] = birthDate;
-        updatedStudent.data['phoneNumber'] = phoneNumber;
-        updatedStudent.data['requestDay'] = requestDay;
-        updatedStudent.data['requestTime'] = requestTime;
-        updatedStudent.data['country'] = country;
-        updatedStudent.data['skypeId'] = skypeId;
-        updatedStudent.data['studyPurpose'] = studyPurpose;
-        updatedStudent.data['referralSource'] = referralSource;
-        updatedStudent.data['lessonStartDate'] = lessonStartDate;
-        // updatedStudent.data['requestTime'] = '$requestDay-$requestTime';
-        updatedStudent.data['lessonPeriod'] =
-            EnrollmentScreen.selectedMins.first;
-        updatedStudent.data['lessonDays'] = EnrollmentScreen.selectedDays.first;
-        updatedStudent.data['lessonMonths'] =
-            EnrollmentScreen.selectedMonths.first;
-        updatedStudent.data['cashReceiptNumber'] = cashReceiptNumber;
-        updatedStudent.data['program'] = EnrollmentScreen1Input.topic.keys
+        Student newStudent = Student(data: {});
+
+        newStudent.data['name'] = name;
+        newStudent.data['birthDate'] = birthDate;
+        newStudent.data['phoneNumber'] = phoneNumber;
+        newStudent.data['requestDay'] = requestDay;
+        newStudent.data['requestTime'] = requestTime;
+        newStudent.data['country'] = country;
+        newStudent.data['skypeId'] = skypeId;
+        newStudent.data['studyPurpose'] = studyPurpose;
+        newStudent.data['referralSource'] = referralSource;
+        newStudent.data['lessonStartDate'] = lessonStartDate;
+        // newStudent.data['requestTime'] = '$requestDay-$requestTime';
+        newStudent.data['lessonPeriod'] = EnrollmentScreen.selectedMins.first;
+        newStudent.data['lessonDays'] = EnrollmentScreen.selectedDays.first;
+        newStudent.data['lessonMonths'] = EnrollmentScreen.selectedMonths.first;
+        newStudent.data['cashReceiptNumber'] = cashReceiptNumber;
+        newStudent.data['program'] = EnrollmentScreen1Input.topic.keys
             .elementAt(EnrollmentScreen.selectedTopic);
-        updatedStudent.data['topic'] = EnrollmentScreen1Input.topic.values
+        newStudent.data['topic'] = EnrollmentScreen1Input.topic.values
                 .elementAt(EnrollmentScreen.selectedTopic)[
             EnrollmentScreen.selectedTopicDetail];
+
+        // 적립금 계산 (기존 points에서 차감)
+        Student updatedStudent = studentProvider.student!;
         updatedStudent.data['points'] = (updatedStudent.data['points'] ?? 0) -
             (int.tryParse(pointsController.text) ?? 0);
+        newStudent.data['points'] = updatedStudent.data['points'];
 
         // 수업 종료 일자 계산
-        updatedStudent.data['modifiedLessonEndDate'] = updatedStudent
+        newStudent.data['modifiedLessonEndDate'] = newStudent
                 .data['lessonEndDate'] =
             DateFormat('yyyy-MM-dd').format(DateTime.parse(lessonStartDate).add(
                 Duration(days: 7 * 4 * EnrollmentScreen.selectedMonths.first)));
 
         // 수업 취소 횟수 계산
-        updatedStudent.data['cancelCountTotal'] =
-            updatedStudent.data['cancelCountLeft'] = EnrollmentScreen1Input
+        newStudent.data['cancelCountTotal'] =
+            newStudent.data['cancelCountLeft'] = EnrollmentScreen1Input
                     .cancelCount[EnrollmentScreen.selectedMonths.first]![
                 EnrollmentScreen.selectedDays.first];
-        updatedStudent.data['cancelDates'] = [];
-        updatedStudent.data['cancelRequestDates'] = [];
+        newStudent.data['cancelDates'] = [];
+        newStudent.data['cancelRequestDates'] = [];
 
         // 장기 홀드 횟수 계산
-        updatedStudent.data['holdCountTotal'] =
-            updatedStudent.data['holdCountLeft'] = EnrollmentScreen1Input
-                    .holdCount[EnrollmentScreen.selectedMonths.first]![
-                EnrollmentScreen.selectedDays.first];
-        updatedStudent.data['holdDates'] = [];
-        updatedStudent.data['holdRequestDates'] = [];
+        newStudent.data['holdCountTotal'] = newStudent.data['holdCountLeft'] =
+            EnrollmentScreen1Input.holdCount[EnrollmentScreen
+                .selectedMonths.first]![EnrollmentScreen.selectedDays.first];
+        newStudent.data['holdDates'] = [];
+        newStudent.data['holdRequestDates'] = [];
 
         // 결재 데이터
         var price =
@@ -420,17 +422,25 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                 EnrollmentScreen.selectedMonths.first;
         var pointDiscount = int.tryParse(pointsController.text) ?? 0;
         var finalPrice = price - pointDiscount;
-        updatedStudent.data['billingAmount'] = price;
-        updatedStudent.data['billingDiscount'] = pointDiscount;
-        updatedStudent.data['billingFinal'] = finalPrice;
+        newStudent.data['billingAmount'] = price;
+        newStudent.data['billingDiscount'] = pointDiscount;
+        newStudent.data['billingFinal'] = finalPrice;
 
         // 기타 초기화 필요 항목
-        updatedStudent.data['tutorCancelDates'] = [];
-        updatedStudent.data['lessonTime'] = [];
-        updatedStudent.data['tutor'] = '';
+        newStudent.data['tutorCancelDates'] = [];
+        newStudent.data['lessonTime'] = [];
+        newStudent.data['tutor'] = '';
 
-        // EnrollmentScreen.selectedDays.first;
+        // 기존 Student 데이터 변경
+        // TODO: 모든 계정 적립금 확인
         studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
+
+        // 새 email 찾기
+        var newEmail =
+            '${studentProvider.studentList!.first}#${studentProvider.studentList!.length + 1}';
+        newStudent.data['email'] = newEmail;
+        studentProvider.updateStudentToFirestoreWithMap(newStudent);
+        studentProvider.setStudent(newEmail);
 
         // 확인 창
         bool? confirm2 = await ConfirmDialog.show(
