@@ -364,7 +364,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
         // if (confirm2 == true) {
         // 성공 시 동작
-        Student inputStudent = Student(data: {});
+        Student inputStudent = studentProvider.student!;
 
         inputStudent.data['name'] = name;
         inputStudent.data['birthDate'] = birthDate;
@@ -427,21 +427,18 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         inputStudent.data['lessonTime'] = [];
         inputStudent.data['tutor'] = '';
 
-        // 기존 학생이 수강 신청을 하지 않은 경우
-
         // 적립금 계산 (기존 points에서 차감)
-        Student originalStudent = studentProvider.student!;
-        var balancePoints = (originalStudent.data['points'] ?? 0) -
+        inputStudent.data['points'] = (inputStudent.data['points'] ?? 0) -
             (int.tryParse(pointsController.text) ?? 0);
 
-        if (originalStudent.getStudentLectureState() ==
+        // 기존 학생이 수강 신청을 하지 않은 경우
+        if (inputStudent.getStudentLectureState() ==
             StudentState.registeredOnly) {
-          originalStudent = inputStudent;
-          originalStudent.data['points'] = balancePoints;
-          studentProvider.updateStudentToFirestoreWithMap(originalStudent);
+          studentProvider.updateStudentToFirestoreWithMap(inputStudent);
+          // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
         } else {
-          inputStudent.data['points'] =
-              originalStudent.data['points'] = balancePoints;
+          Student originalStudent = studentProvider.student!;
+          originalStudent.data['points'] = inputStudent.data['points'];
 
           // 기존 Student의 Points 변경
           // TODO: 모든 계정 적립금 확인
