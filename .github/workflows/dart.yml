@@ -12,7 +12,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4.1.1
       run: ls -al lib/screens
-      run: ls -al lib
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
