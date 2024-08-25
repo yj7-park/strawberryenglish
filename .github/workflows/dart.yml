@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4.1.1
+      run: ls -al lib/screens
+      run: ls -al lib
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -18,13 +20,11 @@ jobs:
         flutter-version: '3.22.0' # 사용하는 Flutter 버전으로 변경
 
     - name: Import Flutter package
-      run: ls -al
-
-    - name: Import Flutter package
       run: flutter pub get
 
     - name: Build Web
       run: flutter build web --release
+      working-directory: ./strawberryenglish
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3.9.3
