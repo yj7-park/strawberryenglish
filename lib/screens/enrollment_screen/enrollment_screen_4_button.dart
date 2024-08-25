@@ -364,55 +364,51 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
         // if (confirm2 == true) {
         // 성공 시 동작
-        Student newStudent = Student(data: {});
+        Student inputStudent = Student(data: {});
 
-        newStudent.data['name'] = name;
-        newStudent.data['birthDate'] = birthDate;
-        newStudent.data['phoneNumber'] = phoneNumber;
-        newStudent.data['requestDay'] = requestDay;
-        newStudent.data['requestTime'] = requestTime;
-        newStudent.data['country'] = country;
-        newStudent.data['skypeId'] = skypeId;
-        newStudent.data['studyPurpose'] = studyPurpose;
-        newStudent.data['referralSource'] = referralSource;
-        newStudent.data['lessonStartDate'] = lessonStartDate;
+        inputStudent.data['name'] = name;
+        inputStudent.data['birthDate'] = birthDate;
+        inputStudent.data['phoneNumber'] = phoneNumber;
+        inputStudent.data['requestDay'] = requestDay;
+        inputStudent.data['requestTime'] = requestTime;
+        inputStudent.data['country'] = country;
+        inputStudent.data['skypeId'] = skypeId;
+        inputStudent.data['studyPurpose'] = studyPurpose;
+        inputStudent.data['referralSource'] = referralSource;
+        inputStudent.data['lessonStartDate'] = lessonStartDate;
         // newStudent.data['requestTime'] = '$requestDay-$requestTime';
-        newStudent.data['lessonPeriod'] = EnrollmentScreen.selectedMins.first;
-        newStudent.data['lessonDays'] = EnrollmentScreen.selectedDays.first;
-        newStudent.data['lessonMonths'] = EnrollmentScreen.selectedMonths.first;
-        newStudent.data['cashReceiptNumber'] = cashReceiptNumber;
-        newStudent.data['program'] = EnrollmentScreen1Input.topic.keys
+        inputStudent.data['lessonPeriod'] = EnrollmentScreen.selectedMins.first;
+        inputStudent.data['lessonDays'] = EnrollmentScreen.selectedDays.first;
+        inputStudent.data['lessonMonths'] =
+            EnrollmentScreen.selectedMonths.first;
+        inputStudent.data['cashReceiptNumber'] = cashReceiptNumber;
+        inputStudent.data['program'] = EnrollmentScreen1Input.topic.keys
             .elementAt(EnrollmentScreen.selectedTopic);
-        newStudent.data['topic'] = EnrollmentScreen1Input.topic.values
+        inputStudent.data['topic'] = EnrollmentScreen1Input.topic.values
                 .elementAt(EnrollmentScreen.selectedTopic)[
             EnrollmentScreen.selectedTopicDetail];
 
-        // 적립금 계산 (기존 points에서 차감)
-        Student updatedStudent = studentProvider.student!;
-        updatedStudent.data['points'] = (updatedStudent.data['points'] ?? 0) -
-            (int.tryParse(pointsController.text) ?? 0);
-        newStudent.data['points'] = updatedStudent.data['points'];
-
         // 수업 종료 일자 계산
-        newStudent.data['modifiedLessonEndDate'] = newStudent
+        inputStudent.data['modifiedLessonEndDate'] = inputStudent
                 .data['lessonEndDate'] =
             DateFormat('yyyy-MM-dd').format(DateTime.parse(lessonStartDate).add(
                 Duration(days: 7 * 4 * EnrollmentScreen.selectedMonths.first)));
 
         // 수업 취소 횟수 계산
-        newStudent.data['cancelCountTotal'] =
-            newStudent.data['cancelCountLeft'] = EnrollmentScreen1Input
+        inputStudent.data['cancelCountTotal'] =
+            inputStudent.data['cancelCountLeft'] = EnrollmentScreen1Input
                     .cancelCount[EnrollmentScreen.selectedMonths.first]![
                 EnrollmentScreen.selectedDays.first];
-        newStudent.data['cancelDates'] = [];
-        newStudent.data['cancelRequestDates'] = [];
+        inputStudent.data['cancelDates'] = [];
+        inputStudent.data['cancelRequestDates'] = [];
 
         // 장기 홀드 횟수 계산
-        newStudent.data['holdCountTotal'] = newStudent.data['holdCountLeft'] =
-            EnrollmentScreen1Input.holdCount[EnrollmentScreen
-                .selectedMonths.first]![EnrollmentScreen.selectedDays.first];
-        newStudent.data['holdDates'] = [];
-        newStudent.data['holdRequestDates'] = [];
+        inputStudent.data['holdCountTotal'] =
+            inputStudent.data['holdCountLeft'] = EnrollmentScreen1Input
+                    .holdCount[EnrollmentScreen.selectedMonths.first]![
+                EnrollmentScreen.selectedDays.first];
+        inputStudent.data['holdDates'] = [];
+        inputStudent.data['holdRequestDates'] = [];
 
         // 결재 데이터
         var price =
@@ -422,25 +418,44 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
                 EnrollmentScreen.selectedMonths.first;
         var pointDiscount = int.tryParse(pointsController.text) ?? 0;
         var finalPrice = price - pointDiscount;
-        newStudent.data['billingAmount'] = price;
-        newStudent.data['billingDiscount'] = pointDiscount;
-        newStudent.data['billingFinal'] = finalPrice;
+        inputStudent.data['billingAmount'] = price;
+        inputStudent.data['billingDiscount'] = pointDiscount;
+        inputStudent.data['billingFinal'] = finalPrice;
 
         // 기타 초기화 필요 항목
-        newStudent.data['tutorCancelDates'] = [];
-        newStudent.data['lessonTime'] = [];
-        newStudent.data['tutor'] = '';
+        inputStudent.data['tutorCancelDates'] = [];
+        inputStudent.data['lessonTime'] = [];
+        inputStudent.data['tutor'] = '';
 
-        // 기존 Student 데이터 변경
-        // TODO: 모든 계정 적립금 확인
-        studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
+        // 기존 학생이 수강 신청을 하지 않은 경우
 
-        // 새 email 찾기
-        var newEmail =
-            '${studentProvider.studentList!.first}#${studentProvider.studentList!.length + 1}';
-        newStudent.data['email'] = newEmail;
-        studentProvider.updateStudentToFirestoreWithMap(newStudent);
-        studentProvider.setStudent(newEmail);
+        // 적립금 계산 (기존 points에서 차감)
+        Student originalStudent = studentProvider.student!;
+        var balancePoints = (originalStudent.data['points'] ?? 0) -
+            (int.tryParse(pointsController.text) ?? 0);
+
+        if (originalStudent.getStudentLectureState() ==
+            StudentState.registeredOnly) {
+          originalStudent = inputStudent;
+          originalStudent.data['points'] = balancePoints;
+          studentProvider.updateStudentToFirestoreWithMap(originalStudent);
+        } else {
+          inputStudent.data['points'] =
+              originalStudent.data['points'] = balancePoints;
+
+          // 기존 Student의 Points 변경
+          // TODO: 모든 계정 적립금 확인
+          studentProvider.updateStudentToFirestoreWithMap(originalStudent);
+
+          // 새 email 찾기
+          var newEmail =
+              '${studentProvider.studentList!.first}#${studentProvider.studentList!.length + 1}';
+          inputStudent.data['email'] = newEmail;
+
+          // 새 email DB 업데이트 / 새 email로 로그인 DB 변경
+          studentProvider.updateStudentToFirestoreWithMap(inputStudent);
+          studentProvider.setStudent(newEmail);
+        }
 
         // 확인 창
         bool? confirm2 = await ConfirmDialog.show(
