@@ -12,9 +12,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4.1.1
 
-    - name: Retrieve
-      run: ls -al lib/screens/signup_screen
-
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
