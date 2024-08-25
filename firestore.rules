@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 'users' document에 대한 권한 설정
+    match /users/{userId} {
+      // 인증된 사용자만 읽기와 쓰기가 허용됨
+      allow read, write: if request.auth != null;
+    }
+    
+    // 모든 다른 문서에 대한 권한 설정
+    match /{document=**} {
+      // 모든 액세스를 허용함
+      allow read, write: if true;
+    }
+  }
+}
