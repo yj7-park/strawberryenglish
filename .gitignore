@@ -42,6 +42,7 @@ devtools_options.yaml
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
+.firebase/
 # /build/
 
 # Symbolication related
