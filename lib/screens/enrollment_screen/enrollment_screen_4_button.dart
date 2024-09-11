@@ -338,31 +338,30 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       );
 
       if (confirm == true) {
-        // var order =
-        //     '${EnrollmentScreen.selectedMonths.first}개월 (주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분)';
-        // var price = finalPrice.toDouble();
-        // Item item = Item();
-        // item.name = order; // 주문정보에 담길 상품명
-        // item.qty = 1; // 해당 상품의 주문 수량
-        // item.id =
-        //     '${EnrollmentScreen.selectedMonths.first}MONTH_${EnrollmentScreen.selectedDays.first}TIMES_PER_WEEK_${EnrollmentScreen.selectedMins.first}MINUTES'; // 해당 상품의 고유 키
-        // item.price = price; // 상품의 가격
+        var _price =
+            EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![
+                    EnrollmentScreen.selectedDays
+                        .first]![EnrollmentScreen.selectedMins.first]! *
+                EnrollmentScreen.selectedMonths.first;
+        var pointDiscount = int.tryParse(pointsController.text) ?? 0;
+        var finalPrice = _price - pointDiscount;
+        var order =
+            '${EnrollmentScreen.selectedMonths.first}개월 (주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분)';
+        var price = finalPrice.toDouble();
+        Item item = Item();
+        item.name = order; // 주문정보에 담길 상품명
+        item.qty = 1; // 해당 상품의 주문 수량
+        item.id =
+            '${EnrollmentScreen.selectedMonths.first}MONTH_${EnrollmentScreen.selectedDays.first}TIMES_PER_WEEK_${EnrollmentScreen.selectedMins.first}MINUTES'; // 해당 상품의 고유 키
+        item.price = price; // 상품의 가격
 
-        // User user = User(); // 구매자 정보
-        // user.username = name;
-        // user.email = studentProvider.student!.data['email'];
-        // user.area = country;
-        // user.phone = phoneNumber;
-        // // user.addr = '서울시 동작구 상도로 222';
-        // bool confirm2 = bootpay(
-        //   context,
-        //   item,
-        //   user,
-        //   order,
-        //   price,
-        // );
+        User user = User(); // 구매자 정보
+        user.username = name;
+        user.email = studentProvider.student!.data['email'];
+        user.area = country;
+        user.phone = phoneNumber;
+        // user.addr = '서울시 동작구 상도로 222';
 
-        // if (confirm2 == true) {
         // 성공 시 동작
         Student inputStudent = studentProvider.student!;
 
@@ -411,13 +410,13 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         inputStudent.data['holdRequestDates'] = [];
 
         // 결재 데이터
-        var price =
-            EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![
-                    EnrollmentScreen.selectedDays
-                        .first]![EnrollmentScreen.selectedMins.first]! *
-                EnrollmentScreen.selectedMonths.first;
-        var pointDiscount = int.tryParse(pointsController.text) ?? 0;
-        var finalPrice = price - pointDiscount;
+        // var price = EnrollmentScreen1Input
+        //             .fee[EnrollmentScreen.selectedMonths.first]![
+        //         EnrollmentScreen.selectedDays
+        //             .first]![EnrollmentScreen.selectedMins.first]! *
+        //     EnrollmentScreen.selectedMonths.first;
+        // var pointDiscount = int.tryParse(pointsController.text) ?? 0;
+        // var finalPrice = price - pointDiscount;
         inputStudent.data['billingAmount'] = price;
         inputStudent.data['billingDiscount'] = pointDiscount;
         inputStudent.data['billingFinal'] = finalPrice;
@@ -431,91 +430,14 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         inputStudent.data['points'] = (inputStudent.data['points'] ?? 0) -
             (int.tryParse(pointsController.text) ?? 0);
 
-        // 기존 학생이 수강 신청을 하지 않은 경우
-        if (inputStudent.getStudentLectureState() ==
-            StudentState.registeredOnly) {
-          studentProvider.updateStudentToFirestoreWithMap(inputStudent);
-          // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
-        } else {
-          Student originalStudent = studentProvider.student!;
-          originalStudent.data['points'] = inputStudent.data['points'];
-
-          // 기존 Student의 Points 변경
-          // TODO: 모든 계정 적립금 확인
-          studentProvider.updateStudentToFirestoreWithMap(originalStudent);
-
-          // 새 email 찾기
-          var newEmail =
-              '${studentProvider.studentList!.first}#${studentProvider.studentList!.length + 1}';
-          inputStudent.data['email'] = newEmail;
-
-          // 새 email DB 업데이트 / 새 email로 로그인 DB 변경
-          studentProvider.updateStudentToFirestoreWithMap(inputStudent);
-          studentProvider.setStudent(newEmail);
-        }
-
-        // 확인 창
-        bool? confirm2 = await ConfirmDialog.show(
-            context: context,
-            title: "수강 신청 완료",
-            body: [
-              // 입금계좌 정보
-              Text(
-                '입금계좌 정보',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: customTheme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Container(
-                width: 300,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(color: customTheme.colorScheme.secondary),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(3),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: const Text(
-                  "국민은행\n"
-                  "613202-04-131166\n"
-                  "(예금주: 윤소명)",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              const Text(
-                "*등록자 성함을 반드시 적어서 입금해주세요.",
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "입금 후, 카톡 채널로 '입금 완료'라고 말씀해주세요.\n"
-                "담당자가 확인 후 수업 확정 안내드리도록 하겠습니다.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: customTheme.colorScheme.primary,
-                ),
-              ),
-            ],
-            trueButton: "카카오톡 채널로 문의하기",
-            falseButton: "마이페이지로 이동",
-            routeToOnLeft: '/student_calendar');
-
-        if (confirm2 == true) {
-          js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
-          Navigator.of(context).pop(true);
-          // }
-        }
+        bootpay(
+          context,
+          item,
+          user,
+          order,
+          price,
+          inputStudent,
+        );
       }
     } catch (e) {
       setState(() {
@@ -528,13 +450,14 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
   String androidApplicationId = '5b8f6a4d396fa665fdc2b5e8';
   String iosApplicationId = '5b8f6a4d396fa665fdc2b5e9';
 
-  bool bootpay(
+  void bootpay(
     BuildContext context,
     Item item,
     User user,
     String orderName,
     double price,
-  ) {
+    Student inputStudent,
+  ) async {
     bool result = false;
 
     Payload payload = getPayload(item, user, orderName, price);
@@ -561,7 +484,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         //TODO - 원하시는 라우터로 페이지 이동
       },
       onIssued: (String data) {
+        result = true;
         print('------- onIssued: $data');
+        // 가상계좌 선택 시 (송금 이전) - 테스트
+        updateNewStudent(inputStudent);
+        showConfirmedMessage(inputStudent);
       },
       onConfirm: (String data) {
         result = true;
@@ -586,7 +513,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         print('------- onDone: $data');
       },
     );
-    return result;
+    // return result;
   }
 
   Payload getPayload(Item item, User user, orderName, price) {
@@ -639,5 +566,92 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     // extra.ageLimit = 20; // 본인인증시 제한할 최소 나이 ex) 20 -> 20살 이상만 인증이 가능
 
     return payload;
+  }
+
+  void updateNewStudent(Student inputStudent) {
+    // 기존 학생이 수강 신청을 하지 않은 경우
+    if (inputStudent.getStudentLectureState() == StudentState.registeredOnly) {
+      studentProvider.updateStudentToFirestoreWithMap(inputStudent);
+      // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
+    } else {
+      // Student originalStudent = studentProvider.student!;
+      // originalStudent.data['points'] = inputStudent.data['points'];
+
+      // // 기존 Student의 Points 변경
+      // // TODO: 모든 계정 적립금 확인
+      // studentProvider.updateStudentToFirestoreWithMap(originalStudent);
+      // 새 email 찾기
+      var newEmail =
+          '${studentProvider.studentList!.first.data['email']}#${studentProvider.studentList!.length + 1}';
+      inputStudent.data['email'] = newEmail;
+
+      // 새 email DB 업데이트 / 새 email로 로그인 DB 변경
+      studentProvider.updateStudentToFirestoreWithMap(inputStudent);
+      studentProvider.setStudent(newEmail);
+    }
+  }
+
+  void showConfirmedMessage(Student inputStudent) async {
+    // 확인 창
+    bool? confirm = await ConfirmDialog.show(
+        context: context,
+        title: "수강 신청 완료",
+        body: [
+          // 입금계좌 정보
+          Text(
+            '입금계좌 정보',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: customTheme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            width: 300,
+            height: 100,
+            decoration: BoxDecoration(
+              border: Border.all(color: customTheme.colorScheme.secondary),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(3),
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              "국민은행\n"
+              "613202-04-131166\n"
+              "(예금주: 윤소명)",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          const Text(
+            "*등록자 성함을 반드시 적어서 입금해주세요.",
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "입금 후, 카톡 채널로 '입금 완료'라고 말씀해주세요.\n"
+            "담당자가 확인 후 수업 확정 안내드리도록 하겠습니다.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: customTheme.colorScheme.primary,
+            ),
+          ),
+        ],
+        trueButton: "카카오톡 채널로 문의하기",
+        falseButton: "마이페이지로 이동",
+        routeToOnLeft: '/student_calendar');
+    if (confirm == true) {
+      js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+      Navigator.of(context).pop(true);
+      // }
+    }
   }
 }

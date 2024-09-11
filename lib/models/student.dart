@@ -1,9 +1,104 @@
 class Student {
-  Map<String, dynamic> data;
+  late Map<String, dynamic> data;
 
   Student({
     required this.data,
   });
+
+  Student.fromRow(List<Object?> row) {
+    int index = 0;
+    data = {};
+    // data['uid'] = row[index] as String;
+    index++;
+    // data['id'] = int.tryParse(row[index] as String) ?? 0;
+    index++;
+    data['name'] = row[index] as String;
+    index++;
+    data['gender'] = row[index] as String?;
+    index++;
+    data['birthDate'] = row[index] as String?;
+    index++;
+    data['phoneNumber'] = row[index] as String?;
+    index++;
+    data['email'] = row[index] as String;
+    index++;
+    data['country'] = row[index] as String?;
+    index++;
+    data['program'] = row[index] as String?;
+    index++;
+    data['studyPurpose'] = row[index] as String?;
+    index++;
+    data['tutor'] = row[index] as String?;
+    index++;
+    data['skypeId'] = row[index] as String?;
+    index++;
+    data['topic'] = row[index] as String?;
+    index++;
+    data['cancelRequestDates'] = (row[index] as String?)!.isNotEmpty
+        ? (row[index] as String?)?.split(',').map((e) => e.trim()).toList()
+        : [];
+    index++;
+    data['cancelDates'] = (row[index] as String?)!.isNotEmpty
+        ? (row[index] as String?)?.split(',').map((e) => e.trim()).toList()
+        : [];
+    index++;
+    data['tutorCancelDates'] = (row[index] as String?)!.isNotEmpty
+        ? (row[index] as String?)?.split(',').map((e) => e.trim()).toList()
+        : [];
+    index++;
+    data['cancelCountLeft'] = int.tryParse(row[index] as String) ?? 0;
+    index++;
+    data['cancelCountTotal'] = int.tryParse(row[index] as String) ?? 0;
+    index++;
+    data['holdRequestDates'] = (row[index] as String?)!.isNotEmpty
+        ? (row[index] as String?)?.split(',').map((e) => e.trim()).toList()
+        : [];
+    index++;
+    data['holdDates'] = (row[index] as String?)!.isNotEmpty
+        ? (row[index] as String?)?.split(',').map((e) => e.trim()).toList()
+        : [];
+    index++;
+    data['holdCountLeft'] = int.tryParse(row[index] as String) ?? 0;
+    index++;
+    data['holdCountTotal'] = int.tryParse(row[index] as String) ?? 0;
+    index++;
+    data['lessonDay'] = row[index] as String;
+    index++;
+    data['lessonTime'] = (row[index] as String?)!.isNotEmpty
+        ? (row[index] as String?)?.split('\n').map((e) => e.trim()).toList()
+        : [];
+    index++;
+    data['philippinesTime'] = row[index] as String?;
+    index++;
+    data['lessonStartDate'] = row[index] as String;
+    index++;
+    data['paymentAmount'] = row[index] as String?;
+    index++;
+    data['lessonEndDate'] = row[index] as String;
+    index++;
+    data['modifiedLessonEndDate'] = row[index] as String;
+    index++;
+    data['extensionRequestMessage'] = row[index] as String;
+    index++;
+    data['referralSource'] = row[index] as String;
+    index++;
+
+    data['level'] = '';
+    data['comments'] = '';
+    data['oneWeekNotice'] = '';
+    data['coupon'] = '';
+
+    try {
+      data['level'] = row[index] ?? '';
+      index++;
+      data['comments'] = row[index] ?? '';
+      index++;
+      data['oneWeekNotice'] = row[index] ?? '';
+      index++;
+      data['coupon'] = row[index] ?? '';
+      index++;
+    } catch (e) {}
+  }
 
   StudentState getStudentState({DateTime? now}) {
     now ??= DateTime.now();
@@ -21,7 +116,6 @@ class Student {
             DateTime endDate = DateTime.parse(dateParts[1])
                 .add(const Duration(days: 1))
                 .subtract(const Duration(microseconds: 1));
-
             if (startDate.isBefore(endDate) &&
                 (startDate.isBefore(now) && endDate.isAfter(now))) {
               inHold = true;
@@ -37,7 +131,7 @@ class Student {
       } else {
         return StudentState.lectureFinished;
       }
-    } else if (data.containsKey('lessonEndDate') &&
+    } else if ((data['lessonEndDate'] ?? '').isNotEmpty &&
         (data['tutor'] ?? '').isEmpty) {
       return StudentState.lectureRequested;
     } else if ((data['trialTutor'] ?? '').isNotEmpty &&
@@ -91,7 +185,6 @@ class Student {
             DateTime endDate = DateTime.parse(dateParts[1])
                 .add(const Duration(days: 1))
                 .subtract(const Duration(microseconds: 1));
-
             if (startDate.isBefore(endDate) &&
                 (startDate.isBefore(now) && endDate.isAfter(now))) {
               inHold = true;
@@ -107,7 +200,7 @@ class Student {
       } else {
         return StudentState.lectureFinished;
       }
-    } else if (data.containsKey('lessonEndDate') &&
+    } else if ((data['lessonEndDate'] ?? '').isNotEmpty &&
         (data['tutor'] ?? '').isEmpty) {
       return StudentState.lectureRequested;
     } else {

@@ -27,7 +27,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
   @override
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
-    return FutureBuilder<(Student?, List<String>)>(
+    return FutureBuilder<(Student?, List<Student>)>(
       future: studentProvider.getStudentAndList(), // 새로운 Future 생성
       builder: (context, snapshot) {
         double screenWidth = MediaQuery.of(context).size.width;
@@ -35,7 +35,9 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
         bool isMobile = screenWidth < 1000;
         // TODO: 모바일일 경우에는 화면이 크더라도 isMobile true로 설정 필요
         var student = snapshot.data?.$1;
-        var studentList = snapshot.data?.$2;
+        var studentList = snapshot.data?.$2.where((e) =>
+                e.getStudentLectureState() != StudentState.lectureFinished) ??
+            [];
         bool isLoggedIn = student != null;
         bool isAdmin =
             isLoggedIn && (student.data['email'] == 'admin@admin.com');
@@ -64,37 +66,47 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                       children: [
                         if (isLoggedIn && (screenWidth >= 450)) ...[
                           !isAdmin
-                              ? DropdownMenu(
-                                  onSelected: (value) {
-                                    studentProvider.setStudent(value as String);
-                                  },
-                                  width: 250,
-                                  textStyle: const TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                  initialSelection: student.data['email'],
-                                  requestFocusOnTap: false,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                    isDense: true,
-                                    border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    constraints: BoxConstraints.tight(
-                                      const Size.fromHeight(35),
-                                    ),
-                                  ),
-                                  dropdownMenuEntries: studentList!.map((e) {
-                                    return DropdownMenuEntry<String>(
-                                      style: MenuItemButton.styleFrom(
-                                        minimumSize: const Size(250, 35),
-                                        // padding: EdgeInsets.symmetric(
-                                        //     horizontal: 10, vertical: 0,),
+                              ? (studentList.isNotEmpty
+                                  ? DropdownMenu<Student>(
+                                      onSelected: (value) {
+                                        studentProvider
+                                            .setStudent(value!.data['email']);
+                                      },
+                                      width: 250,
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
                                       ),
-                                      value: e,
-                                      label: e,
-                                    );
-                                  }).toList(),
-                                )
+                                      initialSelection: studentList.firstWhere(
+                                          (e) =>
+                                              e.data['email'] ==
+                                              student.data['email'],
+                                          // TODO: error 처리 필요
+                                          orElse: () => Student(data: {})),
+                                      requestFocusOnTap: false,
+                                      inputDecorationTheme:
+                                          InputDecorationTheme(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                        constraints: BoxConstraints.tight(
+                                          const Size.fromHeight(35),
+                                        ),
+                                      ),
+                                      dropdownMenuEntries: studentList.map((e) {
+                                        return DropdownMenuEntry<Student>(
+                                          style: MenuItemButton.styleFrom(
+                                            minimumSize: const Size(250, 35),
+                                            // padding: EdgeInsets.symmetric(
+                                            //     horizontal: 10, vertical: 0,),
+                                          ),
+                                          value: e,
+                                          label: userTitleString(e),
+                                        );
+                                      }).toList(),
+                                    )
+                                  : const Text(''))
                               : const Text(
                                   '🛡관리자모드🛡',
                                   style: TextStyle(
@@ -450,4 +462,28 @@ Widget loginButton(context, isLoggedIn, studentProvider) {
       ),
     ),
   );
+}
+
+String userTitleString(Student student) {
+  var name = student.data['name'];
+  var startDate = student.data['lessonStartDate'];
+  var lessonTime = student.data['lessonTime'] ?? [];
+  var detailInfo = '';
+  if (lessonTime.isEmpty) {
+    if (student.getStudentLectureState() == StudentState.lectureRequested) {
+      detailInfo = '수강 신청 중';
+    } else //if (student.getStudentLectureState() == StudentState.registeredOnly)
+    {
+      detailInfo = '수강수업 없음';
+    }
+  } else {
+    var lessonString = lessonTime.join(',');
+    if (lessonString.length <= 10) {
+      detailInfo = lessonString;
+    } else {
+      detailInfo = '${lessonString.substring(0, 7)}...';
+    }
+  }
+
+  return '$name($startDate) - $detailInfo';
 }

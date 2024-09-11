@@ -56,27 +56,27 @@ class SheetApiProvider {
 
   Future<List<List<Object?>>> getStudentSheet() async {
     // if (studentSheet == null || studentSheet!.isEmpty) {
-    if (kDebugMode) {
-      try {
-        var data = await rootBundle.load('assets/images/test.xlsx');
-        List<int> bytes =
-            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-        var excel = SpreadsheetDecoder.decodeBytes(bytes, update: true);
-        var sheet = excel.tables['최신 고객 목록'];
-        studentSheet = [];
-        studentSheet = sheet!.rows.sublist(5).map((innerList) {
-          return innerList.map((dynamicItem) => dynamicItem ?? '').toList();
-        }).toList();
-      } catch (e) {
-        print(e);
-      }
-    } else {
-      var response = await sheetsApi.spreadsheets.values.get(
-        '13cK1mVHqMddsi_YO8iRj6gSbZMQvkyJBSduX9I7Xwt0',
-        '최신 고객 목록!A6:AO505', // 범위는 필요에 따라 조절하세요
-      );
-      studentSheet = response.values!;
-    }
+    // if (kDebugMode) {
+    //   try {
+    //     var data = await rootBundle.load('assets/images/test.xlsx');
+    //     List<int> bytes =
+    //         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    //     var excel = SpreadsheetDecoder.decodeBytes(bytes, update: true);
+    //     var sheet = excel.tables['최신 고객 목록'];
+    //     studentSheet = [];
+    //     studentSheet = sheet!.rows.sublist(5).map((innerList) {
+    //       return innerList.map((dynamicItem) => dynamicItem ?? '').toList();
+    //     }).toList();
+    //   } catch (e) {
+    //     print(e);
+    //   }
+    // } else {
+    var response = await sheetsApi.spreadsheets.values.get(
+      '13cK1mVHqMddsi_YO8iRj6gSbZMQvkyJBSduX9I7Xwt0',
+      '최신 고객 목록!A6:AO505', // 범위는 필요에 따라 조절하세요
+    );
+    studentSheet = response.values!;
+    // }
     // }
     return studentSheet!;
   }

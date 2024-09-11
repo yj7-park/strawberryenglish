@@ -736,85 +736,91 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
     // 최근 리뷰 작성일 이후로 완료된 수업 일수를 계산하여
     // 주간 수업 횟수 * 4가 되면 리뷰 작성 활성화
     // 리뷰를 작성할 경우 리뷰 작성일을 업데이트하고, DB에 반영
-    DateTime lastFeedbackDate =
-        DateTime.tryParse(widget.user.data['lastFeedbackDate'] ?? '') ??
-            DateTime.parse(widget.user.data['lessonStartDate']);
-    var lessonCountAfterFeedback = 0;
-    var lessonsToFeedback = lessonDates.length * 4;
+    try {
+      DateTime lastFeedbackDate =
+          DateTime.tryParse(widget.user.data['lastFeedbackDate'] ?? '') ??
+              DateTime.parse(widget.user.data['lessonStartDate']);
+      var lessonCountAfterFeedback = 0;
+      var lessonsToFeedback = lessonDates.length * 4;
 
-    DateTime currentLessonDate = lessonStartDate;
-    while (currentLessonDate.isBefore(lastLessonDate) ||
-        currentLessonDate.isAtSameMomentAs(lastLessonDate)) {
-      Color appointmentColor = Colors.white;
-      String subject = '';
+      DateTime currentLessonDate = lessonStartDate;
+      while (currentLessonDate.isBefore(lastLessonDate) ||
+          currentLessonDate.isAtSameMomentAs(lastLessonDate)) {
+        Color appointmentColor = Colors.white;
+        String subject = '';
 
-      DateTime? lessonTime = lessonDates[currentLessonDate.weekday];
-      DateTime currentLessonTime = DateTime(
-        currentLessonDate.year,
-        currentLessonDate.month,
-        currentLessonDate.day,
-        lessonTime?.hour ?? 0,
-        lessonTime?.minute ?? 0,
-      );
+        DateTime? lessonTime = lessonDates[currentLessonDate.weekday];
+        DateTime currentLessonTime = DateTime(
+          currentLessonDate.year,
+          currentLessonDate.month,
+          currentLessonDate.day,
+          lessonTime?.hour ?? 0,
+          lessonTime?.minute ?? 0,
+        );
 
-      var mmdd = DateFormat('MM-dd').format(currentLessonDate);
-      var yymmdd = DateFormat('yyyy-MM-dd').format(currentLessonDate);
-      if (holidayData.keys.contains(mmdd)) {
-        appointmentColor = Colors.red;
-        subject = '[휴일] ${holidayData[mmdd]}';
-      } else if (breakdayData.keys.contains(yymmdd)) {
-        appointmentColor = Colors.red;
-        subject = '[임시휴일] ${breakdayData[yymmdd]}';
-      } else if (cancelDates.contains(currentLessonDate)) {
-        appointmentColor = Colors.red;
-        subject = '[수업 취소] 학생 취소';
-      } else if (tutorCancelDates.contains(currentLessonDate)) {
-        appointmentColor = Colors.red.shade900;
-        subject = '[수업 취소] 튜터 취소';
-      } else if (cancelRequestDates.contains(currentLessonDate)) {
-        appointmentColor = Colors.orange;
-        subject = '[수업 취소중]';
-      } else if (holdDates.contains(currentLessonDate)) {
-        appointmentColor = Colors.grey;
-        subject = '[장기 홀드]';
-      } else if (holdRequestDates.contains(currentLessonDate)) {
-        appointmentColor = Colors.orange;
-        subject = '[장기 홀드중]';
-      } else if (lessonDates.keys.contains(currentLessonDate.weekday)) {
-        appointmentColor = Colors.blue;
-        subject =
-            '[수업] ${lessonTime?.hour ?? 0}:${(lessonTime?.minute ?? 0).toString().padLeft(2, '0')}';
-      }
+        var mmdd = DateFormat('MM-dd').format(currentLessonDate);
+        var yymmdd = DateFormat('yyyy-MM-dd').format(currentLessonDate);
+        if (holidayData.keys.contains(mmdd)) {
+          appointmentColor = Colors.red;
+          subject = '[휴일] ${holidayData[mmdd]}';
+        } else if (breakdayData.keys.contains(yymmdd)) {
+          appointmentColor = Colors.red;
+          subject = '[임시휴일] ${breakdayData[yymmdd]}';
+        } else if (cancelDates.contains(currentLessonDate)) {
+          appointmentColor = Colors.red;
+          subject = '[수업 취소] 학생 취소';
+        } else if (tutorCancelDates.contains(currentLessonDate)) {
+          appointmentColor = Colors.red.shade900;
+          subject = '[수업 취소] 튜터 취소';
+        } else if (cancelRequestDates.contains(currentLessonDate)) {
+          appointmentColor = Colors.orange;
+          subject = '[수업 취소중]';
+        } else if (holdDates.contains(currentLessonDate)) {
+          appointmentColor = Colors.grey;
+          subject = '[장기 홀드]';
+        } else if (holdRequestDates.contains(currentLessonDate)) {
+          appointmentColor = Colors.orange;
+          subject = '[장기 홀드중]';
+        } else if (lessonDates.keys.contains(currentLessonDate.weekday)) {
+          appointmentColor = Colors.blue;
+          subject =
+              '[수업] ${lessonTime?.hour ?? 0}:${(lessonTime?.minute ?? 0).toString().padLeft(2, '0')}';
+        }
 
-      if (!(DateTime.now().year == currentLessonTime.year &&
-              DateTime.now().month == currentLessonTime.month &&
-              DateTime.now().day == currentLessonTime.day) &&
-          (DateTime.now().isAfter(currentLessonTime))) {
-        if (subject.contains('[수업]')) {
-          appointmentColor = const Color.fromARGB(255, 171, 212, 245);
-          subject = '[수업 종료]';
-          if (currentLessonTime.isAfter(lastFeedbackDate)) {
-            lessonCountAfterFeedback++;
-            if (lessonCountAfterFeedback >= lessonsToFeedback) {
-              feedbackNeeded = true;
+        if (!(DateTime.now().year == currentLessonTime.year &&
+                DateTime.now().month == currentLessonTime.month &&
+                DateTime.now().day == currentLessonTime.day) &&
+            (DateTime.now().isAfter(currentLessonTime))) {
+          if (subject.contains('[수업]')) {
+            appointmentColor = const Color.fromARGB(255, 171, 212, 245);
+            subject = '[수업 종료]';
+            if (currentLessonTime.isAfter(lastFeedbackDate)) {
+              lessonCountAfterFeedback++;
+              if (lessonCountAfterFeedback >= lessonsToFeedback) {
+                feedbackNeeded = true;
+              }
             }
           }
         }
-      }
 
-      if (subject.isNotEmpty) {
-        appointments.add(
-          Appointment(
-            startTime: currentLessonTime,
-            endTime: currentLessonTime.add(const Duration(minutes: 29)),
-            color: appointmentColor,
-            subject: subject,
-            isAllDay: true,
-          ),
-        );
-      }
+        if (subject.isNotEmpty) {
+          appointments.add(
+            Appointment(
+              startTime: currentLessonTime,
+              endTime: currentLessonTime.add(const Duration(minutes: 29)),
+              color: appointmentColor,
+              subject: subject,
+              isAllDay: true,
+            ),
+          );
+        }
 
-      currentLessonDate = currentLessonDate.add(const Duration(days: 1));
+        currentLessonDate = currentLessonDate.add(const Duration(days: 1));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('lastFeedbackDate parsing failed. $e');
+      }
     }
     return StudentDataSource(appointments);
   }

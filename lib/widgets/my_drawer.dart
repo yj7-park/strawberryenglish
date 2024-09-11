@@ -22,11 +22,12 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
-    return FutureBuilder<Student?>(
-      future: studentProvider.getStudent(), // 새로운 Future 생성
+    return FutureBuilder<(Student?, List<Student>)>(
+      future: studentProvider.getStudentAndList(), // 새로운 Future 생성
       builder: (context, snapshot) {
-        var student = snapshot.data;
-
+        var student = snapshot.data?.$1;
+        var studentList = snapshot.data?.$2.where(
+            (e) => e.getStudentLectureState() != StudentState.lectureFinished);
         bool isLoggedIn = student != null;
         bool isAdmin =
             student != null && student.data['email'] == 'admin@admin.com';
@@ -70,8 +71,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 3),
+                        padding: const EdgeInsets.symmetric(vertical: 3),
                         color: customTheme.colorScheme.secondary,
                         height: 65,
                         width: double.infinity,
@@ -81,13 +81,51 @@ class _MyDrawerState extends State<MyDrawer> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             if (isLoggedIn) ...[
-                              // TODO: DropdownMenu
-                              Text(
-                                isAdmin
-                                    ? '🛡관리자모드🛡'
-                                    : '${student.data['email']} 님',
-                              ),
-                              const SizedBox(height: 3),
+                              !isAdmin
+                                  ? DropdownMenu<Student>(
+                                      onSelected: (value) {
+                                        studentProvider
+                                            .setStudent(value!.data['email']);
+                                      },
+                                      width: 250,
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                      initialSelection: studentList!.firstWhere(
+                                          (e) =>
+                                              e.data['email'] ==
+                                              student.data['email']),
+                                      requestFocusOnTap: false,
+                                      inputDecorationTheme:
+                                          InputDecorationTheme(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                        constraints: BoxConstraints.tight(
+                                          const Size.fromHeight(35),
+                                        ),
+                                      ),
+                                      dropdownMenuEntries: studentList.map((e) {
+                                        return DropdownMenuEntry<Student>(
+                                          style: MenuItemButton.styleFrom(
+                                            minimumSize: const Size(250, 35),
+                                            // padding: EdgeInsets.symmetric(
+                                            //     horizontal: 10, vertical: 0,),
+                                          ),
+                                          value: e,
+                                          label: userTitleString(e),
+                                        );
+                                      }).toList(),
+                                    )
+                                  : const Text(
+                                      '🛡관리자모드🛡',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                              const SizedBox(width: 20),
                             ],
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
