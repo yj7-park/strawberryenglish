@@ -466,24 +466,26 @@ Widget loginButton(context, isLoggedIn, studentProvider) {
 
 String userTitleString(Student student) {
   var name = student.data['name'];
-  var startDate = student.data['lessonStartDate'];
-  var lessonTime = student.data['lessonTime'] ?? [];
+  var startDateInfo = '';
   var detailInfo = '';
-  if (lessonTime.isEmpty) {
-    if (student.getStudentLectureState() == StudentState.lectureRequested) {
-      detailInfo = '수강 신청 중';
-    } else //if (student.getStudentLectureState() == StudentState.registeredOnly)
-    {
-      detailInfo = '수강수업 없음';
-    }
-  } else {
-    var lessonString = lessonTime.join(',');
-    if (lessonString.length <= 10) {
-      detailInfo = lessonString;
-    } else {
-      detailInfo = '${lessonString.substring(0, 7)}...';
-    }
+  switch (student.getStudentLectureState()) {
+    case StudentState.lectureRequested:
+      startDateInfo = '(${student.data['lessonStartDate']})';
+      detailInfo = ' - 수강 신청 중';
+      break;
+    case StudentState.lectureOnGoing:
+    case StudentState.lectureOnHold:
+      var lessonString = student.data['lessonTime'].join(',');
+      if (lessonString.length <= 10) {
+        detailInfo = ' - $lessonString';
+      } else {
+        detailInfo = ' - ${lessonString.substring(0, 7)}...';
+      }
+      break;
+    // case StudentState.registeredOnly:
+    default:
+      detailInfo = ' 님, 환영합니다.';
   }
 
-  return '$name($startDate) - $detailInfo';
+  return '$name$startDateInfo$detailInfo';
 }

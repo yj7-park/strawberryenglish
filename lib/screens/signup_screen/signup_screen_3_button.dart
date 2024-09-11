@@ -50,6 +50,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
     double screenWidth = MediaQuery.of(context).size.width;
+    print(errorMessage);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ((screenWidth - 500) / 2)),
       child: FocusTraversalGroup(
@@ -209,6 +210,8 @@ String errorMessageTranslate(String e) {
         "등록되지 않은 이메일 주소입니다.",
     "The supplied auth credential is incorrect, malformed or has expired.":
         "아이디 또는 비밀번호가 잘못 되었습니다.",
+    // different from .js file
+    "Password should be at least 6 characters": "비밀번호는 6글자 이상이어야 합니다.",
   };
   const errorMessageTranslatedDefault = "시스템 오류가 발생했습니다. 관리자에게 문의하세요.";
 
