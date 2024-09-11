@@ -36,31 +36,31 @@ class EnrollmentScreen2PaymentInputState
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '결제 정보',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 30),
-            TextFormField(
-              controller: widget.cashReceiptNumberController,
-              decoration: const InputDecoration(
-                labelText: '현금 영수증 번호',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (_) {
-                setState(() {});
-              },
-              keyboardType: TextInputType.phone,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp("[0-9-]"),
-                ),
-              ],
-              textInputAction: TextInputAction.next,
-            ),
+            // const Text(
+            //   '결제 정보',
+            //   style: TextStyle(
+            //     fontSize: 25,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            // const SizedBox(height: 30),
+            // TextFormField(
+            //   controller: widget.cashReceiptNumberController,
+            //   decoration: const InputDecoration(
+            //     labelText: '현금 영수증 번호',
+            //     border: OutlineInputBorder(),
+            //   ),
+            //   onChanged: (_) {
+            //     setState(() {});
+            //   },
+            //   keyboardType: TextInputType.phone,
+            //   inputFormatters: [
+            //     FilteringTextInputFormatter.allow(
+            //       RegExp("[0-9-]"),
+            //     ),
+            //   ],
+            //   textInputAction: TextInputAction.next,
+            // ),
 
             // 개인정보 취급방침 동의
             const SizedBox(height: 20),

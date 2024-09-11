@@ -32,7 +32,7 @@ class EnrollmentScreen4Button extends StatefulWidget {
   final TextEditingController studyPurposeController;
   final TextEditingController referralSourceController;
   final TextEditingController lessonStartDateController;
-  final TextEditingController cashReceiptNumberController;
+  // final TextEditingController cashReceiptNumberController;
 
   const EnrollmentScreen4Button({
     super.key,
@@ -46,7 +46,7 @@ class EnrollmentScreen4Button extends StatefulWidget {
     required this.studyPurposeController,
     required this.referralSourceController,
     required this.lessonStartDateController,
-    required this.cashReceiptNumberController,
+    // required this.cashReceiptNumberController,
   });
 
   @override
@@ -126,7 +126,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     final studyPurpose = widget.studyPurposeController.text.trim();
     final referralSource = widget.referralSourceController.text.trim();
     final lessonStartDate = widget.lessonStartDateController.text.trim();
-    final cashReceiptNumber = widget.cashReceiptNumberController.text.trim();
+    // final cashReceiptNumber = widget.cashReceiptNumberController.text.trim();
     errorMessage = '';
 
     // 필수 필드 값 확인
@@ -380,7 +380,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         inputStudent.data['lessonDays'] = EnrollmentScreen.selectedDays.first;
         inputStudent.data['lessonMonths'] =
             EnrollmentScreen.selectedMonths.first;
-        inputStudent.data['cashReceiptNumber'] = cashReceiptNumber;
+        // inputStudent.data['cashReceiptNumber'] = cashReceiptNumber;
         inputStudent.data['program'] = EnrollmentScreen1Input.topic.keys
             .elementAt(EnrollmentScreen.selectedTopic);
         inputStudent.data['topic'] = EnrollmentScreen1Input.topic.values

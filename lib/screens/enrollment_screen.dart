@@ -30,8 +30,8 @@ class EnrollmentScreen extends StatefulWidget {
 
   final TextEditingController lessonStartDateController =
       TextEditingController();
-  final TextEditingController cashReceiptNumberController =
-      TextEditingController();
+  // final TextEditingController cashReceiptNumberController =
+  //     TextEditingController();
   static Set<int> selectedMonths = {3};
   static Set<int> selectedDays = {2};
   static Set<int> selectedMins = {30};
@@ -47,7 +47,7 @@ class EnrollmentScreen extends StatefulWidget {
 class _EnrollmentScreenState extends State<EnrollmentScreen> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    // double screenWidth = MediaQuery.of(context).size.width;
     return Theme(
       data: customTheme, // customTheme을 적용
       child: Scaffold(
@@ -92,8 +92,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       snapshot.data!.data['requestDay'] ?? '';
                   widget.requestTimeController.text =
                       snapshot.data!.data['requestTime'] ?? '';
-                  widget.cashReceiptNumberController.text =
-                      snapshot.data!.data['cashReceiptNumber'] ?? '';
+                  // widget.cashReceiptNumberController.text =
+                  //     snapshot.data!.data['cashReceiptNumber'] ?? '';
                   return ListView(
                     padding: const EdgeInsets.only(
                         top: 93), // Make space for the AppBar
@@ -181,10 +181,10 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                           requestDayController: widget.requestDayController,
                           requestTimeController: widget.requestTimeController,
                         ),
-                        EnrollmentScreen2PaymentInput(
-                          cashReceiptNumberController:
-                              widget.cashReceiptNumberController,
-                        ),
+                        // EnrollmentScreen2PaymentInput(
+                        //   cashReceiptNumberController:
+                        //       widget.cashReceiptNumberController,
+                        // ),
                         EnrollmentScreen4Button(
                           nameController: widget.nameController,
                           birthDateController: widget.birthDateController,
@@ -198,8 +198,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                               widget.referralSourceController,
                           lessonStartDateController:
                               widget.lessonStartDateController,
-                          cashReceiptNumberController:
-                              widget.cashReceiptNumberController,
+                          // cashReceiptNumberController:
+                          //     widget.cashReceiptNumberController,
                         ),
                         // 회사정보
                         // const CompanyInfo(),
