@@ -26,11 +26,11 @@ class HomeScreen extends StatelessWidget {
                   const EdgeInsets.only(top: 93), // Make space for the AppBar
               children: [
                 // 커버 페이지
-                const HomeScreen1Cover(),
+                const HomeScreen5Founder(title: '딸기영어 창업자는 영어공부에 진심이었습니다.'),
+                // const HomeScreen1Cover(),
                 HomeScreen2Feedback(),
                 const HomeScreen3Tutor(),
                 const HomeScreen4Price(),
-                const HomeScreen5Founder(title: '딸기영어 창업자는 영어공부에 진심이었습니다.'),
 
                 // 회사정보
                 const CompanyInfo(),
