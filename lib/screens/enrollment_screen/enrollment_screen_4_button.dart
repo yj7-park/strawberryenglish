@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart';
 import 'package:bootpay/model/payload.dart';
-import 'package:bootpay/model/stat_item.dart';
 import 'package:bootpay/model/user.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:universal_html/js.dart' as js;
@@ -338,15 +339,15 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       );
 
       if (confirm == true) {
-        var _price =
+        var priceBeforeDiscount =
             EnrollmentScreen1Input.fee[EnrollmentScreen.selectedMonths.first]![
                     EnrollmentScreen.selectedDays
                         .first]![EnrollmentScreen.selectedMins.first]! *
                 EnrollmentScreen.selectedMonths.first;
         var pointDiscount = int.tryParse(pointsController.text) ?? 0;
-        var finalPrice = _price - pointDiscount;
+        var finalPrice = priceBeforeDiscount - pointDiscount;
         var order =
-            '${EnrollmentScreen.selectedMonths.first}개월 (주${EnrollmentScreen.selectedDays.first}회 / ${EnrollmentScreen.selectedMins.first}분)';
+            '딸기영어 수강권 (${EnrollmentScreen.selectedMonths.first}개월 주${EnrollmentScreen.selectedDays.first}회/${EnrollmentScreen.selectedMins.first}분)';
         var price = finalPrice.toDouble();
         Item item = Item();
         item.name = order; // 주문정보에 담길 상품명
@@ -446,9 +447,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     }
   }
 
-  String webApplicationId = '5b8f6a4d396fa665fdc2b5e7';
-  String androidApplicationId = '5b8f6a4d396fa665fdc2b5e8';
-  String iosApplicationId = '5b8f6a4d396fa665fdc2b5e9';
+  String webApplicationId = '66daa50286fd08d2213fc224';
+  String androidApplicationId = '66daa50286fd08d2213fc225';
+  String iosApplicationId = '66daa50286fd08d2213fc226';
 
   void bootpay(
     BuildContext context,
@@ -458,7 +459,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     double price,
     Student inputStudent,
   ) async {
-    bool result = false;
+    // bool result = false;
 
     Payload payload = getPayload(item, user, orderName, price);
     if (kIsWeb) {
@@ -484,14 +485,18 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         //TODO - 원하시는 라우터로 페이지 이동
       },
       onIssued: (String data) {
-        result = true;
+        // result = true;
         print('------- onIssued: $data');
         // 가상계좌 선택 시 (송금 이전) - 테스트
+        var dataMap = json.decode(data)['data'];
+        showConfirmedMessageForTransfer(dataMap);
+        // 마이페이지 내 표시 위해 저장
+        //TODO: 만료 처리
+        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
         updateNewStudent(inputStudent);
-        showConfirmedMessage(inputStudent);
       },
       onConfirm: (String data) {
-        result = true;
+        // result = true;
         print('------- onConfirm: $data');
         /**
             1. 바로 승인하고자 할 때
@@ -591,7 +596,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     }
   }
 
-  void showConfirmedMessage(Student inputStudent) async {
+  void showConfirmedMessageForTransfer(
+    Map<String, dynamic> dataMap,
+  ) async {
     // 확인 창
     bool? confirm = await ConfirmDialog.show(
         context: context,
@@ -599,7 +606,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         body: [
           // 입금계좌 정보
           Text(
-            '입금계좌 정보',
+            '가상계좌 입금요청',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -609,7 +616,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
           const SizedBox(height: 5),
           Container(
             width: 300,
-            height: 100,
+            height: 150,
             decoration: BoxDecoration(
               border: Border.all(color: customTheme.colorScheme.secondary),
               borderRadius: const BorderRadius.all(
@@ -617,14 +624,42 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
               ),
             ),
             alignment: Alignment.center,
-            child: const Text(
-              "국민은행\n"
-              "613202-04-131166\n"
-              "(예금주: 윤소명)",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '입금 계좌번호',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "${dataMap['vbank_data']['bank_name']}\n"
+                  "${dataMap['vbank_data']['bank_account']}",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  '입금 금액',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "${NumberFormat("###,###").format(dataMap['price'])}원\n"
+                  "${(dataMap['vbank_data']['expired_at'] as String).replaceAll('T', ' ').split('+')[0]} 만료",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
           const Text(
@@ -642,6 +677,19 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: customTheme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 20),
+          InkWell(
+            onTap: () {
+              js.context.callMethod('open', [dataMap['receipt_url']]);
+            },
+            child: const Text(
+              '가상계좌 입금요청서 보기',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.redAccent,
+              ),
             ),
           ),
         ],
