@@ -87,6 +87,12 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
 
   Future<void> _selectDate(BuildContext context) async {
     String initialDate = widget.lessonStartDateController.value.text;
+    var parsedInitialDate = DateTime.tryParse(initialDate) ?? DateTime.now();
+    parsedInitialDate = parsedInitialDate.weekday == 6
+        ? parsedInitialDate.add(const Duration(days: 2))
+        : parsedInitialDate.weekday == 7
+            ? parsedInitialDate.add(const Duration(days: 1))
+            : parsedInitialDate;
     final DateTime? picked = await showDatePicker(
       builder: (context, child) {
         return Theme(
@@ -108,9 +114,11 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
         );
       },
       context: context,
-      initialDate: DateTime.tryParse(initialDate) ?? DateTime.now(),
+      initialDate: parsedInitialDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(2030, 12),
+      selectableDayPredicate: (DateTime val) =>
+          val.weekday == 6 || val.weekday == 7 ? false : true,
     );
     if (picked != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
