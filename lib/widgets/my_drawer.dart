@@ -26,11 +26,12 @@ class _MyDrawerState extends State<MyDrawer> {
       future: studentProvider.getStudentAndList(), // 새로운 Future 생성
       builder: (context, snapshot) {
         var student = snapshot.data?.$1;
-        var studentList = snapshot.data?.$2.where(
-            (e) => e.getStudentLectureState() != StudentState.lectureFinished);
+        var studentList = snapshot.data?.$2.where((e) =>
+                e.getStudentLectureState() != StudentState.lectureFinished) ??
+            [];
         bool isLoggedIn = student != null;
         bool isAdmin =
-            student != null && student.data['email'] == 'admin@admin.com';
+            isLoggedIn && (student.data['email'] == 'admin@admin.com');
         return PointerInterceptor(
           child: Drawer(
             width: 250,
@@ -82,43 +83,51 @@ class _MyDrawerState extends State<MyDrawer> {
                           children: [
                             if (isLoggedIn) ...[
                               !isAdmin
-                                  ? DropdownMenu<Student>(
-                                      onSelected: (value) {
-                                        studentProvider
-                                            .setStudent(value!.data['email']);
-                                      },
-                                      width: 250,
-                                      textStyle: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                      initialSelection: studentList!.firstWhere(
-                                          (e) =>
-                                              e.data['email'] ==
-                                              student.data['email']),
-                                      requestFocusOnTap: false,
-                                      inputDecorationTheme:
-                                          InputDecorationTheme(
-                                        isDense: true,
-                                        border: InputBorder.none,
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                        constraints: BoxConstraints.tight(
-                                          const Size.fromHeight(35),
-                                        ),
-                                      ),
-                                      dropdownMenuEntries: studentList.map((e) {
-                                        return DropdownMenuEntry<Student>(
-                                          style: MenuItemButton.styleFrom(
-                                            minimumSize: const Size(250, 35),
-                                            // padding: EdgeInsets.symmetric(
-                                            //     horizontal: 10, vertical: 0,),
+                                  ? (studentList.isNotEmpty
+                                      ? DropdownMenu<Student>(
+                                          onSelected: (value) {
+                                            studentProvider.setStudent(
+                                                value!.data['email']);
+                                          },
+                                          width: 250,
+                                          textStyle: const TextStyle(
+                                            fontSize: 12,
                                           ),
-                                          value: e,
-                                          label: userTitleString(e),
-                                        );
-                                      }).toList(),
-                                    )
+                                          initialSelection: studentList!
+                                              .firstWhere(
+                                                  (e) =>
+                                                      e.data['email'] ==
+                                                      student.data['email'],
+                                                  // TODO: error 처리 필요
+                                                  orElse: () =>
+                                                      Student(data: {})),
+                                          requestFocusOnTap: false,
+                                          inputDecorationTheme:
+                                              InputDecorationTheme(
+                                            isDense: true,
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                            constraints: BoxConstraints.tight(
+                                              const Size.fromHeight(35),
+                                            ),
+                                          ),
+                                          dropdownMenuEntries:
+                                              studentList.map((e) {
+                                            return DropdownMenuEntry<Student>(
+                                              style: MenuItemButton.styleFrom(
+                                                minimumSize:
+                                                    const Size(250, 35),
+                                                // padding: EdgeInsets.symmetric(
+                                                //     horizontal: 10, vertical: 0,),
+                                              ),
+                                              value: e,
+                                              label: userTitleString(e),
+                                            );
+                                          }).toList(),
+                                        )
+                                      : const Text(''))
                                   : const Text(
                                       '🛡관리자모드🛡',
                                       style: TextStyle(

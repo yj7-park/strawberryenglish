@@ -487,5 +487,5 @@ String userTitleString(Student student) {
       detailInfo = ' 님, 환영합니다.';
   }
 
-  return '$name$startDateInfo$detailInfo';
+  return '$name$detailInfo $startDateInfo';
 }

@@ -489,11 +489,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         print('------- onIssued: $data');
         // 가상계좌 선택 시 (송금 이전) - 테스트
         var dataMap = json.decode(data)['data'];
-        showConfirmedMessageForTransfer(dataMap);
-        // 마이페이지 내 표시 위해 저장
-        //TODO: 만료 처리
-        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
         updateNewStudent(inputStudent);
+        //TODO: 만료 처리
+        // 마이페이지 내 표시 위해 저장
+        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
+        showConfirmedMessageForTransfer(dataMap);
       },
       onConfirm: (String data) {
         // result = true;
@@ -517,11 +517,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       onDone: (String data) {
         print('------- onDone: $data');
         // var dataMap = json.decode(data)['data'];
-        showConfirmedMessageForCreditCard();
-        // 마이페이지 내 표시 위해 저장
-        //TODO: 만료 처리
-        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
         updateNewStudent(inputStudent);
+        //TODO: 만료 처리
+        // 마이페이지 내 표시 위해 저장
+        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
+        showConfirmedMessageForCreditCard();
       },
     );
     // return result;
@@ -571,6 +571,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     extra.appScheme = 'bootpayFlutterExample';
     extra.cardQuota = '3';
     extra.separatelyConfirmed = false;
+    extra.displaySuccessResult = true;
     payload.extra = extra;
     // extra.openType = 'popup';
 
