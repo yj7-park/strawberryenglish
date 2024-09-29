@@ -516,6 +516,12 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       },
       onDone: (String data) {
         print('------- onDone: $data');
+        // var dataMap = json.decode(data)['data'];
+        showConfirmedMessageForCreditCard();
+        // 마이페이지 내 표시 위해 저장
+        //TODO: 만료 처리
+        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
+        updateNewStudent(inputStudent);
       },
     );
     // return result;
@@ -564,6 +570,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     Extra extra = Extra(); // 결제 옵션
     extra.appScheme = 'bootpayFlutterExample';
     extra.cardQuota = '3';
+    extra.separatelyConfirmed = false;
     payload.extra = extra;
     // extra.openType = 'popup';
 
@@ -671,7 +678,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
           const SizedBox(height: 20),
           Text(
             "입금 후, 카톡 채널로 '입금 완료'라고 말씀해주세요.\n"
-            "담당자가 확인 후 수업 확정 안내드리도록 하겠습니다.",
+            "담당자가 확인 후, 수업 확정 안내드리도록 하겠습니다.",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -699,7 +706,43 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     if (confirm == true) {
       js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
       Navigator.of(context).pop(true);
-      // }
+    }
+  }
+
+  void showConfirmedMessageForCreditCard() async {
+    // 확인 창
+    bool? confirm = await ConfirmDialog.show(
+        context: context,
+        title: "수강 신청 완료",
+        body: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: customTheme.colorScheme.secondary),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(3),
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
+              child: Text(
+                "결제가 완료되었습니다.\n\n"
+                "카톡 채널로 '결제완료'라고 말씀해주세요.\n"
+                "담당자가 확인 후, 수업 확정 안내드리도록 하겠습니다.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+        trueButton: "카카오톡 채널로 문의하기",
+        falseButton: "마이페이지로 이동",
+        routeToOnLeft: '/student_calendar');
+
+    if (confirm == true) {
+      js.context.callMethod('open', ['http://pf.kakao.com/_xmXCtxj']);
+      Navigator.of(context).pop(true);
     }
   }
 }
