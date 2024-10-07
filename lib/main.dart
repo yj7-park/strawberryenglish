@@ -63,7 +63,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Strawberry English',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.amber,
+          fontFamily: 'NotoSansKR',
         ),
         initialRoute: '/',
         onGenerateRoute: (settings) {

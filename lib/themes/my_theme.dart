@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 const Color primaryColor = Color(0xff8a7001);
 
 final ThemeData customTheme = ThemeData(
+  fontFamily: 'NotoSansKR',
   // colorScheme: ColorScheme.fromSwatch(
   //   primarySwatch: Colors.grey,
   // ),

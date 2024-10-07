@@ -90,6 +90,24 @@ flutter:
     # - images/a_dot_burr.jpeg
     # - images/a_dot_ham.jpeg
 
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: fonts/NotoSansKR-Black.ttf
+          weight: 900
+        - asset: fonts/NotoSansKR-Bold.ttf
+          weight: 700
+        - asset: fonts/NotoSansKR-Light.ttf
+          weight: 300
+        - asset: fonts/NotoSansKR-Medium.ttf
+          weight: 500
+        - asset: fonts/NotoSansKR-Regular.ttf
+          weight: 400
+        - asset: fonts/NotoSansKR-Thin.ttf
+          weight: 100
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

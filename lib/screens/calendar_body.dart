@@ -1130,7 +1130,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
               children: [
                 Text(text1,
                     style: TextStyle(
-                        color: mainColor, fontWeight: FontWeight.w600)),
+                        color: mainColor, fontWeight: FontWeight.w500)),
                 Text(
                   text2,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -1191,7 +1191,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                                 '취소',
                                 style: TextStyle(
                                   color: mainColor,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
