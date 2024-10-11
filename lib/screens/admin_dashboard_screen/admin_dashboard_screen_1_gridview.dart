@@ -375,7 +375,7 @@ class _AdminDashboardScreen1GridviewState
                   minX: startdate,
                   maxX: enddate,
                   minY: -5,
-                  maxY: 100,
+                  maxY: 150,
                   titlesData: FlTitlesData(
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(

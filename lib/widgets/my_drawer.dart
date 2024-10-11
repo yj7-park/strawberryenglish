@@ -175,6 +175,8 @@ class _MyDrawerState extends State<MyDrawer> {
                                   context, '🛡관리자메뉴', '/admin_students',
                                   highlight: true),
                               myDrawerTile(
+                                  context, '🛡대시보드', '/admin_dashboard'),
+                              myDrawerTile(
                                   context, '🛡학생정보', '/admin_students'),
                               myDrawerTile(
                                   context, '🛡후기관리', '/admin_feedbacks'),
