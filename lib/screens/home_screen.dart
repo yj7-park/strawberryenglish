@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                 HomeScreen2Feedback(),
                 const HomeScreen3Tutor(),
                 const HomeScreen4Price(),
-                const HomeScreen5Founder(title: '딸기영어 창업자는 영어공부에 진심이었습니다.'),
+                const HomeScreen5Founder(title: '화상영어 창업자가 공개하는 독학 성공법!'),
 
                 // 회사정보
                 const CompanyInfo(),
