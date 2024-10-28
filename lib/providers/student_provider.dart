@@ -91,6 +91,42 @@ class StudentProvider extends ChangeNotifier {
     return null;
   }
 
+  Stream<Student?> getStudentStream(
+      {String? email, bool force = false}) async* {
+    if (currentUser == null) yield* Stream<Student?>.value(null);
+    // if (_student != null) return _student;
+
+    email ??= student != null ? student!.data['email'] : currentUser!.email;
+    // 계정 별 복수개 수업 DB 기능
+    // if (index != null) {
+    //   email = '$email#$index';
+    // }
+    if ((force == false) &&
+        (_student != null) &&
+        (_student!.data['email'].contains(email))) {
+      yield _student;
+    }
+
+    try {
+      currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        if (currentUser!.email == 'admin@admin.com') {
+          _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+        } else {
+          // Google Sheets에서 사용자 데이터 가져오기
+          // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
+          _student = await getStudentFromFirestore(email!);
+        }
+        yield _student;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting Student Data: $e');
+      }
+    }
+    yield null;
+  }
+
   Future<List<Student>> getStudentList(String email) async {
     if (currentUser == null) return [];
 

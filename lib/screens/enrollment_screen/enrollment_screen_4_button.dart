@@ -569,7 +569,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
     Extra extra = Extra(); // 결제 옵션
     extra.appScheme = 'bootpayFlutterExample';
-    extra.cardQuota = '3';
+    extra.cardQuota = '0';
     extra.separatelyConfirmed = false;
     extra.displaySuccessResult = true;
     payload.extra = extra;
