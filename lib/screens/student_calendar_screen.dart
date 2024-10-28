@@ -28,8 +28,8 @@ class StudentCalendarScreen extends StatelessWidget {
               children: [
                 // 제목
                 const MyHeader('마이페이지'),
-                StreamBuilder(
-                  stream: Provider.of<StudentProvider>(context)
+                FutureBuilder<Student?>(
+                  future: Provider.of<StudentProvider>(context)
                       .getStudent(force: true), // 새로운 Future 생성
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting ||
