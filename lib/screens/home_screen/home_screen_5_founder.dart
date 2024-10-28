@@ -49,21 +49,11 @@ class HomeScreen5Founder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              '왜, 딸기영어여야만 하는가?',
-              style: TextStyle(
-                // color: Colors.white,
-                fontSize: (screenWidth * 0.04).clamp(14, 32),
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.start,
-            ),
-            const SizedBox(height: 16),
             Image.asset(
               'assets/images/founder_book.png',
               width: screenWidth >= 1600
-                  ? (screenWidth / 3 - 150).clamp(500, double.nan)
-                  : (screenWidth - 100).clamp(100, 150),
+                  ? screenWidth / 3
+                  : (screenWidth - 100).clamp(100, 800),
             ),
             const SizedBox(height: 16),
             // [튜터소개]로 이동 버튼
