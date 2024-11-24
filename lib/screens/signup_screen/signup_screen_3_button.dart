@@ -50,7 +50,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
     double screenWidth = MediaQuery.of(context).size.width;
-    print(errorMessage);
+    // print(errorMessage);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ((screenWidth - 500) / 2)),
       child: FocusTraversalGroup(
@@ -151,6 +151,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
 
         // TODO: 초기화 위치 확정 필요
         'level': '',
+        'points': 0,
       });
 
       bool? confirm = await ConfirmDialog.show(

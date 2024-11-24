@@ -100,7 +100,9 @@ class _AdminStudentsScreen1ListviewState
           'holdRequestDates',
           'tutorCancelDates',
         };
-        intNames = {};
+        intNames = {
+          'points',
+        };
         // searchedData = data;
         for (var e in userData.entries) {
           var v = e.value;
