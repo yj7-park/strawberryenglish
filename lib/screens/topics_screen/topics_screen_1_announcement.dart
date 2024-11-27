@@ -69,7 +69,7 @@ class TopicsScreen1Announcement extends StatelessWidget {
 ### **Kids English**  
   - Kid's English는 만 3~15세 주니어 학생을 위한 수업으로서  
     Speaking, Reading, and Comprehension을 재미있고 친근하게 익힐 수 있는 수업입니다.  
-    아이 레벨에 맞게 아래 커리큘럼을 적절하게 적용하여 1:1 맞춤형 수업을 진행합니다.
+    아이 레벨에 맞게 아래 커리큘럼을 적절하게 적용하여 1:1 맞춤형 수업을 진행합니다.  
     
       ✅파닉스 – 영어 알파벳과 소리의 관계를 익혀 스펠링만 보고도 정확하게 발음할 수 있도록 돕는 수업  
       ✅애니메이션 스피킹 – 애니메이션을 보면서 부담 없이 영어회화를 시작하도록 돕는 수업  

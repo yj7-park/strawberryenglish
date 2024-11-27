@@ -65,7 +65,7 @@ class TrialScreen2InputState extends State<TrialScreen2Input> {
             TextFormField(
               controller: widget.trialTimeController,
               decoration: InputDecoration(
-                labelText: '*희망 체험 수업 시간',
+                labelText: '*희망 체험 수업 시간 (주의! 한국시간으로 말씀해주세요.)',
                 hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
                 border: const OutlineInputBorder(),
                 enabledBorder: myOutlineInputBorder(widget.trialTimeController),
