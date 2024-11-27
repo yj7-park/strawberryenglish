@@ -365,6 +365,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
         // 성공 시 동작
         Student inputStudent = studentProvider.student!;
+        // LectureState가 registeredOnly가 아니면 새로 만들어야함 (#2로)
+        bool needToMakeNew = (inputStudent.getStudentLectureState() !=
+            StudentState.registeredOnly);
 
         inputStudent.data['name'] = name;
         inputStudent.data['birthDate'] = birthDate;
@@ -438,6 +441,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
           order,
           price,
           inputStudent,
+          needToMakeNew,
         );
       }
     } catch (e) {
@@ -458,6 +462,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     String orderName,
     double price,
     Student inputStudent,
+    bool needToMakeNew,
   ) async {
     // bool result = false;
 
@@ -489,7 +494,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         print('------- onIssued: $data');
         // 가상계좌 선택 시 (송금 이전) - 테스트
         var dataMap = json.decode(data)['data'];
-        updateNewStudent(inputStudent);
+        updateNewStudent(inputStudent, needToMakeNew);
         //TODO: 만료 처리
         // 마이페이지 내 표시 위해 저장
         // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
@@ -517,7 +522,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       onDone: (String data) {
         print('------- onDone: $data');
         // var dataMap = json.decode(data)['data'];
-        updateNewStudent(inputStudent);
+        updateNewStudent(inputStudent, needToMakeNew);
         //TODO: 만료 처리
         // 마이페이지 내 표시 위해 저장
         // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
@@ -581,10 +586,11 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     return payload;
   }
 
-  void updateNewStudent(Student inputStudent) {
+  void updateNewStudent(Student inputStudent, bool needToMakeNew) {
     // 기존 학생이 수강 신청을 하지 않은 경우
-    if (inputStudent.getStudentLectureState() == StudentState.registeredOnly) {
+    if (needToMakeNew == false) {
       studentProvider.updateStudentToFirestoreWithMap(inputStudent);
+
       // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
     } else {
       // Student originalStudent = studentProvider.student!;
