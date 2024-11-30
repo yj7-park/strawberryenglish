@@ -393,9 +393,13 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
         // 수업 종료 일자 계산
         inputStudent.data['modifiedLessonEndDate'] = inputStudent
-                .data['lessonEndDate'] =
-            DateFormat('yyyy-MM-dd').format(DateTime.parse(lessonStartDate).add(
-                Duration(days: 7 * 4 * EnrollmentScreen.selectedMonths.first)));
+            .data['lessonEndDate'] = DateFormat('yyyy-MM-dd').format(
+          DateTime.parse(lessonStartDate).add(
+            Duration(
+              days: (7 * 4 * EnrollmentScreen.selectedMonths.first - 1),
+            ),
+          ),
+        );
 
         // 수업 취소 횟수 계산
         inputStudent.data['cancelCountTotal'] =
