@@ -119014,7 +119014,7 @@ b===$&&A.b()
 a0=A.by("yyyy-MM-dd",null)
 a1=A.cJ(b5)
 a2=$.fU
-a2=a0.bm(a1.v(0,A.cl(28*a2.gZ(a2),0,0,0,0,0)))
+a2=a0.bm(a1.v(0,A.cl(28*a2.gZ(a2)-1,0,0,0,0,0)))
 J.b8(b,"lessonEndDate",a2)
 J.b8(a5,"modifiedLessonEndDate",a2)
 a2=e.a
