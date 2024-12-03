@@ -25,11 +25,11 @@ class IntroductionScreen extends StatelessWidget {
               children: [
                 // 커버 페이지
                 const MyHeader('뭐가 달라?'),
-                const HomeScreen5Founder(title: ''),
                 Container(
                   color: customTheme.colorScheme.secondary.withOpacity(0.1),
                   child: const IntroductionScreen1Text(),
                 ),
+                const HomeScreen5Founder(title: ''),
 
                 // 회사정보
                 const CompanyInfo(),
