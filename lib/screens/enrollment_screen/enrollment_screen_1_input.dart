@@ -219,7 +219,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
             TextFormField(
               controller: widget.requestTimeController,
               decoration: InputDecoration(
-                labelText: '*희망 수업 시간',
+                labelText: '*희망 수업 시간 (주의! 한국시간으로 말씀해주세요.)',
                 hintText: 'ex) 오전 10시~11시, 오후 6시~8시',
                 border: const OutlineInputBorder(),
                 enabledBorder:
