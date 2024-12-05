@@ -335,6 +335,13 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateStudentListField(String field, dynamic value) async {
+    for (var student in _studentList) {
+      student.data[field] = value;
+      updateStudentToFirestoreWithMap(student);
+    }
+  }
+
   Future<List<Student>> getAndSetAllStudents() async {
     try {
       // Google Sheets에서 전체 사용자 데이터 가져오기
