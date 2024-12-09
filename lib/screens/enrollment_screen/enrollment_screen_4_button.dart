@@ -358,7 +358,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
 
         User user = User(); // 구매자 정보
         user.username = name;
-        user.email = studentProvider.student!.data['email'];
+        user.email = studentProvider.student!.data['email'].split('#')[0];
         user.area = country;
         user.phone = phoneNumber;
         // user.addr = '서울시 동작구 상도로 222';
@@ -493,17 +493,6 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         }
         //TODO - 원하시는 라우터로 페이지 이동
       },
-      onIssued: (String data) {
-        // result = true;
-        print('------- onIssued: $data');
-        // 가상계좌 선택 시 (송금 이전) - 테스트
-        var dataMap = json.decode(data)['data'];
-        updateNewStudent(inputStudent, needToMakeNew);
-        //TODO: 만료 처리
-        // 마이페이지 내 표시 위해 저장
-        // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
-        showConfirmedMessageForTransfer(dataMap);
-      },
       onConfirm: (String data) {
         // result = true;
         print('------- onConfirm: $data');
@@ -523,13 +512,20 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         // checkQtyFromServer(data);
         return true;
       },
-      onDone: (String data) {
-        print('------- onDone: $data');
-        // var dataMap = json.decode(data)['data'];
+      onIssued: (String data) {
+        // result = true;
+        print('------- onIssued: $data');
+        // 가상계좌 선택 시 (송금 이전) - 테스트
+        var dataMap = json.decode(data)['data'];
         updateNewStudent(inputStudent, needToMakeNew);
         //TODO: 만료 처리
         // 마이페이지 내 표시 위해 저장
         // inputStudent.data['vbank_receipt_url'] = dataMap['receipt_url'];
+        showConfirmedMessageForTransfer(dataMap);
+      },
+      onDone: (String data) {
+        print('------- onDone: $data');
+        updateNewStudent(inputStudent, needToMakeNew);
         showConfirmedMessageForCreditCard();
       },
     );
@@ -595,14 +591,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     if (needToMakeNew == false) {
       studentProvider.updateStudentToFirestoreWithMap(inputStudent);
 
-      // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
+    // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
     } else {
-      // Student originalStudent = studentProvider.student!;
-      // originalStudent.data['points'] = inputStudent.data['points'];
-
-      // // 기존 Student의 Points 변경
-      // // TODO: 모든 계정 적립금 확인
-      // studentProvider.updateStudentToFirestoreWithMap(originalStudent);
       // 새 email 찾기
       var newEmail =
           '${studentProvider.studentList!.first.data['email']}#${studentProvider.studentList!.length + 1}';
@@ -611,6 +601,8 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       // 새 email DB 업데이트 / 새 email로 로그인 DB 변경
       studentProvider.updateStudentToFirestoreWithMap(inputStudent);
       studentProvider.setStudent(newEmail);
+      // 적립그금points 업데이트      
+      studentProvider.updateStudentListField('points', inputStudent.data['points'] ?? 0);
     }
   }
 

@@ -26,7 +26,7 @@ class CompanyInfo extends StatelessWidget {
 경북 구미시 고아읍 송평구길 62 나동 1402호
 
 딸기영어는 '딸기아카데미'의 영어교육 서비스 브랜드입니다.
-상표권 등록번호(신청 중)
+상표권 등록번호 | 40-2024-0081521
                 """,
                 style: TextStyle(
                   // color: Colors.white,
