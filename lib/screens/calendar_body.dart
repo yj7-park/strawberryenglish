@@ -1355,6 +1355,11 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
       today = today.add(const Duration(days: 1));
     }
 
+    // lessonEndDate를 수업이 있는 요일로 맞추기
+    while (!lessonDays.contains(lessonEndDate.weekday)) {
+      lessonEndDate = lessonEndDate.subtract(const Duration(days: 1));
+    }
+
     // 데이터 저장
     String formattedDate = DateFormat('yyyy-MM-dd').format(lessonEndDate);
     widget.user.data['modifiedLessonEndDate'] = formattedDate;
