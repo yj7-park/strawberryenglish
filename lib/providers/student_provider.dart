@@ -22,16 +22,15 @@ class StudentProvider extends ChangeNotifier {
   Future<void> _initStudent() async {
     currentUser = FirebaseAuth.instance.currentUser;
     if ((currentUser != null) && (currentUser!.email != null)) {
-      await sheetApiProvider.init().then((_) {
-        // print('initializing');
-        // getAndSetAllStudents();
-      });
+      // await sheetApiProvider.init().then((_) {});
       if (currentUser!.email != 'admin@admin.com') {
         _student = await getStudent();
         _studentList = await getStudentList(currentUser!.email!);
         notifyListeners();
       }
     }
+    // print('initializing');
+    // getAndSetAllStudents();
   }
 
   Future<void> setStudent(String email) async {
@@ -351,10 +350,28 @@ class StudentProvider extends ChangeNotifier {
         if (row.length > 22) {
           try {
             var student = Student.fromRow(row);
+            // try {
+            //   getStudentFromFirestore(student.data['email']);
+            //   print('${student.data['email']} exists!!!');
+            // } catch (e) {
+            print(student.data);
+            student.data['points'] = 0;
+
+            // student.data['lessonTime'] as List<String>의 각 element에서 ','와 '_x000D_'을 삭제
+            (student.data['lessonTime'] as List<String>).map(
+                (String e) => e.replaceAll(',', '').replaceAll('_x000D_', ''));
+
+            for (var i = 0; i < student.data['lessonTime'].length; i++) {
+              student.data['lessonTime'][i] = student.data['lessonTime'][i]
+                  .replaceAll('_x000D_', '')
+                  .replaceAll(',', '');
+            }
+            print(student.data);
             updateStudentToFirestoreWithMap(student);
+            // }
           } catch (e) {
-            // print(row[6]);
-            // print(e);
+            print(row[6]);
+            print(e);
           }
           // students.add(student);
           // try {

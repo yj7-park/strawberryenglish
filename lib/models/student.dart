@@ -68,7 +68,7 @@ class Student {
         ? (row[index] as String?)?.split('\n').map((e) => e.trim()).toList()
         : [];
     index++;
-    data['philippinesTime'] = row[index] as String?;
+    // data['philippinesTime'] = row[index] as String?;
     index++;
     data['lessonStartDate'] = row[index] as String;
     index++;
