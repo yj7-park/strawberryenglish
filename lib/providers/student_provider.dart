@@ -223,7 +223,7 @@ class StudentProvider extends ChangeNotifier {
     try {
       var snapshot = await FirebaseFirestore.instance.collection('users').get();
       List<Student> result = snapshot.docs
-          .where((e) => e.id.contains(email))
+          .where((e) => e.id.startsWith(email))
           .map((e) => Student(data: e.data()))
           .toList();
 

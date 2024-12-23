@@ -88,6 +88,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
   Future<void> _selectDate(BuildContext context) async {
     String initialDate = widget.lessonStartDateController.value.text;
     var parsedInitialDate = DateTime.tryParse(initialDate) ?? DateTime.now();
+    parsedInitialDate = parsedInitialDate.add(const Duration(days: 1));
     parsedInitialDate = parsedInitialDate.weekday == 6
         ? parsedInitialDate.add(const Duration(days: 2))
         : parsedInitialDate.weekday == 7
@@ -115,7 +116,7 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
       },
       context: context,
       initialDate: parsedInitialDate,
-      firstDate: DateTime.now(),
+      firstDate: parsedInitialDate,
       lastDate: DateTime(2030, 12),
       selectableDayPredicate: (DateTime val) =>
           val.weekday == 6 || val.weekday == 7 ? false : true,

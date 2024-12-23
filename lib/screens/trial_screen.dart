@@ -94,19 +94,40 @@ class _TrialScreenState extends State<TrialScreen> {
                       if (snapshot.data!.getStudentTrialState() ==
                           StudentState.trialRequested) ...[
                         Text(
-                          """
-
-*체험 수업 신청 완료
-
-체험 수업 확정 안내를 위해 
-
-반드시 카카오톡 채널을 통해 '체험 수업 신청 완료'라고 말씀해 주세요. 
-
-체험 수업 일정이 확정되면 카카오톡으로 안내드리겠습니다.
-
-그 외 정보 수정 및 문의사항 있으시다면 카카오톡 채널로 문의해 주세요.
-
-""",
+                          "\n\n*체험 수업 신청 완료\n\n",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: fontSize + 3,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "체험 수업 확정 안내를 위해\n",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "반드시 카카오톡 채널을 통해 '체험 수업 신청 완료'라고 말씀해 주세요.\n",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "체험 수업 일정이 확정되면 카카오톡으로 안내드리겠습니다.\n",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "그 외 정보 수정 및 문의사항 있으시다면 카카오톡 채널로 문의해 주세요.\n",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: fontSize,

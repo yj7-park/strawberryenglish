@@ -93,8 +93,8 @@ class _MyDrawerState extends State<MyDrawer> {
                                           textStyle: const TextStyle(
                                             fontSize: 12,
                                           ),
-                                          initialSelection: studentList!
-                                              .firstWhere(
+                                          initialSelection:
+                                              studentList.firstWhere(
                                                   (e) =>
                                                       e.data['email'] ==
                                                       student.data['email'],

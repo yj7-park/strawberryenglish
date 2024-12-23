@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:strawberryenglish/models/student.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_1_input.dart';
-import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_2_payment_input.dart';
 import 'package:strawberryenglish/screens/enrollment_screen/enrollment_screen_4_button.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_2_input.dart';
 import 'package:strawberryenglish/screens/trial_screen/trial_screen_1_input.dart';

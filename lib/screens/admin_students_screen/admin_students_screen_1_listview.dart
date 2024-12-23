@@ -578,10 +578,13 @@ class _AdminStudentsScreen1ListviewState
                                             inputCondition['기본 정보'] = false;
 
                                             inputCondition['name'] = true;
+                                            inputCondition['phoneNumber'] =
+                                                true;
                                             inputCondition['points'] = true;
                                             inputCondition['studyPurpose'] =
                                                 true;
                                             inputCondition['level'] = true;
+                                            inputCondition['comments'] = true;
 
                                             // 수강신청
                                             bool isEnroll = (customData[id]![
@@ -613,8 +616,8 @@ class _AdminStudentsScreen1ListviewState
                                               inputCondition['결제 관련 정보'] =
                                                   false;
 
-                                              inputCondition[
-                                                  'cashReceiptNumber'] = true;
+                                              // inputCondition[
+                                              //     'cashReceiptNumber'] = true;
                                               inputCondition['billingAmount'] =
                                                   true;
                                               inputCondition[
