@@ -1340,6 +1340,13 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
         .map((e) => DateTime.tryParse(e))
         .toSet();
 
+    widget.user.data['cancelCountLeft'] = widget.user.data['cancelCountTotal'] -
+        (widget.user.data['cancelDates'] ?? []).length -
+        (widget.user.data['cancelRequestDates'] ?? []).length;
+    widget.user.data['holdCountLeft'] = widget.user.data['holdCountTotal'] -
+        (widget.user.data['holdDates'] ?? []).length -
+        (widget.user.data['holdRequestDates'] ?? []).length;
+
     // 장기홀드
     for (String dateRange
         in ((data['holdDates'] ?? []) + (data['holdRequestDates'] ?? []))) {
