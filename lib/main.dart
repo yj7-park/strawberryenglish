@@ -16,7 +16,6 @@ import 'package:strawberryenglish/screens/topics_screen.dart';
 import 'package:strawberryenglish/screens/tuitionfee_screen.dart';
 import 'package:strawberryenglish/screens/introduction_screen.dart';
 import 'package:strawberryenglish/screens/tutors_screen.dart';
-import 'providers/tutor_provider.dart';
 import 'providers/student_provider.dart';
 import 'screens/signup_screen.dart';
 import 'screens/trial_screen.dart';
@@ -55,7 +54,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => StudentProvider()),
-        ChangeNotifierProvider(create: (context) => TutorProvider()),
+        // ChangeNotifierProvider(create: (context) => TutorProvider()),
         // ChangeNotifierProvider(create: (context) => LessonProvider()),
         // Add more providers if needed
       ],

@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:strawberryenglish/models/student.dart';
-import 'package:strawberryenglish/providers/sheet_api_provider.dart';
+// import 'package:strawberryenglish/providers/sheet_api_provider.dart';
 
 class StudentProvider extends ChangeNotifier {
   Student? _student;
   List<Student> _studentList = [];
 
   User? currentUser;
-  SheetApiProvider sheetApiProvider = SheetApiProvider();
+  // SheetApiProvider sheetApiProvider = SheetApiProvider();
   Map<String, String> errorLogs = <String, String>{};
 
   Student? get student => _student;
@@ -188,22 +188,22 @@ class StudentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Student> getStudentFromGoogleSheets(String email) async {
-    try {
-      var values = await sheetApiProvider.getStudentSheet();
-      // print(response.values);
-      for (var row in values) {
-        if (row.length > 22 && row[6].toString() == email) {
-          return Student.fromRow(row);
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Google Sheets에서 Student 가져오는 중 오류 발생: $e');
-      }
-    }
-    throw Exception('Student를 찾을 수 없습니다.');
-  }
+  // Future<Student> getStudentFromGoogleSheets(String email) async {
+  //   try {
+  //     var values = await sheetApiProvider.getStudentSheet();
+  //     // print(response.values);
+  //     for (var row in values) {
+  //       if (row.length > 22 && row[6].toString() == email) {
+  //         return Student.fromRow(row);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Google Sheets에서 Student 가져오는 중 오류 발생: $e');
+  //     }
+  //   }
+  //   throw Exception('Student를 찾을 수 없습니다.');
+  // }
 
   Future<Student> getStudentFromFirestore(String email) async {
     try {
@@ -341,62 +341,62 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Student>> getAndSetAllStudents() async {
-    try {
-      // Google Sheets에서 전체 사용자 데이터 가져오기
-      var values = await sheetApiProvider.getStudentSheet();
-      List<Student> students = [];
-      for (var row in values) {
-        if (row.length > 22) {
-          try {
-            var student = Student.fromRow(row);
-            // try {
-            //   getStudentFromFirestore(student.data['email']);
-            //   print('${student.data['email']} exists!!!');
-            // } catch (e) {
-            print(student.data);
-            student.data['points'] = 0;
+  // Future<List<Student>> getAndSetAllStudents() async {
+  //   try {
+  //     // Google Sheets에서 전체 사용자 데이터 가져오기
+  //     var values = await sheetApiProvider.getStudentSheet();
+  //     List<Student> students = [];
+  //     for (var row in values) {
+  //       if (row.length > 22) {
+  //         try {
+  //           var student = Student.fromRow(row);
+  //           // try {
+  //           //   getStudentFromFirestore(student.data['email']);
+  //           //   print('${student.data['email']} exists!!!');
+  //           // } catch (e) {
+  //           print(student.data);
+  //           student.data['points'] = 0;
 
-            // student.data['lessonTime'] as List<String>의 각 element에서 ','와 '_x000D_'을 삭제
-            (student.data['lessonTime'] as List<String>).map(
-                (String e) => e.replaceAll(',', '').replaceAll('_x000D_', ''));
+  //           // student.data['lessonTime'] as List<String>의 각 element에서 ','와 '_x000D_'을 삭제
+  //           (student.data['lessonTime'] as List<String>).map(
+  //               (String e) => e.replaceAll(',', '').replaceAll('_x000D_', ''));
 
-            for (var i = 0; i < student.data['lessonTime'].length; i++) {
-              student.data['lessonTime'][i] = student.data['lessonTime'][i]
-                  .replaceAll('_x000D_', '')
-                  .replaceAll(',', '');
-            }
-            print(student.data);
-            updateStudentToFirestoreWithMap(student);
-            // }
-          } catch (e) {
-            print(row[6]);
-            print(e);
-          }
-          // students.add(student);
-          // try {
-          //   UserCredential userCredential =
-          //       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          //     email: user.email,
-          //     password: 'password',
-          //   );
-          // } catch (e) {
-          //   print('${user.email} exists.');
-          // }
-        }
-      }
+  //           for (var i = 0; i < student.data['lessonTime'].length; i++) {
+  //             student.data['lessonTime'][i] = student.data['lessonTime'][i]
+  //                 .replaceAll('_x000D_', '')
+  //                 .replaceAll(',', '');
+  //           }
+  //           print(student.data);
+  //           updateStudentToFirestoreWithMap(student);
+  //           // }
+  //         } catch (e) {
+  //           print(row[6]);
+  //           print(e);
+  //         }
+  //         // students.add(student);
+  //         // try {
+  //         //   UserCredential userCredential =
+  //         //       await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //         //     email: user.email,
+  //         //     password: 'password',
+  //         //   );
+  //         // } catch (e) {
+  //         //   print('${user.email} exists.');
+  //         // }
+  //       }
+  //     }
 
-      // add logs for error students
-      // notifyListeners();
-      return students;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error getting all students: $e');
-      }
-    }
+  //     // add logs for error students
+  //     // notifyListeners();
+  //     return students;
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Error getting all students: $e');
+  //     }
+  //   }
 
-    return [];
-  }
+  //   return [];
+  // }
 
   // Future<List<Student>> addAllStudents() async {
   //   try {

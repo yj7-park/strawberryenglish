@@ -148,13 +148,25 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
               ),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
-                child: Text(
-                  "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.\n"
-                  "담당자가 확인 후, 수업 확정 안내드리도록 하겠습니다.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      "체험 확정을 위해 카톡 채널로 '신청완료'라고 말씀해주세요.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      "담당자가 확인 후, 수업 확정 안내드리도록 하겠습니다.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

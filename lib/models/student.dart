@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Student {
   late Map<String, dynamic> data;
 
@@ -97,7 +99,11 @@ class Student {
       index++;
       data['coupon'] = row[index] ?? '';
       index++;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error parsing student data: $e');
+      }
+    }
   }
 
   StudentState getStudentState({DateTime? now}) {

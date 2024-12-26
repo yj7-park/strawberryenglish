@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strawberryenglish/providers/student_provider.dart';
-import 'package:strawberryenglish/providers/tutor_provider.dart';
 import 'package:strawberryenglish/screens/signup_screen/signup_screen_3_button.dart';
 import 'package:strawberryenglish/themes/my_theme.dart';
 
@@ -23,12 +22,12 @@ class LoginScreenState extends State<LoginScreen> {
   bool isClicked = false;
 
   late StudentProvider studentProvider;
-  late TutorProvider tutorProvider;
+  // late TutorProvider tutorProvider;
 
   @override
   Widget build(BuildContext context) {
     studentProvider = Provider.of<StudentProvider>(context);
-    tutorProvider = Provider.of<TutorProvider>(context);
+    // tutorProvider = Provider.of<TutorProvider>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double imageSize = screenWidth * 0.8;

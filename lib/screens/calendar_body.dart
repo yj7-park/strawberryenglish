@@ -92,6 +92,7 @@ class CalendarBodyState extends State<CalendarBody> {
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    double fontSize = (screenWidth * 0.025).clamp(12, 18);
     bool isMobile = screenWidth < 1000 || widget.updated != null;
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -106,18 +107,46 @@ class CalendarBodyState extends State<CalendarBody> {
             // 체험 신청 중인 상태
             if (widget.user.getStudentState() ==
                 StudentState.trialRequested) ...[
-              const Text(
-                """
-*체험 수업 신청 완료
-
-체험 수업 신청이 완료되어, 일정을 확인 중입니다.
-
-체험 수업 일정이 확정되면 카카오톡으로 연락 드리겠습니다.
-
-신청 정보 수정이 필요하시면 카카오톡 채널로 문의해주시기 바랍니다.
-
-""",
+              Text(
+                "*체험 수업 신청 완료\n\n",
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: fontSize + 3,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "체험 수업 확정 안내를 위해\n",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                "반드시 카카오톡 채널을 통해 '체험 수업 신청 완료'라고 말씀해 주세요.\n",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "체험 수업 일정이 확정되면 카카오톡으로 안내드리겠습니다.\n",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                "그 외 정보 수정 및 문의사항 있으시다면 카카오톡 채널로 문의해 주세요.\n",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ]
             // 체험 확정 상태
