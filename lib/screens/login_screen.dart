@@ -181,7 +181,7 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     if (username.isNotEmpty && password.isNotEmpty) {
-      // if (username == 'admin@admin.com') {
+      // if ((username??'').endsWith('@sb.english.com')) {
       //   Navigator.pushNamed(context, '/admin');
       //   return; // admin 계정으로 로그인 시 바로 종료
       // }

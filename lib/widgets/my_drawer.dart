@@ -30,8 +30,8 @@ class _MyDrawerState extends State<MyDrawer> {
                 e.getStudentLectureState() != StudentState.lectureFinished) ??
             [];
         bool isLoggedIn = student != null;
-        bool isAdmin =
-            isLoggedIn && (student.data['email'] == 'admin@admin.com');
+        bool isAdmin = isLoggedIn &&
+            ((student.data['email'] ?? '').endsWith('@sb.english.com'));
         return PointerInterceptor(
           child: Drawer(
             width: 250,

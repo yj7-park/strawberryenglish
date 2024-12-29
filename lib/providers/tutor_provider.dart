@@ -22,7 +22,7 @@
 //     await sheetApiProvider.init();
 //     currentUser = FirebaseAuth.instance.currentUser;
 //     if (currentUser != null) {
-//       if (currentUser!.email != 'admin@admin.com') {
+//       if ((currentUser!.email??'').endsWith('@sb.english.com')) {
 //         _tutor = await getTutor();
 //         // _students = await getAllStudents();
 //       }
@@ -53,7 +53,7 @@
 //         password: password,
 //       );
 //       currentUser = FirebaseAuth.instance.currentUser;
-//       if (userCredential.user!.email == 'admin@admin.com') {
+//       if (userCredential.user!.email??''.endsWith('@sb.english.com')) {
 //         _tutor = null;
 //       } else {
 //         // Google Sheets에서 사용자 데이터 가져오기

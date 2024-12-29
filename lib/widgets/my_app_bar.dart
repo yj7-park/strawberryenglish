@@ -39,8 +39,8 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                 e.getStudentLectureState() != StudentState.lectureFinished) ??
             [];
         bool isLoggedIn = student != null;
-        bool isAdmin =
-            isLoggedIn && (student.data['email'] == 'admin@admin.com');
+        bool isAdmin = isLoggedIn &&
+            ((student.data['email'] ?? '').endsWith('@sb.english.com'));
         // TODO: for test
         // isAdmin = true;
         return Stack(

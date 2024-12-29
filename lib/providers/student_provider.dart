@@ -23,7 +23,7 @@ class StudentProvider extends ChangeNotifier {
     currentUser = FirebaseAuth.instance.currentUser;
     if ((currentUser != null) && (currentUser!.email != null)) {
       // await sheetApiProvider.init().then((_) {});
-      if (currentUser!.email != 'admin@admin.com') {
+      if ((currentUser!.email ?? '').endsWith('@sb.english.com')) {
         _student = await getStudent();
         _studentList = await getStudentList(currentUser!.email!);
         notifyListeners();
@@ -35,8 +35,8 @@ class StudentProvider extends ChangeNotifier {
 
   Future<void> setStudent(String email) async {
     try {
-      if (currentUser!.email == 'admin@admin.com') {
-        _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+      if ((currentUser!.email ?? '').endsWith('@sb.english.com')) {
+        _student = Student(data: {'admin': true, 'email': currentUser!.email});
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
         // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
@@ -73,8 +73,9 @@ class StudentProvider extends ChangeNotifier {
     try {
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        if (currentUser!.email == 'admin@admin.com') {
-          _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+        if ((currentUser!.email ?? '').endsWith('@sb.english.com')) {
+          _student =
+              Student(data: {'admin': true, 'email': currentUser!.email});
         } else {
           // Google Sheets에서 사용자 데이터 가져오기
           // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
@@ -109,8 +110,9 @@ class StudentProvider extends ChangeNotifier {
     try {
       currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        if (currentUser!.email == 'admin@admin.com') {
-          _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+        if ((currentUser!.email ?? '').endsWith('@sb.english.com')) {
+          _student =
+              Student(data: {'admin': true, 'email': currentUser!.email});
         } else {
           // Google Sheets에서 사용자 데이터 가져오기
           // return await getStudentFromGoogleSheets(currentUser!.email ?? '');
@@ -136,7 +138,7 @@ class StudentProvider extends ChangeNotifier {
 
     try {
       // Google Sheets에서 사용자 데이터 가져오기
-      if (currentUser!.email == 'admin@admin.com') {
+      if ((currentUser!.email ?? '').endsWith('@sb.english.com')) {
         _studentList = [];
       } else {
         _studentList = await getStudentListFromFirestore(email);
@@ -161,8 +163,8 @@ class StudentProvider extends ChangeNotifier {
         );
       }
       currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser!.email == 'admin@admin.com') {
-        _student = Student(data: {'admin': true, 'email': 'admin@admin.com'});
+      if ((currentUser!.email ?? '').endsWith('@sb.english.com')) {
+        _student = Student(data: {'admin': true, 'email': currentUser!.email});
       } else {
         // Google Sheets에서 사용자 데이터 가져오기
         // _student = await getStudentFromGoogleSheets(username);
