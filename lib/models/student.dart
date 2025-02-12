@@ -104,18 +104,19 @@ class Student {
       } catch (_) {}
     } catch (e) {
       if (kDebugMode) {
-        print('Exception: ' + e.toString());
+        print('Exception: $e');
       }
     }
   }
 
   StudentState getStudentState({DateTime? now}) {
     now ??= DateTime.now();
+    now = DateTime(now.year, now.month, now.day);
     if ((data['tutor'] ?? '').isNotEmpty) {
-      if (!((DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
-              DateTime.tryParse(data['lessonEndDate'] ?? '') ??
-              now)
-          .isBefore(now))) {
+      var endDate = DateTime.tryParse(data['modifiedLessonEndDate'] ?? '') ??
+          DateTime.tryParse(data['lessonEndDate'] ?? '') ??
+          now;
+      if (!endDate.isBefore(now)) {
         bool inHold = false;
         for (String range in data['holdDates']) {
           List<String> dateParts =
