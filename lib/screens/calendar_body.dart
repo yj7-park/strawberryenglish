@@ -1104,15 +1104,12 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
               true,
             ));
           }
-        } else if (appointment.subject.contains('[수업 종료]')) {
-          message = '종료된 수업입니다.';
-        } else if (appointment.subject.contains('[수업]')) {
+        } else if (appointment.subject.contains('[수업]') ||
+            widget.isAdmin == true) {
           DateTime now = DateTime.now();
           DateTime limitTime =
               appointment.startTime.subtract(const Duration(hours: 12));
-          if (!now.isBefore(limitTime)) {
-            message = '정상 수업 예정입니다.\n(수업 취소 / 장기 홀드는 수업 시작 12시간 전까지만 가능합니다.)';
-          } else {
+          if (now.isBefore(limitTime) || widget.isAdmin == true) {
             message = '정상 수업 예정입니다.';
             buttonText.add((
               '수업 취소',
@@ -1137,7 +1134,11 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
                 true,
               ));
             }
+          } else {
+            message = '정상 수업 예정입니다.\n(수업 취소 / 장기 홀드는 수업 시작 12시간 전까지만 가능합니다.)';
           }
+        } else if (appointment.subject.contains('[수업 종료]')) {
+          message = '종료된 수업입니다.';
         }
       },
     );
