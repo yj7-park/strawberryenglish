@@ -172,10 +172,10 @@ class _AdminStudentsScreen1ListviewState
           // 수업 종료 기준 (D-n)
           if (v.containsKey('modifiedLessonEndDate')) {
             var date = DateTime.tryParse(v['modifiedLessonEndDate']);
-            if (date != null && date.isAfter(DateTime.now())) {
-              if (date
-                  .subtract(const Duration(days: 1))
-                  .isBefore(DateTime.now())) {
+            var now = DateTime.now();
+            now = DateTime(now.year, now.month, now.day);
+            if (date != null && !date.isBefore(now)) {
+              if (!date.subtract(const Duration(days: 1)).isAfter(now)) {
                 flag = 'd-1';
                 if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
                 filterCount[flag] = filterCount[flag]! + 1;
@@ -183,9 +183,7 @@ class _AdminStudentsScreen1ListviewState
                   customData[k]![flag] = 0;
                 }
                 customData[k]![flag]++;
-              } else if (date
-                  .subtract(const Duration(days: 3))
-                  .isBefore(DateTime.now())) {
+              } else if (!date.subtract(const Duration(days: 3)).isAfter(now)) {
                 flag = 'd-3';
                 if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
                 filterCount[flag] = filterCount[flag]! + 1;
@@ -193,9 +191,7 @@ class _AdminStudentsScreen1ListviewState
                   customData[k]![flag] = 0;
                 }
                 customData[k]![flag]++;
-              } else if (date
-                  .subtract(const Duration(days: 7))
-                  .isBefore(DateTime.now())) {
+              } else if (!date.subtract(const Duration(days: 7)).isAfter(now)) {
                 flag = 'd-7';
                 if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
                 filterCount[flag] = filterCount[flag]! + 1;
@@ -203,9 +199,9 @@ class _AdminStudentsScreen1ListviewState
                   customData[k]![flag] = 0;
                 }
                 customData[k]![flag]++;
-              } else if (date
+              } else if (!date
                   .subtract(const Duration(days: 15))
-                  .isBefore(DateTime.now())) {
+                  .isAfter(now)) {
                 flag = 'd-15';
                 if (!filterCount.containsKey(flag)) filterCount[flag] = 0;
                 filterCount[flag] = filterCount[flag]! + 1;
