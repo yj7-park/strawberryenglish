@@ -113665,7 +113665,7 @@ if(J.eD(r==null?"":r)){r=s.h(g,"modifiedLessonEndDate")
 r=A.j1(r==null?"":r)
 if(r==null){r=s.h(g,j)
 r=A.j1(r==null?"":r)}if(r==null)r=h
-if(r.a>h.gbD()){g=J.az(s.h(g,"holdDates"))
+if(r.a>=h.gbD()){g=J.az(s.h(g,"holdDates"))
 s=t.s
 r=t.a4
 p=r.i("aH.E")
@@ -115664,10 +115664,9 @@ if(n.b.a.d===!0)s.push(B.acm)}else if(B.d.p(s,"[\uc7a5\uae30 \ud640\ub4dc]")){n.
 if(n.b.a.d===!0)n.c.push(B.acp)}else if(B.d.p(s,"[\uc7a5\uae30 \ud640\ub4dc\uc911]")){n.a.a="\ud574\ub2f9 \uc77c\uc790\uc758 \uc218\uc5c5\uc740 \uc7a5\uae30 \ud640\ub4dc \uc694\uccad \uc0c1\ud0dc\uc785\ub2c8\ub2e4."
 s=n.c
 s.push(B.aco)
-if(n.b.a.d===!0)s.push(B.act)}else if(B.d.p(s,"[\uc218\uc5c5 \uc885\ub8cc]"))n.a.a="\uc885\ub8cc\ub41c \uc218\uc5c5\uc785\ub2c8\ub2e4."
-else if(B.d.p(s,"[\uc218\uc5c5]")){s=n.a
-if(Date.now()>=a.a.jY(B.ot).gbD())s.a="\uc815\uc0c1 \uc218\uc5c5 \uc608\uc815\uc785\ub2c8\ub2e4.\n(\uc218\uc5c5 \ucde8\uc18c / \uc7a5\uae30 \ud640\ub4dc\ub294 \uc218\uc5c5 \uc2dc\uc791 12\uc2dc\uac04 \uc804\uae4c\uc9c0\ub9cc \uac00\ub2a5\ud569\ub2c8\ub2e4.)"
-else{s.a="\uc815\uc0c1 \uc218\uc5c5 \uc608\uc815\uc785\ub2c8\ub2e4."
+if(n.b.a.d===!0)s.push(B.act)}else if(B.d.p(s,"[\uc218\uc5c5]")||n.b.a.d===!0){s=Date.now()<a.a.jY(B.ot).gbD()||n.b.a.d===!0
+r=n.a
+if(s){r.a="\uc815\uc0c1 \uc218\uc5c5 \uc608\uc815\uc785\ub2c8\ub2e4."
 s=n.c
 r=n.b
 q=r.a.c.a
@@ -115694,7 +115693,7 @@ o=r.a.c.a
 o===$&&A.b()
 o=J.K(o,l)
 s.push(new A.kg(["\uc7a5\uae30 \ud640\ub4dc","\uc794\uc5ec \ud69f\uc218 : "+q+"/"+p,B.VC,B.m2,J.DV(o==null?0:o,0)]))
-if(r.a.d===!0)s.push(B.acn)}}},
+if(r.a.d===!0)s.push(B.acn)}else r.a="\uc815\uc0c1 \uc218\uc5c5 \uc608\uc815\uc785\ub2c8\ub2e4.\n(\uc218\uc5c5 \ucde8\uc18c / \uc7a5\uae30 \ud640\ub4dc\ub294 \uc218\uc5c5 \uc2dc\uc791 12\uc2dc\uac04 \uc804\uae4c\uc9c0\ub9cc \uac00\ub2a5\ud569\ub2c8\ub2e4.)"}else if(B.d.p(s,"[\uc218\uc5c5 \uc885\ub8cc]"))n.a.a="\uc885\ub8cc\ub41c \uc218\uc5c5\uc785\ub2c8\ub2e4."},
 $S:7}
 A.aha.prototype={
 $1(a){var s,r,q,p=null,o=a.a,n=o[0],m=o[1],l=o[2],k=o[4]?o[3].b.h(0,700):B.k2,j=o[3].b.h(0,100)
