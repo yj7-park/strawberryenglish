@@ -28,7 +28,7 @@ class TrialScreen extends StatefulWidget {
   final TextEditingController trialDayController = TextEditingController();
   final TextEditingController trialTimeController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
-  final TextEditingController skypeIdController = TextEditingController();
+  // final TextEditingController skypeIdController = TextEditingController();
   final TextEditingController studyPurposeController = TextEditingController();
   final TextEditingController referralSourceController =
       TextEditingController();
@@ -74,8 +74,8 @@ class _TrialScreenState extends State<TrialScreen> {
                       snapshot.data!.data['phoneNumber'] ?? '';
                   widget.countryController.text =
                       snapshot.data!.data['country'] ?? '';
-                  widget.skypeIdController.text =
-                      snapshot.data!.data['skypeId'] ?? '';
+                  // widget.skypeIdController.text =
+                  //     snapshot.data!.data['skypeId'] ?? '';
                   widget.studyPurposeController.text =
                       snapshot.data!.data['studyPurpose'] ?? '';
                   widget.referralSourceController.text =
@@ -226,7 +226,7 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
                         TrialScreen1Input(
                           phoneNumberController: widget.phoneNumberController,
                           countryController: widget.countryController,
-                          skypeIdController: widget.skypeIdController,
+                          // skypeIdController: widget.skypeIdController,
                           studyPurposeController: widget.studyPurposeController,
                           referralSourceController:
                               widget.referralSourceController,
@@ -242,7 +242,7 @@ Tutor: ${snapshot.data!.data['trialTutor'] ?? ''}
                           trialDayController: widget.trialDayController,
                           trialTimeController: widget.trialTimeController,
                           countryController: widget.countryController,
-                          skypeIdController: widget.skypeIdController,
+                          // skypeIdController: widget.skypeIdController,
                           studyPurposeController: widget.studyPurposeController,
                           referralSourceController:
                               widget.referralSourceController,

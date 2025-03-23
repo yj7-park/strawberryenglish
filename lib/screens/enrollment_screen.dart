@@ -22,7 +22,7 @@ class EnrollmentScreen extends StatefulWidget {
   final TextEditingController requestDayController = TextEditingController();
   final TextEditingController requestTimeController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
-  final TextEditingController skypeIdController = TextEditingController();
+  // final TextEditingController skypeIdController = TextEditingController();
   final TextEditingController studyPurposeController = TextEditingController();
   final TextEditingController referralSourceController =
       TextEditingController();
@@ -79,8 +79,8 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                       snapshot.data!.data['phoneNumber'] ?? '';
                   widget.countryController.text =
                       snapshot.data!.data['country'] ?? '';
-                  widget.skypeIdController.text =
-                      snapshot.data!.data['skypeId'] ?? '';
+                  // widget.skypeIdController.text =
+                  //     snapshot.data!.data['skypeId'] ?? '';
                   widget.studyPurposeController.text =
                       snapshot.data!.data['studyPurpose'] ?? '';
                   widget.referralSourceController.text =
@@ -169,7 +169,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                         TrialScreen1Input(
                           phoneNumberController: widget.phoneNumberController,
                           countryController: widget.countryController,
-                          skypeIdController: widget.skypeIdController,
+                          // skypeIdController: widget.skypeIdController,
                           studyPurposeController: widget.studyPurposeController,
                           referralSourceController:
                               widget.referralSourceController,
@@ -191,7 +191,7 @@ class _EnrollmentScreenState extends State<EnrollmentScreen> {
                           requestDayController: widget.requestDayController,
                           requestTimeController: widget.requestTimeController,
                           countryController: widget.countryController,
-                          skypeIdController: widget.skypeIdController,
+                          // skypeIdController: widget.skypeIdController,
                           studyPurposeController: widget.studyPurposeController,
                           referralSourceController:
                               widget.referralSourceController,

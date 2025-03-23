@@ -152,6 +152,7 @@ class SignupScreen3ButtonState extends State<SignupScreen3Button> {
         // TODO: 초기화 위치 확정 필요
         'level': '',
         'points': 0,
+        'skypeId': '',
       });
 
       bool? confirm = await ConfirmDialog.show(

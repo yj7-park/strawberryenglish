@@ -29,7 +29,7 @@ class EnrollmentScreen4Button extends StatefulWidget {
   final TextEditingController requestDayController;
   final TextEditingController requestTimeController;
   final TextEditingController countryController;
-  final TextEditingController skypeIdController;
+  // final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
   final TextEditingController referralSourceController;
   final TextEditingController lessonStartDateController;
@@ -43,7 +43,7 @@ class EnrollmentScreen4Button extends StatefulWidget {
     required this.requestDayController,
     required this.requestTimeController,
     required this.countryController,
-    required this.skypeIdController,
+    // required this.skypeIdController,
     required this.studyPurposeController,
     required this.referralSourceController,
     required this.lessonStartDateController,
@@ -123,7 +123,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     final requestDay = widget.requestDayController.text.trim();
     final requestTime = widget.requestTimeController.text.trim();
     final country = widget.countryController.text.trim();
-    final skypeId = widget.skypeIdController.text.trim();
+    // final skypeId = widget.skypeIdController.text.trim();
     final studyPurpose = widget.studyPurposeController.text.trim();
     final referralSource = widget.referralSourceController.text.trim();
     final lessonStartDate = widget.lessonStartDateController.text.trim();
@@ -137,7 +137,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         requestDay.isEmpty ||
         requestTime.isEmpty ||
         country.isEmpty ||
-        skypeId.isEmpty ||
+        // skypeId.isEmpty ||
         lessonStartDate.isEmpty) {
       setState(() {
         // errorMessage = 'All fields are required.';
@@ -375,7 +375,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
         inputStudent.data['requestDay'] = requestDay;
         inputStudent.data['requestTime'] = requestTime;
         inputStudent.data['country'] = country;
-        inputStudent.data['skypeId'] = skypeId;
+        // inputStudent.data['skypeId'] = skypeId;
         inputStudent.data['studyPurpose'] = studyPurpose;
         inputStudent.data['referralSource'] = referralSource;
         inputStudent.data['lessonStartDate'] = lessonStartDate;
@@ -591,7 +591,7 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
     if (needToMakeNew == false) {
       studentProvider.updateStudentToFirestoreWithMap(inputStudent);
 
-    // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
+      // 기존 학생이 수강 신청을 한 이후, 신규 수강 신청을 하는 경우
     } else {
       // 새 email 찾기
       var newEmail =
@@ -601,8 +601,9 @@ class EnrollmentScreen4ButtonState extends State<EnrollmentScreen4Button> {
       // 새 email DB 업데이트 / 새 email로 로그인 DB 변경
       studentProvider.updateStudentToFirestoreWithMap(inputStudent);
       studentProvider.setStudent(newEmail);
-      // 적립그금points 업데이트      
-      studentProvider.updateStudentListField('points', inputStudent.data['points'] ?? 0);
+      // 적립그금points 업데이트
+      studentProvider.updateStudentListField(
+          'points', inputStudent.data['points'] ?? 0);
     }
   }
 

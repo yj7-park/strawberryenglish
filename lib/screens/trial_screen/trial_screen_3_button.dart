@@ -17,7 +17,7 @@ class TrialScreen3Button extends StatefulWidget {
   final TextEditingController trialDayController;
   final TextEditingController trialTimeController;
   final TextEditingController countryController;
-  final TextEditingController skypeIdController;
+  // final TextEditingController skypeIdController;
   final TextEditingController studyPurposeController;
   final TextEditingController referralSourceController;
 
@@ -29,7 +29,7 @@ class TrialScreen3Button extends StatefulWidget {
     required this.trialDayController,
     required this.trialTimeController,
     required this.countryController,
-    required this.skypeIdController,
+    // required this.skypeIdController,
     required this.studyPurposeController,
     required this.referralSourceController,
   });
@@ -89,7 +89,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
     final trialDay = widget.trialDayController.text.trim();
     final trialTime = widget.trialTimeController.text.trim();
     final country = widget.countryController.text.trim();
-    final skypeId = widget.skypeIdController.text.trim();
+    // final skypeId = widget.skypeIdController.text.trim();
     final studyPurpose = widget.studyPurposeController.text.trim();
     final referralSource = widget.referralSourceController.text.trim();
     errorMessage = '';
@@ -100,8 +100,8 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
         phoneNumber.isEmpty ||
         trialDay.isEmpty ||
         trialTime.isEmpty ||
-        country.isEmpty ||
-        skypeId.isEmpty) {
+        // skypeId.isEmpty ||
+        country.isEmpty) {
       setState(() {
         // errorMessage = 'All fields are required.';
         errorMessage = '모든 필수 항목이 입력되어야 합니다.';
@@ -129,7 +129,7 @@ class TrialScreen3ButtonState extends State<TrialScreen3Button> {
       updatedStudent.data['trialDay'] = trialDay;
       updatedStudent.data['trialTime'] = trialTime;
       updatedStudent.data['country'] = country;
-      updatedStudent.data['skypeId'] = skypeId;
+      // updatedStudent.data['skypeId'] = skypeId;
       updatedStudent.data['studyPurpose'] = studyPurpose;
       updatedStudent.data['referralSource'] = referralSource;
       studentProvider.updateStudentToFirestoreWithMap(updatedStudent);
