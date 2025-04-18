@@ -541,6 +541,15 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
 // }
 
   Widget _buildLessonInfo(bool isMobile) {
+    var topicString = widget.user.data['topic'].substring(
+            0,
+            widget.user.data['topic'].length > 20
+                ? 20
+                : widget.user.data['topic'].length) ??
+        '';
+    if (widget.user.data['topic'].length > 20) {
+      topicString += '...';
+    }
     return Column(
       children: [
         Row(
@@ -550,10 +559,8 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
             _buildInfoRow('이름', '${widget.user.data['name']}', isMobile),
             _buildInfoRow('튜터', widget.user.data['tutor'] ?? '', isMobile),
             // _buildInfoRow('토픽', widget.user.data['topic'] ?? ''),
-            _buildInfoRow(
-                '토픽',
-                '${widget.user.data['program'] ?? ''}\n${widget.user.data['topic'] ?? ''}',
-                isMobile),
+            _buildInfoRow('토픽',
+                '${widget.user.data['program'] ?? ''}\n$topicString', isMobile),
           ],
         ),
         const SizedBox(height: 10),
@@ -844,7 +851,8 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
           );
         }
 
-        currentLessonDate = currentLessonDate.add(const Duration(days: 1));
+        currentLessonDate = DateTime(currentLessonDate.year,
+            currentLessonDate.month, currentLessonDate.day + 1);
       }
     } catch (e) {
       if (kDebugMode) {

@@ -173,7 +173,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> handleLogin() async {
-    var username = _usernameController.text;
+    var username = _usernameController.text.trim();
     var password = _passwordController.text;
 
     setState(() {
