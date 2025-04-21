@@ -123,8 +123,8 @@ class Student {
               range.split('~').map((e) => e.trim()).toList();
           if (dateParts.length == 2) {
             DateTime startDate = DateTime.parse(dateParts[0]);
-            DateTime endDate = DateTime.parse(dateParts[1])
-                .add(const Duration(days: 1))
+            DateTime endDate = DateTime.parse(dateParts[1]);
+            endDate = DateTime(endDate.year, endDate.month, endDate.day + 1)
                 .subtract(const Duration(microseconds: 1));
             if (startDate.isBefore(endDate) &&
                 (startDate.isBefore(now) && endDate.isAfter(now))) {
@@ -192,8 +192,8 @@ class Student {
               range.split('~').map((e) => e.trim()).toList();
           if (dateParts.length == 2) {
             DateTime startDate = DateTime.parse(dateParts[0]);
-            DateTime endDate = DateTime.parse(dateParts[1])
-                .add(const Duration(days: 1))
+            DateTime endDate = DateTime.parse(dateParts[1]);
+            endDate = DateTime(endDate.year, endDate.month, endDate.day + 1)
                 .subtract(const Duration(microseconds: 1));
             if (startDate.isBefore(endDate) &&
                 (startDate.isBefore(now) && endDate.isAfter(now))) {

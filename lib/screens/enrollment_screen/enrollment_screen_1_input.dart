@@ -88,11 +88,23 @@ class EnrollmentScreen1InputState extends State<EnrollmentScreen1Input> {
   Future<void> _selectDate(BuildContext context) async {
     String initialDate = widget.lessonStartDateController.value.text;
     var parsedInitialDate = DateTime.tryParse(initialDate) ?? DateTime.now();
-    parsedInitialDate = parsedInitialDate.add(const Duration(days: 1));
+    parsedInitialDate = DateTime(
+      parsedInitialDate.year,
+      parsedInitialDate.month,
+      parsedInitialDate.day + 1,
+    );
     parsedInitialDate = parsedInitialDate.weekday == 6
-        ? parsedInitialDate.add(const Duration(days: 2))
+        ? DateTime(
+            parsedInitialDate.year,
+            parsedInitialDate.month,
+            parsedInitialDate.day + 2,
+          )
         : parsedInitialDate.weekday == 7
-            ? parsedInitialDate.add(const Duration(days: 1))
+            ? DateTime(
+                parsedInitialDate.year,
+                parsedInitialDate.month,
+                parsedInitialDate.day + 1,
+              )
             : parsedInitialDate;
     final DateTime? picked = await showDatePicker(
       builder: (context, child) {

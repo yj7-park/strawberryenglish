@@ -722,12 +722,14 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
             if (startDate.isBefore(endDate) ||
                 startDate.isAtSameMomentAs(endDate)) {
               for (int i = 0;
-                  startDate.add(Duration(days: i)).isBefore(endDate) ||
-                      startDate
-                          .add(Duration(days: i))
+                  DateTime(startDate.year, startDate.month, startDate.day + i)
+                          .isBefore(endDate) ||
+                      DateTime(startDate.year, startDate.month,
+                              startDate.day + i)
                           .isAtSameMomentAs(endDate);
                   i++) {
-                parsedHoldDates.add(startDate.add(Duration(days: i)));
+                parsedHoldDates.add(DateTime(
+                    startDate.year, startDate.month, startDate.day + i));
               }
             }
           }
@@ -751,12 +753,14 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
             if (startDate.isBefore(endDate) ||
                 startDate.isAtSameMomentAs(endDate)) {
               for (int i = 0;
-                  startDate.add(Duration(days: i)).isBefore(endDate) ||
-                      startDate
-                          .add(Duration(days: i))
+                  DateTime(startDate.year, startDate.month, startDate.day + i)
+                          .isBefore(endDate) ||
+                      DateTime(startDate.year, startDate.month,
+                              startDate.day + i)
                           .isAtSameMomentAs(endDate);
                   i++) {
-                holdRequestDates.add(startDate.add(Duration(days: i)));
+                holdRequestDates.add(DateTime(
+                    startDate.year, startDate.month, startDate.day + i));
               }
             }
           }
@@ -1369,7 +1373,7 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
         // startDate와 endDate 사이에 있는 날짜를 확인하면서 lessonDays에 포함된 weekDay를 count
         for (DateTime date = startDate;
             date.isBefore(endDate) || date.isAtSameMomentAs(endDate);
-            date = date.add(const Duration(days: 1))) {
+            date = DateTime(date.year, date.month, date.day + 1)) {
           cancelDates.add(date);
         }
       }
@@ -1391,13 +1395,15 @@ Tutor: ${widget.user.data['trialTutor'] ?? ''}
             holidayData.keys.contains(DateFormat('MM-dd').format(today)) ||
             breakdayData.keys
                 .contains(DateFormat('yyyy-MM-dd').format(today))) {
-          lessonEndDate = lessonEndDate.add(const Duration(days: 1));
+          lessonEndDate = DateTime(
+              lessonEndDate.year, lessonEndDate.month, lessonEndDate.day + 1);
           while (!lessonDays.contains(lessonEndDate.weekday)) {
-            lessonEndDate = lessonEndDate.add(const Duration(days: 1));
+            lessonEndDate = DateTime(
+                lessonEndDate.year, lessonEndDate.month, lessonEndDate.day + 1);
           }
         }
       }
-      today = today.add(const Duration(days: 1));
+      today = DateTime(today.year, today.month, today.day + 1);
     }
 
     // lessonEndDate를 수업이 있는 요일로 맞추기
