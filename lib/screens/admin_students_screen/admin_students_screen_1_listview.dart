@@ -252,6 +252,32 @@ class _AdminStudentsScreen1ListviewState
     bool isMobile = screenWidth < 1000;
     bool noFilter = controller.text.isNotEmpty ||
         [for (var e in filterChecked.values) e].contains(true);
+    var checkBoxList = [];
+    if (isMobile) {
+      // split each list into two
+      checkBoxList = [
+        AdminStudentsScreen1Listview.filterRequests.sublist(0, 2),
+        AdminStudentsScreen1Listview.filterRequests.sublist(2, 4),
+        [],
+        AdminStudentsScreen1Listview.filterEtc.sublist(0, 2),
+        AdminStudentsScreen1Listview.filterEtc.sublist(2, 4),
+        [],
+        AdminStudentsScreen1Listview.filterOnLecture.sublist(0, 2),
+        AdminStudentsScreen1Listview.filterOnLecture.sublist(2, 4),
+        [],
+        AdminStudentsScreen1Listview.filterDday.sublist(0, 2),
+        AdminStudentsScreen1Listview.filterDday.sublist(2, 4),
+      ];
+    } else {
+      checkBoxList = [
+        AdminStudentsScreen1Listview.filterRequests,
+        [],
+        AdminStudentsScreen1Listview.filterEtc,
+        AdminStudentsScreen1Listview.filterOnLecture,
+        [],
+        AdminStudentsScreen1Listview.filterDday,
+      ];
+    }
     return Theme(
       data: customTheme,
       child: Padding(
@@ -268,14 +294,7 @@ class _AdminStudentsScreen1ListviewState
                     // height: 50,
                     child: Column(
                       children: [
-                        for (var filterList in [
-                          AdminStudentsScreen1Listview.filterRequests,
-                          [],
-                          AdminStudentsScreen1Listview.filterEtc,
-                          AdminStudentsScreen1Listview.filterOnLecture,
-                          [],
-                          AdminStudentsScreen1Listview.filterDday,
-                        ])
+                        for (var filterList in checkBoxList)
                           filterList.isEmpty
                               ? const SizedBox(height: 20)
                               : Row(
@@ -308,8 +327,10 @@ class _AdminStudentsScreen1ListviewState
                                                         .leading,
                                                 title: Text(
                                                   '$t ($count)',
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Colors.white,
+                                                    fontSize:
+                                                        isMobile ? 12 : 16,
                                                   ),
                                                 ),
                                               ),
@@ -354,6 +375,7 @@ class _AdminStudentsScreen1ListviewState
                   const Divider(height: 0),
                   ListView.separated(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (_, __) =>
                         Container(height: 1.5, color: Colors.grey[300]),
                     itemCount: noFilter ? searchedData.length : userData.length,

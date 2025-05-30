@@ -22,6 +22,7 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
   static const _defaultHeight = 56.0;
   static const _expendedHeight = 256.0;
   double _height = _defaultHeight;
+  bool isExpanded = false;
   late StudentProvider studentProvider;
 
   @override
@@ -173,12 +174,16 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                   MouseRegion(
                                     onEnter: (_) {
                                       setState(() {
-                                        _height = _expendedHeight;
+                                        if (!isExpanded) {
+                                          _height = _expendedHeight;
+                                        }
                                       });
                                     },
                                     onExit: (_) {
                                       setState(() {
-                                        _height = _defaultHeight;
+                                        if (!isExpanded) {
+                                          _height = _defaultHeight;
+                                        }
                                       });
                                     },
                                     child: Column(
@@ -196,12 +201,16 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                   MouseRegion(
                                     onEnter: (_) {
                                       setState(() {
-                                        _height = _expendedHeight;
+                                        if (!isExpanded) {
+                                          _height = _expendedHeight;
+                                        }
                                       });
                                     },
                                     onExit: (_) {
                                       setState(() {
-                                        _height = _defaultHeight;
+                                        if (!isExpanded) {
+                                          _height = _defaultHeight;
+                                        }
                                       });
                                     },
                                     child: Column(
@@ -224,12 +233,16 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                   MouseRegion(
                                     onEnter: (_) {
                                       setState(() {
-                                        _height = _expendedHeight;
+                                        if (!isExpanded) {
+                                          _height = _expendedHeight;
+                                        }
                                       });
                                     },
                                     onExit: (_) {
                                       setState(() {
-                                        _height = _defaultHeight;
+                                        if (!isExpanded) {
+                                          _height = _defaultHeight;
+                                        }
                                       });
                                     },
                                     child: myMenuItemButton(
@@ -239,12 +252,16 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                     MouseRegion(
                                       onEnter: (_) {
                                         setState(() {
-                                          _height = _expendedHeight;
+                                          if (!isExpanded) {
+                                            _height = _expendedHeight;
+                                          }
                                         });
                                       },
                                       onExit: (_) {
                                         setState(() {
-                                          _height = _defaultHeight;
+                                          if (!isExpanded) {
+                                            _height = _defaultHeight;
+                                          }
                                         });
                                       },
                                       child: Column(
@@ -280,6 +297,24 @@ class _MyMenuAppBarState extends State<MyMenuAppBar> {
                                       ],
                                     ),
                                 ],
+                              ),
+                              // put button expanding all menu items without border
+                              Padding(
+                                padding: const EdgeInsets.only(top: 18),
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isExpanded = !isExpanded;
+                                      _height = isExpanded
+                                          ? _expendedHeight
+                                          : _defaultHeight;
+                                    });
+                                  },
+                                  child: Text(
+                                    isExpanded ? '▲' : '▼',
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
+                                ),
                               ),
                             ] else ...[
                               const Spacer(),
